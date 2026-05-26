@@ -1,7 +1,9 @@
 'use client';
 
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin, Twitter, ArrowUp } from 'lucide-react';
+import { useState } from 'react';
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin, Twitter, ArrowUp, Shield, CheckCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   footerQuickLinks,
   footerProductLinks,
@@ -10,9 +12,38 @@ import {
   siteMetadata,
 } from '@/lib/tostem-data';
 
+const trustBadges = [
+  { label: 'ISO 9001 Certified', icon: Shield },
+  { label: 'JIS Certified', icon: Shield },
+  { label: 'ISO 14001 Certified', icon: Shield },
+  { label: '100+ Quality Checks', icon: CheckCircle },
+];
+
 export default function Footer() {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateTo = (slug: string) => {
+    const navFn = (window as unknown as Record<string, unknown>).__navigateTo as ((s: string) => void) | undefined;
+    if (navFn) {
+      navFn(slug);
+    }
+  };
+
+  const handleNewsletterSubmit = () => {
+    if (!newsletterEmail) return;
+
+    // Store in localStorage
+    const subscriptions = JSON.parse(localStorage.getItem('tostem-newsletter') || '[]');
+    subscriptions.push({ email: newsletterEmail, timestamp: new Date().toISOString() });
+    localStorage.setItem('tostem-newsletter', JSON.stringify(subscriptions));
+
+    setNewsletterSubmitted(true);
+    setNewsletterEmail('');
   };
 
   const socialIconMap: Record<string, React.ReactNode> = {
@@ -23,11 +54,34 @@ export default function Footer() {
     twitter: <Twitter className="w-4 h-4" />,
   };
 
+  // Map footer href to navigateTo slug
+  const handleLinkClick = (href: string) => {
+    const slug = href.replace('#/', '').replace('#', '') || 'home';
+    navigateTo(slug);
+  };
+
   return (
     <footer className="bg-tostem-footer text-gray-300">
+      {/* Trust Badges Row */}
+      <div className="border-b border-white/10">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
+            {trustBadges.map((badge) => (
+              <div
+                key={badge.label}
+                className="flex items-center gap-2 text-sm text-gray-400"
+              >
+                <badge.icon className="w-4 h-4 text-tostem-blue" />
+                <span className="font-medium">{badge.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Main Footer */}
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Column 1: Logo & Description */}
           <div className="lg:col-span-1">
             <h2 className="text-2xl font-black tracking-[0.15em] text-white mb-4">
@@ -64,12 +118,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerQuickLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <button
+                    onClick={() => handleLinkClick(link.href)}
                     className="text-sm text-gray-400 hover:text-white hover:pl-1 transition-all duration-200"
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -83,12 +137,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerProductLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <button
+                    onClick={() => handleLinkClick(link.href)}
                     className="text-sm text-gray-400 hover:text-white hover:pl-1 transition-all duration-200"
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -135,13 +189,52 @@ export default function Footer() {
             {/* CTA Button */}
             <Button
               className="mt-6 bg-tostem-blue hover:bg-tostem-blue-light text-white text-xs tracking-wider"
-              onClick={() => {
-                const el = document.querySelector('#quotation');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => navigateTo('contact')}
             >
               GET A QUOTATION
             </Button>
+          </div>
+
+          {/* Column 5: Newsletter */}
+          <div>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-5 pb-2 border-b border-white/10">
+              Newsletter
+            </h3>
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+              Stay updated with the latest products, offers, and design inspiration from Tostem India.
+            </p>
+            {newsletterSubmitted ? (
+              <div className="flex items-center gap-2 text-green-400 text-sm">
+                <CheckCircle className="w-4 h-4" />
+                <span>Thank you for subscribing!</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 text-sm h-9"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleNewsletterSubmit();
+                    }}
+                  />
+                  <Button
+                    size="sm"
+                    className="bg-tostem-blue hover:bg-tostem-blue-light text-white h-9 px-3 flex-shrink-0"
+                    onClick={handleNewsletterSubmit}
+                    disabled={!newsletterEmail}
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-[10px] text-gray-500">
+                  Join 10,000+ architects and homeowners
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -154,26 +247,27 @@ export default function Footer() {
             India Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <a
-              href="#privacy"
+            <button
+              onClick={() => navigateTo('about-tostem')}
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
             >
               Privacy Policy
-            </a>
+            </button>
             <span className="text-gray-700">|</span>
-            <a
-              href="#terms"
+            <button
+              onClick={() => navigateTo('about-tostem')}
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
             >
               Terms & Conditions
-            </a>
+            </button>
             <span className="text-gray-700">|</span>
-            <a
-              href="#sitemap"
-              className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            <button
+              onClick={scrollToTop}
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1"
             >
-              Sitemap
-            </a>
+              <ArrowUp className="w-3 h-3" />
+              Back to Top
+            </button>
           </div>
         </div>
       </div>

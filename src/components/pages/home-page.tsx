@@ -701,7 +701,7 @@ export default function HomePage() {
           <p className="text-lg text-white/60 max-w-2xl mx-auto mb-8">Get a free consultation and quotation for premium Tostem aluminium windows and doors.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black px-8" onClick={() => navigateTo('contact')}>Contact Us</Button>
+            <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Contact Us <ArrowRight className="w-4 h-4 ml-2" /></Button>
           </div>
         </div>
       </section>

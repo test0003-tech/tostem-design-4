@@ -119,7 +119,10 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Choose {series.name} for Your Project</h2>
           <p className="text-white/60 mb-6">Get a free consultation and quotation for {series.name} series products.</p>
-          <Button className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>
+            <Button className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Contact Us <ArrowRight className="w-4 h-4 ml-2" /></Button>
+          </div>
         </div>
       </section>
     </div>

@@ -4,6 +4,7 @@ import PageRouter from '@/components/page-router';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import CookieConsent from '@/components/cookie-consent';
+import WhatsAppButton from '@/components/whatsapp-button';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       </main>
       <Footer />
       <CookieConsent />
+      <WhatsAppButton />
     </div>
   );
 }

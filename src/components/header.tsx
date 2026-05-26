@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Menu, X, ChevronDown, ChevronRight, Download, MessageCircle, Search } from 'lucide-react';
+import { Phone, Menu, X, ChevronDown, ChevronRight, Download, MessageCircle, Search, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { mainNavigation, productMegaMenuTabs, siteMetadata } from '@/lib/tostem-data';
 import SearchOverlay from '@/components/search-overlay';
 import type { NavSection, NavItem, MegaMenuTab } from '@/lib/tostem-data';
 import { useSiteStore } from '@/lib/store';
+import { useTheme } from 'next-themes';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -17,6 +18,7 @@ export default function Header() {
   const [activeProductTab, setActiveProductTab] = useState('aluminium-doors');
   const [searchOpen, setSearchOpen] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -64,7 +66,7 @@ export default function Header() {
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <header className="fixed top-0 left-0 right-0 z-50">
         {/* Top Bar */}
-        <div className={`bg-white border-b border-gray-100 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
+        <div className={`bg-white dark:bg-[#1a1a1a] border-b border-gray-100 dark:border-white/10 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 flex items-center justify-between">
             <a href="#" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }} className="flex items-center gap-3 group">
               <span className="text-2xl md:text-3xl font-black tracking-[0.15em] text-tostem-dark group-hover:text-tostem-blue transition-colors">TOSTEM</span>
@@ -72,8 +74,16 @@ export default function Header() {
               <span className="hidden md:block text-xs text-tostem-text-light tracking-wide max-w-[200px] leading-tight">Japanese Innovation<br />in Window Design</span>
             </a>
             <div className="flex items-center gap-3">
-              <button onClick={() => setSearchOpen(true)} className="w-10 h-10 rounded-full bg-tostem-light-gray flex items-center justify-center text-tostem-dark hover:bg-tostem-mid-gray transition-colors" aria-label="Search">
+              <button onClick={() => setSearchOpen(true)} className="w-10 h-10 rounded-full bg-tostem-light-gray dark:bg-white/10 flex items-center justify-center text-tostem-dark dark:text-gray-300 hover:bg-tostem-mid-gray dark:hover:bg-white/20 transition-colors" aria-label="Search">
                 <Search className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="w-10 h-10 rounded-full bg-tostem-light-gray dark:bg-white/10 flex items-center justify-center text-tostem-dark dark:text-gray-300 hover:bg-tostem-mid-gray dark:hover:bg-white/20 transition-colors"
+                aria-label="Toggle theme"
+              >
+                <Sun className="w-4 h-4 hidden dark:block" />
+                <Moon className="w-4 h-4 block dark:hidden" />
               </button>
               <a href={`tel:${siteMetadata.phone}`} className="w-10 h-10 rounded-full bg-tostem-blue flex items-center justify-center text-white hover:bg-tostem-blue-light transition-colors shadow-md" aria-label="Call us"><Phone className="w-4 h-4" /></a>
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-10 h-10 rounded-md flex items-center justify-center text-tostem-dark hover:bg-gray-100 transition-colors" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>

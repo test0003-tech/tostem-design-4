@@ -1671,7 +1671,7 @@ export const pageRegistry: PageRegistryItem[] = [
   { slug: 'we-70-windows-doors-series', title: 'We 70 Series', type: 'series', description: 'Design Meets Performance & Reliability. The WE-70 series provides excellent balance of quality and value.', breadcrumb: ['Our Product', 'We 70 Series'], url: 'https://www.tostemindia.com/series/we-70-windows-doors-series/' },
 
   // Driving Experience
-  { slug: 'e-catalogue', title: 'E-catalogue', type: 'experience', description: 'Browse Tostem\'s digital catalogue for our complete range of aluminium windows and doors.', breadcrumb: ['Driving Experience', 'E-catalogue'], url: 'https://www.tostemindia.com/e-catalogue/' },
+  { slug: 'e-catalogue', title: 'E-Catalogue', type: 'ecatalogue', description: 'Browse and download Tostem product catalogues and brochures', breadcrumb: ['Driving Experience'], url: 'https://www.tostemindia.com/e-catalogue/' },
   { slug: 'modern-window-door-design', title: 'Modern Window & Door Design', type: 'experience', description: 'Explore modern window and door design ideas for contemporary homes and spaces.', breadcrumb: ['Driving Experience', 'Modern Design'], url: 'https://www.tostemindia.com/modern-window-door-design/' },
   { slug: 'gallery', title: 'Gallery', type: 'experience-gallery', description: 'Browse our collection of residential, commercial, interior, and exterior projects showcasing Tostem solutions.', breadcrumb: ['Driving Experience', 'Gallery'], url: 'https://www.tostemindia.com/gallery/' },
 

@@ -409,3 +409,113 @@ Stage Summary:
 - All 26 design pages have detailed content
 - All subpage templates enhanced with richer features
 - Project is stable and ready for further enhancement
+
+---
+Task ID: 2-3
+Agent: Full-stack Developer
+Task: Add Dark Mode + Page Transitions
+
+Work Log:
+- Installed next-themes@0.4.6 package via bun
+- Created /home/z/my-project/src/components/theme-provider.tsx with ThemeProvider wrapping NextThemesProvider
+- Updated /home/z/my-project/src/app/layout.tsx: imported ThemeProvider, wrapped children with `<ThemeProvider attribute="class" defaultTheme="light" enableSystem>`
+- Added dark mode toggle to header.tsx:
+  - Imported useTheme from next-themes and Sun/Moon icons from lucide-react
+  - Added toggle button next to Search button in top bar
+  - Uses CSS-based show/hide (`hidden dark:block` / `block dark:hidden`) for Sun/Moon icons to avoid hydration mismatch
+  - Uses `setTheme(theme === 'dark' ? 'light' : 'dark')` for toggling
+  - Applied dark mode classes to top bar background, search button, and toggle button
+- Updated globals.css:
+  - Enhanced .dark CSS variables: darker background (#111111), lighter accent (#3a6fa3), improved contrast ratios
+  - Added dark mode variants to mega-menu, side-button, and custom-scrollbar component classes
+- Enhanced page-router.tsx with slide + fade animation:
+  - Replaced simple opacity fade with slide+fade: exit slides left (x: -40) + fade out, enter slides from right (x: 40) + fade in
+  - Duration: 0.3s with ease-out timing
+  - Kept AnimatePresence with mode="wait"
+  - Removed unused isTransitioning state and useState import
+- All lint checks pass with 0 errors
+- Dev server compiling successfully
+
+Stage Summary:
+- Dark mode fully functional with next-themes class-based approach
+- Theme toggle button in header with Sun/Moon icons (CSS-based, no hydration issues)
+- Dark mode CSS variables properly configured with Tostem brand colors
+- Page transitions enhanced with premium slide+fade animation (0.3s ease-out)
+- No lint errors, dev server stable
+
+---
+
+Task ID: 4-6
+Agent: Full-stack Developer
+Task: Add E-Catalogue page, WhatsApp floating button, and Enhanced Footer
+
+Work Log:
+
+### E-Catalogue Page (`ecatalogue-page.tsx`)
+- Created `/home/z/my-project/src/components/pages/ecatalogue-page.tsx`
+- Hero section with title "E-Catalogue", subtitle "Browse and download our premium product catalogues", gradient background with decorative blurred circles, Badge component
+- Catalogue Grid: 6 catalogue cards with unique gradient covers:
+  1. "Windows Collection 2025" (tostem-blue gradient, 32 Pages)
+  2. "Doors Collection 2025" (amber gradient, 28 Pages)
+  3. "GIESTA Entrance Doors" (stone gradient, 16 Pages)
+  4. "ATIS Series Technical Specs" (teal gradient, 24 Pages)
+  5. "GRANTS Series Brochure" (emerald gradient, 20 Pages)
+  6. "Complete Product Range" (tostem-dark gradient, 48 Pages)
+- Each card features: gradient cover with FileText icon, PDF badge, title, description, page count, Download button
+- Download Form Modal using shadcn Dialog: Name, Email, Phone, City fields, marketing consent Checkbox, Submit button with success state (CheckCircle animation)
+- Submissions stored in localStorage under 'tostem-catalogue-submissions'
+- "How It Works" section: 3 steps with numbered circles (01 Browse, 02 Fill Details, 03 Download Instantly)
+- CTA section: "Need a physical copy?" with Contact Us button using navigateTo
+- All sections use framer-motion animations (fade-in, stagger, spring)
+- Registered in page-router.tsx: imported EcataloguePage, added case 'ecatalogue'
+- Updated tostem-data.ts pageRegistry: changed e-catalogue entry type from 'experience' to 'ecatalogue', updated description and breadcrumb
+
+### WhatsApp Floating Chat Button (`whatsapp-button.tsx`)
+- Created `/home/z/my-project/src/components/whatsapp-button.tsx`
+- Fixed position: bottom-left corner (bottom-20 left-4 on mobile, bottom-24 left-6 on desktop, above cookie consent)
+- Green (#25D366) WhatsApp icon with MessageCircle from lucide-react
+- On click: opens WhatsApp with pre-filled message "Hi, I'm interested in Tostem windows and doors. Please share more details." to number 919876543210
+- Tooltip on hover: "Chat with us on WhatsApp" with left-pointing arrow
+- Pulse animation on hover (animate-ping with opacity-20)
+- Subtle bounce animation when first appearing after 3-second delay (spring transition)
+- Responsive: smaller on mobile (w-12 h-12) vs desktop (w-14 h-14)
+- Integrated into page.tsx: imported WhatsAppButton, rendered after CookieConsent
+
+### Enhanced Footer (`footer.tsx`)
+- Added Trust Badges row above main footer: "ISO 9001 Certified", "JIS Certified", "ISO 14001 Certified", "100+ Quality Checks" with Shield and CheckCircle icons
+- Added Newsletter section as 5th column: email input, Send button, "Join 10,000+ architects and homeowners" text, success state with CheckCircle
+- Newsletter subscriptions stored in localStorage under 'tostem-newsletter'
+- Changed footer layout from 4 columns to 5 columns (lg:grid-cols-5)
+- Made footer links use hash-based navigation via onClick with navigateTo (using window.__navigateTo global)
+- Added "Back to Top" text link with ArrowUp icon in bottom bar
+- All link elements changed from <a> to <button> for proper hash navigation
+- No indigo/blue-purple colors used; all Tostem brand colors maintained
+
+### General
+- All components use 'use client' directive
+- All use framer-motion for animations
+- All use Tostem brand colors (tostem-dark, tostem-blue, tostem-light-gray)
+- All responsive (mobile-first)
+- Lint passes with 0 errors
+- Dev server compiles successfully
+
+---
+Task ID: button-consistency
+Agent: Main Developer
+Task: Make "Get Free Quotation" and "Contact Us" buttons consistent across all pages
+
+Work Log:
+- Updated homepage CTA section: changed "Contact Us" button from outline variant (border-white text-white hover:bg-white hover:text-black) to solid blue style matching "Get Free Quotation" button (bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 with ArrowRight icon)
+- Added "Contact Us" button alongside "Get Free Quotation" in category-page.tsx CTA section (wrapped in flex container with gap-4)
+- Added "Contact Us" button alongside "Get Free Quotation" in series-page.tsx CTA section
+- Added "Contact Us" button alongside "Get Free Quotation" in design-page.tsx CTA section
+- All "Get Free Quotation" and "Contact Us" buttons now have identical styling: bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 with ArrowRight icon
+- Lint passes cleanly
+- Dev server compiling successfully
+- Created scheduled cron job (ID: 170902) for 15-minute QA intervals
+
+Stage Summary:
+- All CTA buttons across the site are now visually consistent
+- "Get Free Quotation" and "Contact Us" buttons share the same blue solid CTA style
+- Blog, Testimonials, Glossary, E-Catalogue pages already had consistent "Contact Us" button styling
+- No lint errors, dev server stable

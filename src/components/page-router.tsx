@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSiteStore } from '@/lib/store';
 import { pageRegistry } from '@/lib/tostem-data';
@@ -15,10 +15,10 @@ import TestimonialsPage from '@/components/pages/testimonials-page';
 import GlossaryPage from '@/components/pages/glossary-page';
 import TadaPage from '@/components/pages/tada-page';
 import HomePage from '@/components/pages/home-page';
+import EcataloguePage from '@/components/pages/ecatalogue-page';
 
 export default function PageRouter() {
   const { currentPage, setCurrentPage } = useSiteStore();
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Listen for hash changes
   useEffect(() => {
@@ -89,6 +89,8 @@ export default function PageRouter() {
         return <GlossaryPage />;
       case 'tada':
         return <TadaPage slug={currentPage} pageInfo={pageInfo} />;
+      case 'ecatalogue':
+        return <EcataloguePage />;
       default:
         return <GenericPage slug={currentPage} />;
     }
@@ -98,10 +100,10 @@ export default function PageRouter() {
     <AnimatePresence mode="wait">
       <motion.div
         key={currentPage}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isTransitioning ? 0 : 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -40 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         {renderPage()}
       </motion.div>
