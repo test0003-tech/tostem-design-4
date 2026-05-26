@@ -39,12 +39,24 @@ export default function SectionHeading({
       </span>
       <h2
         className={cn(
-          'text-3xl md:text-4xl lg:text-5xl font-black mt-3 mb-6',
+          'text-3xl md:text-4xl lg:text-5xl font-black mt-3 mb-4',
           light ? 'text-white' : 'text-tostem-dark'
         )}
       >
         {title}
       </h2>
+      {/* Decorative gradient underline */}
+      <div className={cn('flex mb-6', align === 'center' ? 'justify-center' : 'justify-start')}>
+        <div
+          className={cn(
+            'h-1 rounded-full',
+            light
+              ? 'bg-gradient-to-r from-tostem-blue/40 via-tostem-blue to-tostem-blue/40'
+              : 'bg-gradient-to-r from-tostem-blue/30 via-tostem-blue to-tostem-blue/30'
+          )}
+          style={{ width: '80px' }}
+        />
+      </div>
       {description && (
         <p
           className={cn(

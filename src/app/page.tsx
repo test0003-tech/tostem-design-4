@@ -3,6 +3,7 @@
 import PageRouter from '@/components/page-router';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import CookieConsent from '@/components/cookie-consent';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <PageRouter />
       </main>
       <Footer />
+      <CookieConsent />
     </div>
   );
 }
