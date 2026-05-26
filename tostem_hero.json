@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### Full Description of the Webpage:  \n\n#### 1. Hero Section  \n- **Hero Image**: The background of the hero section displays a **modern window design** (likely showcasing Tostem’s products). The image features sleek, dark-framed windows with a blurred, neutral-toned interior (possibly a room or building facade), emphasizing a contemporary aesthetic.  \n- **Text on the Hero**:  \n  - Top-left: The brand name **“TOSTEM”** in large, bold, dark gray/black typography.  \n  - Top-right: A tagline: **“Japanese Innovation in Window Design”** in smaller, lighter gray text.  \n- **Overlay/Modal**: A prominent white modal (popup) is centered over the hero image, titled **“BOOK AN APPOINTMENT”** in bold, dark gray text. The modal contains a form with the following fields:  \n  - Text input: *“Enter your name”*  \n  - Two text inputs side-by-side: *“Enter your email address”* (left) and *“Enter your mobile number”* (right)  \n  - Two inputs side-by-side: *“City”* (text input, left) and *“Select State”* (dropdown, right)  \n  - Two dropdowns side-by-side: *“Are you a”* (left) and *“You are looking for”* (right)  \n  - A black **“SUBMIT”** button (centered, white text)  \n  - A close button (**“×”**) in the top-right corner of the modal.  \n\n\n#### 2. Navigation Bar (Below Hero Header)  \nA dark gray navigation bar spans the width of the page, containing menu items (left-aligned) with dropdown arrows:  \n- **“ABOUT TOSTEM”**  \n- **“WHY TOSTEM”**  \n- **“OUR PRODUCTS”** (partially visible, truncated)  \n- **“CUSTOMER EXPERIENCE”**  \n- **“REACH US”**  \n\n\n#### 3. Side Buttons (Flanking the Hero)  \n- **Left Side**: A vertical black button with white text: **“DOWNLOAD BROCHURE”**.  \n- **Right Side**: A vertical black button with white text: **“ENQUIRE NOW”**.  \n\n\n#### 4. Cookie Consent Banner (Bottom of Page)  \nA white banner spans the bottom of the page with:  \n- Text: *“We use cookies on our website to give you the most relevant experience by remembering your preferences and repeat visits. By clicking “Accept”, you consent to the use of ALL the cookies.”* (gray text).  \n- Two buttons:  \n  - **“Cookie settings”** (gray text, left-aligned).  \n  - **“ACCEPT”** (black background, white text, right-aligned).  \n\n\n#### 5. Additional UI Elements  \n- A small circular icon (likely a phone icon) is visible in the top-right corner of the page, near the navigation bar.  \n\n\n### Summary of Visible Sections Below the Hero  \nNo full sections (e.g., product galleries, testimonials) are visible *below* the hero—only the navigation bar, side buttons, cookie banner, and the appointment modal overlay the hero image. The page appears to be in a “modal-open” state, with the appointment form as the primary interactive element.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1779830992,
+  "id": "20260527052937852843ca487d4e3e",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260527052937852843ca487d4e3e",
+  "usage": {
+    "completion_tokens": 702,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1031,
+    "prompt_tokens_details": {
+      "cached_tokens": 6
+    },
+    "total_tokens": 1733
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "The webpage appears to be the homepage of TOSTEM, a company focused on Japanese innovation in window design. At the top left, the company name \"TOSTEM\" is prominently displayed in large, bold, dark gray text. To the right of the company name, in smaller, lighter gray text, is the tagline \"Japanese Innovation in Window Design\".\n\nBelow the company name and tagline is a navigation menu bar with a dark gray background. The menu items, all in white text, are arranged horizontally from left to right: \"ABOUT TOSTEM\" with a dropdown arrow, \"WHY TOSTEM\" with a dropdown arrow, \"OUR PRODUCT\" with a dropdown arrow, \"DRIVING EXPERIENCE\" with a dropdown arrow, \"TADA\" with a dropdown arrow, \"KNOWLEDGE EXPERIENCE\" with a dropdown arrow, and \"REACH US\" with a dropdown arrow.\n\nThe main content area of the page features a large, full-width image showing a person in a suit standing with their back to the viewer, looking out through large floor-to-ceiling windows at a clear blue sky with some clouds. This image occupies most of the page's height.\n\nOn the left side of the page, vertically aligned, is a black rectangular button with white text that reads \"DOWNLOAD BROCHURE\". On the right side, there is another black rectangular button with white text that reads \"ENQUIRE NOW\". Additionally, there is a circular button with a phone icon in the top right corner of the page.\n\nAt the bottom of the page, there is a cookie consent banner with a light gray background. The text in this banner reads: \"We use cookies on our website to give you the most relevant experience by remembering your preferences and repeat visits. By clicking \"Accept\", you consent to the use of ALL the cookies.\" To the right of this text are two buttons: \"Cookie settings\" and \"ACCEPT\".",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1779831033,
+  "id": "20260527053023025a1164de1343c1",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260527053023025a1164de1343c1",
+  "usage": {
+    "completion_tokens": 392,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1006,
+    "prompt_tokens_details": {
+      "cached_tokens": 5
+    },
+    "total_tokens": 1398
+  }
+}

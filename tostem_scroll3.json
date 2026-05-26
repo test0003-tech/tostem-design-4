@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "The webpage appears to be the homepage of TOSTEM, a company focused on Japanese innovation in window design. At the top left, the company name \"TOSTEM\" is prominently displayed in large, bold text. To the right of the company name, there is a tagline that reads \"Japanese Innovation in Window Design\". \n\nBelow the company name and tagline, there is a navigation menu with several options. From left to right, the menu items are: \"ABOUT TOSTEM\", \"WHY TOSTEM\", \"OUR PRODUCT\", \"DRIVING EXPERIENCE\", \"TADA\", \"KNOWLEDGE EXPERIENCE\", and \"REACH US\". Each of these menu items has a small downward-pointing arrow next to it, indicating that they are dropdown menus.\n\nThe main content area of the page features a large, high-quality image that takes up most of the screen. The image shows a person in a suit walking towards a set of large, floor-to-ceiling windows that offer a view of the ocean. The windows appear to be part of a modern, minimalist interior space.\n\nOn the left side of the page, there is a vertical black bar with white text that reads \"DOWNLOAD BROCHURE\". On the right side, there is another vertical black bar with white text that reads \"ENQUIRE NOW\". \n\nAt the bottom of the page, there is a cookie consent banner. The banner contains a message that explains the use of cookies on the website and provides options to manage cookie settings or accept all cookies. The message reads: \"We use cookies on our website to give you the most relevant experience by remembering your preferences and repeat visits. By clicking \"Accept\", you consent to the use of ALL the cookies.\" There are two buttons in the banner: \"Cookie settings\" and \"ACCEPT\".\n\nIn the top right corner of the page, there is a small icon that appears to be a phone, possibly a contact or call button. There is also a small upward-pointing arrow in the top right corner, which might be a scroll-to-top button.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1779831057,
+  "id": "202605270530488b8634cb42404e65",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "202605270530488b8634cb42404e65",
+  "usage": {
+    "completion_tokens": 421,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1010,
+    "prompt_tokens_details": {
+      "cached_tokens": 5
+    },
+    "total_tokens": 1431
+  }
+}

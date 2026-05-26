@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### Visible Text Headings and Content:  \n1. **Brand/Header Text**:  \n   - \"TOSTEM\" (logo)  \n   - \"Japanese Innovation in Window Design\" (tagline)  \n\n2. **Navigation Menu (Top Bar)**:  \n   - \"ABOUT TOSTEM\"  \n   - \"WHY TOSTEM\"  \n   - \"OUR PRODUCTS\"  \n   - \"TOSTEM EXPERIENCE\"  \n   - \"KNOWLEDGE\"  \n   - \"REACH US\"  \n\n3. **Main Section Heading**:  \n   - \"Premium Aluminium\"  \n   - \"ndows & Doors\" (likely \"Windows & Doors\" with a partial display)  \n\n4. **Descriptive Text**:  \n   - \"ed with cutting - edge technology, our system windows offer unmatched durability, thermal insulation, and soundproofing.\" (partial sentence, likely \"Engineered with cutting - edge technology...\")  \n\n5. **Call - to - Action Buttons/Links**:  \n   - \"Why Tostem\" (button with arrow)  \n   - \"ENQUIRE NOW\" (button)  \n   - \"DOWNLOAD BROCHURE\" (left - side text)  \n\n6. **Notification/Alert**:  \n   - \"2 Issues\" (with a close icon)",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1779832534,
+  "id": "202605270555296fd473aa95f04604",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "202605270555296fd473aa95f04604",
+  "usage": {
+    "completion_tokens": 267,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 992,
+    "prompt_tokens_details": {
+      "cached_tokens": 5
+    },
+    "total_tokens": 1259
+  }
+}
