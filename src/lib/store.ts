@@ -25,9 +25,9 @@ interface SiteState {
   openAppointmentModal: () => void;
   closeAppointmentModal: () => void;
 
-  // Current section/page
-  currentSection: string;
-  setCurrentSection: (section: string) => void;
+  // Current page for hash-based routing
+  currentPage: string;
+  setCurrentPage: (page: string) => void;
 
   // Scrolled state
   isScrolled: boolean;
@@ -60,9 +60,9 @@ export const useSiteStore = create<SiteState>((set) => ({
   openAppointmentModal: () => set({ appointmentModalOpen: true }),
   closeAppointmentModal: () => set({ appointmentModalOpen: false }),
 
-  // Current section
-  currentSection: 'home',
-  setCurrentSection: (section) => set({ currentSection: section }),
+  // Current page - hash-based routing
+  currentPage: 'home',
+  setCurrentPage: (page) => set({ currentPage: page }),
 
   // Scrolled state
   isScrolled: false,
