@@ -20,6 +20,11 @@ interface SiteState {
   openModal: (type: 'quotation' | 'brochure' | 'contact') => void;
   closeModal: () => void;
 
+  // Appointment modal state
+  appointmentModalOpen: boolean;
+  openAppointmentModal: () => void;
+  closeAppointmentModal: () => void;
+
   // Current section/page
   currentSection: string;
   setCurrentSection: (section: string) => void;
@@ -49,6 +54,11 @@ export const useSiteStore = create<SiteState>((set) => ({
   modalType: null,
   openModal: (type) => set({ modalOpen: true, modalType: type }),
   closeModal: () => set({ modalOpen: false, modalType: null }),
+
+  // Appointment modal state
+  appointmentModalOpen: false,
+  openAppointmentModal: () => set({ appointmentModalOpen: true }),
+  closeAppointmentModal: () => set({ appointmentModalOpen: false }),
 
   // Current section
   currentSection: 'home',

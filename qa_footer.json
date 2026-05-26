@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Yes, the footer is visible. Here’s a description and QA check:  \n\n### Footer Description:  \nThe footer has a **dark background** and is divided into four sections:  \n1. **Left Section**:  \n   - Brand name “TOSTEM” (logo) + tagline “Japanese Innovation in Window”.  \n   - Brief company intro: “Tostem India brings world-class Japanese aluminium window & door technology to India, offering premium quality, durability, and energy efficiency.”  \n   - Social media icons (Instagram, YouTube, LinkedIn, Twitter).  \n\n2. **Quick Links Section**:  \n   - Links: *About Tostem, Why Tostem, Our Products, Tostem Experience, Knowledge, Reach Us*.  \n\n3. **Products Section**:  \n   - Links: *Windows, Doors, Interior, Exterior, ATIS Series, GRANTS Series, WE-70 Series, WE+ Series*.  \n\n4. **Contact Us Section**:  \n   - Address: “Tostem India, LIXIL Window Systems India Pvt. Ltd., 4th Floor, Tower B, Building No. 5, Cyber Hub, Gurugram, Haryana 122002” (note: address is partially cut off in the screenshot but visible).  \n   - Phone: `+91 1800-123-4567`  \n   - Email: `info@tostemindia.com`  \n   - Hours: “Mon - Sat: 9:00 AM - 6:00 PM”  \n   - CTA button: *“GET A QUOTATION”* (blue button).  \n\n\n### QA Issues Check:  \n- **Address Truncation**: The address is partially cut off (e.g., “Har” instead of “Haryana”)—this is a **content accuracy issue** (incomplete address).  \n- **Link Consistency**: All links (Quick Links, Products) appear to follow standard formatting (no broken links visible, but full testing would require clicking).  \n- **CTA Clarity**: “GET A QUOTATION” is clear and prominent.  \n- **Copyright/Policy Links**: At the very bottom, there’s a copyright notice (*“— LIXIL Window Systems India Pvt. Ltd. All rights reserved.”*) and links for *Privacy Policy, Terms & Conditions* (standard footer elements, no obvious issues).  \n\n\nOverall, the footer is structured logically, but the truncated address needs correction for completeness.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1779832947,
+  "id": "2026052706021513047f598da24021",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "2026052706021513047f598da24021",
+  "usage": {
+    "completion_tokens": 511,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 998,
+    "prompt_tokens_details": {
+      "cached_tokens": 6
+    },
+    "total_tokens": 1509
+  }
+}
