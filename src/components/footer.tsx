@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin, Twitter, ArrowUp, Shield, CheckCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,8 @@ import {
   footerSocial,
   siteMetadata,
 } from '@/lib/tostem-data';
+
+const studioCities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune'];
 
 const trustBadges = [
   { label: 'ISO 9001 Certified', icon: Shield },
@@ -62,6 +65,34 @@ export default function Footer() {
 
   return (
     <footer className="bg-tostem-footer text-gray-300">
+      {/* Find a Studio Banner */}
+      <div className="bg-tostem-blue text-white">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <MapPin className="w-6 h-6 flex-shrink-0" />
+              <div>
+                <h3 className="text-lg font-bold">Find a Studio Near You</h3>
+                <p className="text-sm text-white/80">Visit our studios across India</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {studioCities.map((city) => (
+                <motion.button
+                  key={city}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigateTo('contact')}
+                  className="px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 text-white text-sm font-medium transition-colors duration-200 border border-white/20 hover:border-white/40"
+                >
+                  {city}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Trust Badges Row */}
       <div className="border-b border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5">
@@ -271,15 +302,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* Scroll to top button */}
-      <button
-        onClick={scrollToTop}
-        className="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-tostem-blue text-white flex items-center justify-center shadow-lg hover:bg-tostem-blue-light transition-colors z-40"
-        aria-label="Scroll to top"
-      >
-        <ArrowUp className="w-4 h-4" />
-      </button>
     </footer>
   );
 }

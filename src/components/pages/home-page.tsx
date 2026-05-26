@@ -20,8 +20,9 @@ import {
   aboutData, designsData, faqData, blogPosts, testimonials,
   galleryData, tadaAwards, glossaryTerms, channelPartners,
 } from '@/lib/tostem-data';
-import type { WhyTostemItem } from '@/lib/tostem-data';
+import type { WhyTostemItem, DesignData } from '@/lib/tostem-data';
 import SectionHeading from '@/components/section-heading';
+import { DesignQuickViewModal, DesignQuickViewButton } from '@/components/design-quick-view';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -92,7 +93,7 @@ function HeroStat({ value, suffix, label }: { value: number; suffix: string; lab
       transition={{ duration: 0.5 }}
       className="text-center"
     >
-      <div className="text-3xl md:text-4xl font-black text-white">
+      <div className="text-4xl md:text-5xl font-black text-white">
         {count}<span className="text-tostem-blue">{suffix}</span>
       </div>
       <div className="text-xs md:text-sm text-white/60 mt-1 font-medium">{label}</div>
@@ -119,6 +120,8 @@ export default function HomePage() {
   const [galleryFilter, setGalleryFilter] = useState<string>('All');
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [quickViewDesign, setQuickViewDesign] = useState<DesignData | null>(null);
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -179,10 +182,15 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
             <motion.div key={currentSlide} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-2">{heroSlides[currentSlide].title}</h1>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-white/90 mb-6">{heroSlides[currentSlide].subtitle}</h2>
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="mb-4">
+                <Badge className="bg-white/10 text-white/80 backdrop-blur-sm border border-white/20 text-xs px-4 py-1.5 rounded-full">
+                  <span className="mr-1.5">★</span> 50+ Years of Japanese Craftsmanship
+                </Badge>
+              </motion.div>
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-2 drop-shadow-lg">{heroSlides[currentSlide].title}</h1>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white/90 mb-6">{heroSlides[currentSlide].subtitle}</h2>
               <p className="text-base md:text-lg text-white/70 leading-relaxed mb-8 max-w-xl">{heroSlides[currentSlide].description}</p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('aluminium-doors-design-prices')}>
@@ -219,8 +227,8 @@ export default function HomePage() {
       </section>
 
       {/* ===== ANIMATED COUNTER STATS (below hero) ===== */}
-      <section className="bg-tostem-dark py-8 md:py-10">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+      <section className="bg-tostem-dark py-8 md:py-10 border-t border-white/10">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <HeroStat value={50} suffix="+" label="Years Legacy" />
             <HeroStat value={10} suffix="M+" label="Windows Installed" />
@@ -277,13 +285,14 @@ export default function HomePage() {
           <SectionHeading label="Why Tostem" title="The Tostem Advantage" description="Discover why architects, builders, and homeowners across India trust Tostem." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyTostemItems.map((item: WhyTostemItem) => (
-              <motion.div key={item.title} variants={itemVariants} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] hover:border-tostem-blue/30 border border-transparent transition-all duration-300 group cursor-pointer" onClick={() => {
+              <motion.div key={item.title} variants={itemVariants} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] border border-transparent hover:border-l-[4px] hover:border-l-tostem-blue hover:border-t-tostem-blue/30 hover:border-r-tostem-blue/30 hover:border-b-tostem-blue/30 transition-all duration-300 group cursor-pointer relative overflow-hidden" onClick={() => {
                 const slugMap: Record<string, string> = { 'Japanese Innovation': 'japanese-innovation', 'Pre-Engineered System': 'pre-engineered-system-windows', 'Quality Assurance': 'quality-assurance-and-services', 'Anodized Aluminum': 'anodized-aluminum-windows-surface-colour-protection', 'Soundproof Insulated': 'soundproof-insulated-doors-and-windows', 'System Aluminum Windows': 'system-aluminum-windows' };
                 navigateTo(slugMap[item.title] || 'japanese-innovation');
               }}>
                 <div className="text-tostem-blue mb-4 group-hover:scale-110 transition-transform">{iconMap[item.icon]}</div>
                 <h3 className="text-lg font-bold text-tostem-dark mb-2">{item.title}</h3>
                 <p className="text-sm text-tostem-text-light leading-relaxed">{item.detailed}</p>
+                <div className="mt-4 flex items-center gap-1 text-tostem-blue text-sm font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Learn More <ArrowRight className="w-3 h-3" /></div>
               </motion.div>
             ))}
           </motion.div>
@@ -358,7 +367,9 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Products" title="Premium Aluminium Solutions" description="From elegant windows to grand entrances, explore our comprehensive range." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categoryData.map((cat, i) => (
+            {categoryData.map((cat, i) => {
+              const priceHints: Record<string, string> = { windows: '₹4,500', doors: '₹5,200', interior: '₹3,800', exterior: '₹6,100' };
+              return (
               <motion.a key={cat.id} href={`#/${cat.id}`} onClick={(e) => { e.preventDefault(); navigateTo(cat.href); }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="group relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl hover:scale-[1.03] border-2 border-transparent hover:border-tostem-blue/30 transition-all duration-300">
                 <div className="aspect-[4/5] relative">
                   <div className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style={{ backgroundImage: `url(${cat.image})` }} />
@@ -367,11 +378,13 @@ export default function HomePage() {
                     <span className="text-xs text-tostem-blue font-bold tracking-wider uppercase">{cat.count} Products</span>
                     <h3 className="text-xl font-bold text-white mt-1">{cat.name}</h3>
                     <p className="text-sm text-white/70 mt-2 line-clamp-2">{cat.description}</p>
-                    <div className="mt-3 flex items-center gap-1 text-tostem-blue text-sm font-medium group-hover:gap-2 transition-all">Explore <ArrowRight className="w-3 h-3" /></div>
+                    <span className="text-xs text-tostem-blue/80 font-semibold mt-1 block">Starting {priceHints[cat.id] || '₹4,500'}</span>
+                    <div className="mt-3 flex items-center gap-1 text-tostem-blue text-sm font-medium group-hover:gap-2 transition-all explore-pulse">Explore <ArrowRight className="w-3 h-3" /></div>
                   </div>
                 </div>
               </motion.a>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -383,11 +396,11 @@ export default function HomePage() {
           <Tabs defaultValue="atis" className="w-full">
             <TabsList className="mx-auto mb-8 bg-tostem-light-gray rounded-xl p-1 h-auto flex-wrap gap-1">
               {seriesData.map((series) => (
-                <TabsTrigger key={series.id} value={series.id} className="px-6 py-3 text-sm font-semibold data-[state=active]:bg-tostem-blue data-[state=active]:text-white rounded-lg">{series.name}</TabsTrigger>
+                <TabsTrigger key={series.id} value={series.id} className="px-6 py-3 text-sm font-semibold data-[state=active]:bg-tostem-blue data-[state=active]:text-white rounded-lg data-[state=active]:border-b-2 data-[state=active]:border-tostem-blue transition-all duration-300">{series.name}</TabsTrigger>
               ))}
             </TabsList>
             {seriesData.map((series) => (
-              <TabsContent key={series.id} value={series.id}>
+              <TabsContent key={series.id} value={series.id} className="transition-all duration-300">
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div className="relative rounded-xl overflow-hidden aspect-[16/10] cursor-pointer" onClick={() => navigateTo(`${series.id}-windows-doors-series`)}>
                     <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${series.image})` }} />
@@ -434,6 +447,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style={{ backgroundImage: `url(${design.image})` }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-3 left-3"><Badge className="bg-tostem-blue/90 text-white text-[10px]">{design.category}</Badge></div>
+                  <DesignQuickViewButton onClick={(e) => { e.stopPropagation(); setQuickViewDesign(design); setQuickViewOpen(true); }} />
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <h3 className="text-sm font-bold text-white leading-tight">{design.name}</h3>
                     <p className="text-xs text-white/60 mt-1 line-clamp-2">{design.description}</p>
@@ -696,15 +710,35 @@ export default function HomePage() {
       {/* ===== CTA ===== */}
       <section className="py-16 md:py-24 bg-tostem-dark relative overflow-hidden">
         <div className="absolute inset-0 opacity-10"><div className="absolute -top-20 -right-20 w-96 h-96 bg-tostem-blue rounded-full blur-3xl" /><div className="absolute -bottom-20 -left-20 w-96 h-96 bg-tostem-blue rounded-full blur-3xl" /></div>
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10 text-center">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-4">Ready to Transform Your Home?</h2>
-          <p className="text-lg text-white/60 max-w-2xl mx-auto mb-8">Get a free consultation and quotation for premium Tostem aluminium windows and doors.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>
-            <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Contact Us <ArrowRight className="w-4 h-4 ml-2" /></Button>
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10 text-center">
+          {/* Decorative vertical lines */}
+          <div className="flex items-center justify-center gap-8 mb-8">
+            <div className="hidden md:block w-px h-24 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-4">Ready to Transform Your Home?</h2>
+              <p className="text-lg text-white/60 max-w-2xl mx-auto mb-8">Get a free consultation and quotation for premium Tostem aluminium windows and doors.</p>
+            </div>
+            <div className="hidden md:block w-px h-24 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+          </div>
+          {/* Buttons with glow */}
+          <div className="flex flex-wrap justify-center gap-4 relative">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-64 h-16 bg-tostem-blue/20 rounded-full blur-2xl" />
+            </div>
+            <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 relative z-10" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>
+            <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 relative z-10" onClick={() => navigateTo('contact')}>Contact Us <ArrowRight className="w-4 h-4 ml-2" /></Button>
           </div>
         </div>
       </section>
+
+      {/* Quick View Modal */}
+      {quickViewDesign && (
+        <DesignQuickViewModal
+          design={quickViewDesign}
+          open={quickViewOpen}
+          onOpenChange={setQuickViewOpen}
+        />
+      )}
     </div>
   );
 }

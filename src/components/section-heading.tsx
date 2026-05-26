@@ -31,10 +31,14 @@ export default function SectionHeading({
     >
       <span
         className={cn(
-          'text-xs font-bold uppercase tracking-[0.2em]',
+          'text-xs font-bold uppercase tracking-[0.2em] inline-flex items-center gap-2',
           light ? 'text-tostem-blue' : 'text-tostem-blue'
         )}
       >
+        <span className={cn(
+          'w-[3px] h-4 rounded-full inline-block',
+          light ? 'bg-tostem-blue' : 'bg-tostem-blue'
+        )} />
         {label}
       </span>
       <h2
@@ -54,7 +58,7 @@ export default function SectionHeading({
               ? 'bg-gradient-to-r from-tostem-blue/40 via-tostem-blue to-tostem-blue/40'
               : 'bg-gradient-to-r from-tostem-blue/30 via-tostem-blue to-tostem-blue/30'
           )}
-          style={{ width: '80px' }}
+          style={{ width: '100px' }}
         />
       </div>
       {description && (

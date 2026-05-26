@@ -5,11 +5,11 @@ Building a React/Next.js 16 clone of the Tostem India website (https://www.toste
 
 ## Current Project Status
 - **Status**: Stable, fully functional with 60+ pages
-- **Homepage**: 8/10 visual quality (VLM rated)
+- **Homepage**: 8/10 visual quality (VLM rated, improved from 7/10)
 - **Subpages**: 7-8/10 visual quality across all page types
 - **Lint**: Clean, no errors
 - **Dev Server**: Running on port 3000, all pages HTTP 200
-- **Features**: Search overlay, cookie consent, animated counters, process timeline, newsletter, channel partners marquee, lightbox gallery, reading progress bar, table of contents auto-generation
+- **Features**: Search overlay, cookie consent, animated counters, process timeline, newsletter, channel partners marquee, lightbox gallery, reading progress bar, table of contents auto-generation, dark mode, page transitions, floating CTA bar, scroll progress indicator, product quick view modal, back-to-top button, WhatsApp chat, Find a Studio section, e-catalogue with form capture
 
 ## Current Goals / Completed Modifications
 1. ✅ Core infrastructure with mega-menu navigation and hash-based routing
@@ -19,20 +19,28 @@ Building a React/Next.js 16 clone of the Tostem India website (https://www.toste
 5. ✅ Search overlay with real-time filtering across all pages
 6. ✅ Cookie consent with preferences modal
 7. ✅ Enhanced subpages: Gallery (masonry + lightbox), Blog (featured post + categories), Testimonials (stats + filters), Glossary (search + sticky nav), Contact (validation + FAQ), Generic (TOC + progress bar)
+8. ✅ Dark mode toggle with next-themes
+9. ✅ Page transitions with slide+fade animation
+10. ✅ E-Catalogue page with download form capture
+11. ✅ WhatsApp floating chat button
+12. ✅ Enhanced footer with trust badges, newsletter, Find a Studio
+13. ✅ Consistent CTA button styling across all pages
+14. ✅ Styling improvements: hero typography, nav spacing, accent bars, decorative elements
+15. ✅ New features: Floating CTA bar, scroll progress, quick view modal, back-to-top button
 
 ## Unresolved Issues / Risks
 1. **API dependency**: Generic pages fetch content from the live Tostem site via server-side API; if the site is down, fallback content is shown
 2. **Images**: Using Unsplash URLs as placeholders; real Tostem images would improve authenticity
-3. **Mobile navigation**: Could be further refined with smoother animations
-4. **Performance**: Some pages with heavy animations could benefit from lazy loading
+3. **Performance**: Some pages with heavy animations could benefit from lazy loading
+4. **Cookie banner**: VLM noted it could be more prominent with higher contrast
 
 ## Priority Recommendations for Next Phase
-1. Replace Unsplash images with actual Tostem product images
-2. Add product comparison feature
-3. Implement e-catalogue / brochure download with form capture
-4. Add location-based "Find a Studio" integration
-5. Implement dark mode toggle
-6. Add page transition animations
+1. Replace Unsplash images with actual Tostem product images from tostemindia.com
+2. Add product comparison feature (side-by-side comparison of designs)
+3. Implement "Find a Studio" interactive map integration
+4. Add animated page loading skeleton screens
+5. Implement keyboard navigation for mega menu
+6. Add micro-interactions on form fields (floating labels, animated validation)
 
 ---
 
@@ -518,4 +526,166 @@ Stage Summary:
 - All CTA buttons across the site are now visually consistent
 - "Get Free Quotation" and "Contact Us" buttons share the same blue solid CTA style
 - Blog, Testimonials, Glossary, E-Catalogue pages already had consistent "Contact Us" button styling
+- No lint errors, dev server stable
+
+---
+
+Task ID: QA-Styling-Round4
+Agent: Full-stack Developer
+Task: Improve styling across the site based on VLM QA analysis (rated 6-7/10)
+
+Work Log:
+
+### 1. Homepage Hero Section (`home-page.tsx`)
+- Changed hero content wrapper padding from `px-4 lg:px-8` to `px-6 lg:px-12` to prevent text clipping
+- Changed h2 subtitle from `font-light` to `font-medium` for better typography contrast with h1
+- Added `drop-shadow-lg` to h1 for improved readability over hero images
+- Added decorative animated badge above hero title: "★ 50+ Years of Japanese Craftsmanship" with `bg-white/10 text-white/80 backdrop-blur-sm border border-white/20` styling, using Badge component with framer-motion entrance animation
+
+### 2. Navigation Spacing (`globals.css`)
+- Updated `.nav-item` class from `px-4 py-3` to `px-5 py-3` for more horizontal breathing room between nav items
+
+### 3. SectionHeading Component (`section-heading.tsx`)
+- Component already supported `light` prop for dark backgrounds (kept as-is)
+- Added subtle 3px left accent bar (tostem-blue, rounded) before label text using inline-flex with gap-2
+- Increased gradient underline width from 80px to 100px
+
+### 4. Counter Stats Section (`home-page.tsx`)
+- Added `border-t border-white/10` top border separator
+- Increased stat values from `text-3xl md:text-4xl` to `text-4xl md:text-5xl`
+- Updated section padding to `px-6 lg:px-12` to match hero
+
+### 5. Why Tostem Cards (`home-page.tsx`)
+- Added left accent bar on hover: 4px wide tostem-blue border-left with other borders at tostem-blue/30
+- Added "Learn More →" link at bottom of each card that appears on hover with opacity and translateY transition
+
+### 6. Product Cards (`home-page.tsx`)
+- Added "Starting ₹X,XXX" price hint text below description in each product card (windows: ₹4,500, doors: ₹5,200, interior: ₹3,800, exterior: ₹6,100)
+- Added subtle pulse animation on "Explore" text link using custom `.explore-pulse` CSS class
+
+### 7. CTA Section (`home-page.tsx`)
+- Added two decorative vertical lines flanking the CTA text (w-px h-24, gradient from transparent via white/20 to transparent, hidden on mobile)
+- Added subtle glow effect behind buttons (w-64 h-16 bg-tostem-blue/20 rounded-full blur-2xl)
+
+### 8. Series Tab Section (`home-page.tsx`)
+- Added bottom border indicator on active tab: `data-[state=active]:border-b-2 data-[state=active]:border-tostem-blue`
+- Added `transition-all duration-300` to TabsTrigger for smooth transitions
+- Added `transition-all duration-300` to TabsContent for smooth content switching
+
+### 9. Global CSS (`globals.css`)
+- Added `.glass-card` utility class: `bg-white/80 backdrop-blur-md border border-white/20 rounded-xl shadow-sm`
+- Added `.tostem-gradient-text` utility: `bg-gradient-to-r from-tostem-blue to-tostem-blue-light bg-clip-text text-transparent`
+- Added `.explore-pulse` keyframe animation (opacity pulse 1→0.6→1 over 2s)
+- All new classes use `@apply` directive for consistency
+
+### General
+- All components use 'use client' directive
+- All use Tostem brand colors (tostem-dark: #333, tostem-blue: #2E5A87, tostem-blue-light: #3a6fa3, tostem-light-gray: #f5f5f5)
+- No indigo/blue-purple colors used
+- Lint passes with 0 errors
+- Dev server compiles successfully (HTTP 200)
+
+Stage Summary:
+- Homepage hero section significantly improved with better padding, typography hierarchy, decorative badge, and drop shadow
+- Navigation has more breathing room with updated padding
+- SectionHeading enhanced with left accent bar and wider gradient underline
+- Counter stats section more prominent with larger values and top border
+- Why Tostem cards have richer hover effects with accent bar and Learn More link
+- Product cards now show price hints and animated Explore text
+- CTA section has decorative vertical lines and button glow effect
+- Series tabs have active state border indicator and smooth transitions
+- Two new utility classes added to globals.css for reuse across the site
+
+---
+
+Task ID: QA-Features-Round4
+Agent: Full-stack Developer
+Task: Add new features and functionality (5 features)
+
+Work Log:
+
+### Feature 1: Sticky Floating CTA Bar (`floating-cta-bar.tsx`)
+- Created `/home/z/my-project/src/components/floating-cta-bar.tsx`
+- Slim bar (h-14) fixed at bottom of viewport with: "Get Free Quotation" button (tostem-blue solid), "Contact Us" button (tostem-blue solid), Phone number link on the right
+- Styling: `bg-tostem-dark/95 backdrop-blur-md border-t border-white/10`
+- Only visible on mobile/tablet (below lg breakpoint) using `lg:hidden`
+- Smooth slide-up animation with framer-motion spring (stiffness: 300, damping: 30)
+- Uses IntersectionObserver to detect when hero section is out of view (show) and when footer is in view (hide)
+- AnimatePresence for smooth enter/exit transitions
+- Phone number shows "Call" on mobile, full number on sm+ screens
+- Integrated into `page.tsx` after WhatsAppButton
+
+### Feature 2: Scroll Progress Indicator (`scroll-progress.tsx`)
+- Created `/home/z/my-project/src/components/scroll-progress.tsx`
+- Thin (2px) progress bar at the very top of the page
+- Uses `position: fixed` with z-[60] (above header)
+- Shows reading progress based on scroll position using passive scroll event listener
+- Uses tostem-blue color with smooth width transition (duration-150 ease-out)
+- Integrates with `page.tsx` to show on all pages (not just generic)
+- Rendered before Header in the layout
+
+### Feature 3: Product Quick View Modal (`design-quick-view.tsx`)
+- Created `/home/z/my-project/src/components/design-quick-view.tsx`
+- On each design card hover, shows a small "Quick View" button with Eye icon (top-right corner)
+  - White/90 background that transitions to tostem-blue on hover
+  - Opacity 0 → 100 on group-hover with smooth transition
+  - Uses e.stopPropagation() to prevent card click navigation
+- Quick View Dialog modal (shadcn Dialog) showing:
+  - Design image with gradient overlay and category badge
+  - Design name and description (DialogTitle, DialogDescription)
+  - Key Features (first 3 from category-mapped feature list)
+  - Available Series (mapped by category, shown as Badge pills)
+  - "View Full Details" button → navigates to design page
+  - "Get Quotation" button → navigates to contact page
+- Framer-motion animation for modal entry (opacity + y translate)
+- Category-to-features and category-to-series mapping for all 6 categories
+- Added DesignData import to home-page.tsx
+- Added quickViewDesign and quickViewOpen state to HomePage component
+- Integrated DesignQuickViewButton into designs grid cards
+- Integrated DesignQuickViewModal at end of HomePage return
+
+### Feature 4: Back to Top Floating Button (`back-to-top.tsx`)
+- Created `/home/z/my-project/src/components/back-to-top.tsx`
+- Position: bottom-right corner (right-4 md:right-6, bottom-20 md:bottom-24)
+- Only appears after scrolling down 500px (passive scroll listener)
+- Smooth scroll behavior: `window.scrollTo({ top: 0, behavior: 'smooth' })`
+- Circular button (w-11 h-11) with ArrowUp icon from lucide-react
+- Styling: `bg-tostem-dark/80 backdrop-blur-sm text-white hover:bg-tostem-blue`
+- Fade in/out animation with framer-motion (opacity + scale)
+- Does NOT overlap with WhatsApp button (which is bottom-left)
+- Integrated into `page.tsx`
+- Replaced old footer scroll-to-top button (removed fixed button from footer.tsx)
+
+### Feature 5: Enhanced Footer with "Find a Studio" Section (`footer.tsx`)
+- Added "Find a Studio Near You" full-width banner above trust badges
+- Banner styling: `bg-tostem-blue text-white`
+- MapPin icon + title "Find a Studio Near You" + subtitle "Visit our studios across India"
+- 6 city pills/buttons: Mumbai, Delhi, Bangalore, Chennai, Hyderabad, Pune
+- Each city button: `px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 hover:border-white/40`
+- Clicking any city navigates to contact page using navigateTo
+- Subtle animation on city pills hover: `motion.button` with whileHover scale 1.05 and whileTap scale 0.95
+- Added framer-motion import to footer
+- Removed old fixed scroll-to-top button from footer (replaced by BackToTop component)
+
+### Integration (`page.tsx`)
+- Added imports for ScrollProgress, FloatingCTABar, BackToTop
+- Render order: ScrollProgress (fixed z-60) → Header → main → Footer → CookieConsent → WhatsAppButton → FloatingCTABar → BackToTop
+
+### General
+- All new components use 'use client' directive
+- All use Tostem brand colors (tostem-dark: #333, tostem-blue: #2E5A87, tostem-blue-light: #3a6fa3, tostem-light-gray: #f5f5f5)
+- No indigo/blue-purple colors used
+- All use shadcn/ui components (Button, Badge, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter)
+- All responsive (mobile-first)
+- All use framer-motion for animations
+- Lint passes with 0 errors
+- Dev server compiles successfully (HTTP 200)
+
+Stage Summary:
+- 5 new features added: Floating CTA Bar, Scroll Progress, Quick View Modal, Back to Top, Find a Studio Footer
+- All features integrated into page.tsx and home-page.tsx
+- Footer enhanced with "Find a Studio" banner with 6 city pills
+- Design cards now have Quick View button with modal popup
+- Mobile experience improved with sticky CTA bar
+- Reading progress shown globally via thin top bar
 - No lint errors, dev server stable

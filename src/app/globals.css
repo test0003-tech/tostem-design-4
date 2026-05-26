@@ -146,7 +146,7 @@
 
   /* Nav item styling */
   .nav-item {
-    @apply relative px-4 py-3 text-sm font-medium text-white tracking-wide uppercase transition-colors duration-200 cursor-pointer;
+    @apply relative px-5 py-3 text-sm font-medium text-white tracking-wide uppercase transition-colors duration-200 cursor-pointer;
   }
   .nav-item:hover {
     @apply bg-white/10;
@@ -189,6 +189,25 @@
     background: #777;
   }
 }
+
+  /* Glass card utility */
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-xl shadow-sm;
+  }
+
+  /* Tostem gradient text utility */
+  .tostem-gradient-text {
+    @apply bg-gradient-to-r from-tostem-blue to-tostem-blue-light bg-clip-text text-transparent;
+  }
+
+  /* Explore pulse animation */
+  @keyframes explore-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .explore-pulse {
+    animation: explore-pulse 2s ease-in-out infinite;
+  }
 
 /* Smooth scroll */
 html {
