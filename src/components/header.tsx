@@ -227,7 +227,7 @@ export default function Header() {
           </div>
         )}
         {/* Top Bar */}
-        <div className={`bg-white dark:bg-[#1a1a1a] border-b border-gray-100 dark:border-white/10 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
+        <div className={`bg-white/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md border-b border-gray-100 dark:border-white/10 transition-all duration-500 ${scrolled ? 'py-1.5 shadow-sm' : 'py-3'}`}>
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 flex items-center justify-between">
             <a href="#" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }} className="flex items-center gap-3 group">
               <span className="text-2xl md:text-3xl font-black tracking-[0.15em] text-tostem-dark group-hover:text-tostem-blue transition-colors">TOSTEM</span>
@@ -262,7 +262,9 @@ export default function Header() {
         </div>
 
         {/* Navigation Bar - Desktop */}
-        <nav ref={navRef} className={`hidden lg:block bg-tostem-dark transition-all duration-300 ${scrolled ? 'shadow-lg' : ''}`} onMouseLeave={() => setActiveDropdown(null)} role="menubar" aria-label="Main navigation">
+        <nav ref={navRef} className={`hidden lg:block bg-tostem-dark transition-all duration-500 ${scrolled ? 'shadow-lg backdrop-blur-md' : ''} relative`} onMouseLeave={() => setActiveDropdown(null)} role="menubar" aria-label="Main navigation">
+          {/* Subtle gradient border bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-tostem-blue/30 to-transparent" />
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <div className="flex items-center justify-center">
               {mainNavigation.map((section, index) => (

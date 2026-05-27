@@ -321,7 +321,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-white/10 card-shine relative"
+                className="group bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-white/10 card-shine tilt-hover gradient-border-hover relative"
               >
                 {isPopular && (
                   <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">
@@ -373,7 +373,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="group p-6 rounded-xl bg-tostem-light-gray dark:bg-[#1a1a1a] border-l-4 border-transparent hover:border-l-tostem-blue hover:shadow-lg transition-all duration-300"
+                    className="group p-6 rounded-xl bg-white/80 dark:bg-white/5 backdrop-blur-md border-l-4 border-transparent hover:border-l-tostem-blue hover:shadow-lg transition-all duration-300 glass-card-hover gradient-border-hover"
                   >
                     <div className="w-12 h-12 rounded-xl bg-tostem-blue/10 flex items-center justify-center mb-4 group-hover:bg-tostem-blue group-hover:text-white transition-colors duration-300">
                       <Icon className="w-6 h-6 text-tostem-blue group-hover:text-white transition-colors duration-300" />
@@ -402,7 +402,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="group bg-white dark:bg-[#222] rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300"
+                  className="group bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 tilt-hover gradient-border-hover"
                 >
                   <div className="text-2xl font-black text-tostem-blue mb-2">{series.name}</div>
                   <p className="text-sm text-tostem-text-light dark:text-gray-400 mb-4">{series.tagline}</p>

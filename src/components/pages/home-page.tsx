@@ -306,28 +306,71 @@ export default function HomePage() {
           </motion.div>
         ))}
 
-        {/* Floating decorative elements */}
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 hero-gradient-bg z-[2]" />
+
+        {/* Floating decorative elements - hexagons and circles with parallax */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
+          {/* Hexagon 1 - large */}
+          <motion.div
+            className="absolute top-[12%] right-[8%] w-24 h-24 md:w-44 md:h-44"
+            style={{ transform: `translateY(${scrollY * -0.15}px)` }}
+            animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full opacity-10">
+              <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" fill="none" stroke="white" strokeWidth="1" />
+            </svg>
+          </motion.div>
+          {/* Hexagon 2 - medium */}
+          <motion.div
+            className="absolute bottom-[20%] left-[8%] w-16 h-16 md:w-28 md:h-28"
+            style={{ transform: `translateY(${scrollY * -0.1}px)` }}
+            animate={{ y: [0, 15, 0], rotate: [0, -8, 0] }}
+            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full opacity-[0.07]">
+              <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" fill="none" stroke="#5a9fd4" strokeWidth="1.5" />
+            </svg>
+          </motion.div>
+          {/* Hexagon 3 - small */}
+          <motion.div
+            className="absolute top-[45%] right-[30%] w-10 h-10 md:w-16 md:h-16"
+            animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full opacity-[0.08]">
+              <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" fill="none" stroke="white" strokeWidth="1" />
+            </svg>
+          </motion.div>
+          {/* Circle 1 - large with border */}
           <motion.div
             className="absolute top-[15%] right-[10%] w-24 h-24 md:w-40 md:h-40 rounded-full border border-white/10"
+            style={{ transform: `translateY(${scrollY * -0.2}px)` }}
             animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           />
+          {/* Circle 2 - medium with blue tint */}
           <motion.div
             className="absolute top-[60%] right-[20%] w-16 h-16 md:w-24 md:h-24 rounded-full border border-tostem-blue/20 bg-tostem-blue/5"
+            style={{ transform: `translateY(${scrollY * -0.12}px)` }}
             animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.div
-            className="absolute top-[30%] left-[5%] w-2 h-20 md:h-32 bg-gradient-to-b from-transparent via-white/10 to-transparent"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          {/* Circle 3 - small filled */}
           <motion.div
             className="absolute bottom-[30%] right-[8%] w-3 h-3 md:w-4 md:h-4 rounded-full bg-tostem-blue/30"
             animate={{ y: [0, -12, 0], scale: [1, 1.2, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           />
+          {/* Vertical line accent */}
+          <motion.div
+            className="absolute top-[30%] left-[5%] w-2 h-20 md:h-32 bg-gradient-to-b from-transparent via-white/10 to-transparent"
+            style={{ transform: `translateY(${scrollY * -0.08}px)` }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          {/* Dot accents */}
           <motion.div
             className="absolute top-[20%] right-[35%] w-1.5 h-1.5 rounded-full bg-white/20"
             animate={{ y: [0, -8, 0] }}
@@ -344,23 +387,29 @@ export default function HomePage() {
           <div className="max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
             <motion.div key={currentSlide} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="max-w-2xl">
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="mb-4">
-                <Badge className="bg-white/10 text-white/80 backdrop-blur-sm border border-white/20 text-xs px-4 py-1.5 rounded-full">
+                <Badge className="bg-white/10 text-white/80 backdrop-blur-sm border border-white/20 text-xs px-4 py-1.5 rounded-full float-animation">
                   <span className="mr-1.5">★</span> 50+ Years of Japanese Craftsmanship
                 </Badge>
               </motion.div>
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mt-4 mb-2 drop-shadow-lg">{heroSlides[currentSlide].title}</h1>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-white/90 mb-6" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
-                <span className="text-gradient-animated">{typedText}</span>
+                <span className="text-gradient-animate">{typedText}</span>
                 <span className="typing-cursor" />
               </h2>
               <p className="text-base md:text-lg text-white/70 leading-relaxed mb-10 max-w-xl">{heroSlides[currentSlide].description}</p>
-              <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('aluminium-doors-design-prices')}>
+              <div className="flex flex-wrap gap-4 items-center">
+                <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 cta-glow relative" onClick={() => navigateTo('aluminium-doors-design-prices')}>
                   Explore Products <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black px-8">
-                  <Play className="w-4 h-4 mr-2" /> Watch Video
-                </Button>
+                <div className="relative group">
+                  <Button size="lg" variant="outline" className="border-white/60 text-white hover:bg-white hover:text-black px-8 backdrop-blur-sm">
+                    <Play className="w-4 h-4 mr-2" /> Watch Video
+                  </Button>
+                  {/* Video play button ripple overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-12 h-12 rounded-full border-2 border-white/30 pulse-glow" />
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -461,6 +510,76 @@ export default function HomePage() {
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== VIRTUAL SHOWROOM ===== */}
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111] overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <SectionHeading label="Virtual Showroom" title="Explore in 360°" description="Rotate and explore our premium products from every angle." />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+            {[
+              { name: 'Sliding Window', slug: 'aluminium-sliding-windows-designs', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', category: 'Windows' },
+              { name: 'French Door', slug: 'aluminium-french-doors', img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80', category: 'Doors' },
+              { name: 'GIESTA Entrance', slug: 'giesta-doors', img: 'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&q=80', category: 'Steel Doors' },
+              { name: 'Curtain Wall', slug: 'facade-curtain-wall', img: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&q=80', category: 'Facades' },
+            ].map((product, i) => (
+              <motion.div
+                key={product.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group cursor-pointer"
+                onClick={() => navigateTo(product.slug)}
+              >
+                <div
+                  className="relative aspect-square rounded-2xl overflow-hidden bg-tostem-light-gray dark:bg-gray-800 perspective-[1000px]"
+                >
+                  <motion.div
+                    className="w-full h-full transition-transform duration-700 ease-out preserve-3d"
+                    whileHover={{ rotateY: 15, scale: 1.05 }}
+                    transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                  >
+                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${product.img})` }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    {/* 360° rotation ring animation */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="relative">
+                        <div className="w-20 h-20 rounded-full border-2 border-white/30 flex items-center justify-center">
+                          <div className="absolute inset-0 rounded-full border-2 border-tostem-blue/60 border-t-transparent animate-spin" style={{ animationDuration: '2s' }} />
+                          <span className="text-white text-xs font-bold">360°</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-tostem-blue/90 text-white text-[10px]">{product.category}</Badge>
+                    </div>
+                  </motion.div>
+                </div>
+                <div className="mt-3 text-center">
+                  <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 group-hover:text-tostem-blue transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-tostem-text-muted mt-0.5">Hover to explore</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-10"
+          >
+            <Button
+              size="lg"
+              className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8"
+              onClick={() => navigateTo('aluminium-doors-design-prices')}
+            >
+              Explore in 360° <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </motion.div>
         </div>
       </section>

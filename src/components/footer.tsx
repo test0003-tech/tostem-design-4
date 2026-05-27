@@ -64,7 +64,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-tostem-footer text-gray-300">
+    <footer className="bg-tostem-footer text-gray-300 relative">
+      {/* Gradient top border */}
+      <div className="h-1 bg-gradient-to-r from-tostem-blue via-tostem-blue-light to-tostem-blue" />
+
       {/* Find a Studio Banner */}
       <div className="bg-tostem-blue text-white">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-8">
@@ -111,8 +114,10 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-12 md:py-16 relative">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 pattern-dots opacity-50 pointer-events-none" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-14 relative z-10">
           {/* Column 1: Logo & Description */}
           <div className="lg:col-span-1">
             <h2 className="text-2xl font-black tracking-[0.15em] text-white mb-4">

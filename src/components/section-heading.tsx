@@ -40,6 +40,10 @@ export default function SectionHeading({
           light ? 'bg-tostem-blue' : 'bg-tostem-blue'
         )} />
         {label}
+        <span className={cn(
+          'w-[3px] h-4 rounded-full inline-block',
+          light ? 'bg-tostem-blue' : 'bg-tostem-blue'
+        )} />
       </span>
       <h2
         className={cn(
@@ -47,10 +51,25 @@ export default function SectionHeading({
           light ? 'text-white' : 'text-tostem-dark'
         )}
       >
-        {title}
+        {/* Decorative dots before title */}
+        <span className={cn('inline-flex items-center gap-1 mr-3 align-middle', light ? 'opacity-30' : 'opacity-20')}>
+          <span className="w-1 h-1 rounded-full bg-tostem-blue inline-block" />
+          <span className="w-1.5 h-1.5 rounded-full bg-tostem-blue inline-block" />
+          <span className="w-1 h-1 rounded-full bg-tostem-blue inline-block" />
+        </span>
+        <span className={light ? '' : 'text-gradient-animate'}>
+          {title}
+        </span>
+        {/* Decorative dots after title */}
+        <span className={cn('inline-flex items-center gap-1 ml-3 align-middle', light ? 'opacity-30' : 'opacity-20')}>
+          <span className="w-1 h-1 rounded-full bg-tostem-blue inline-block" />
+          <span className="w-1.5 h-1.5 rounded-full bg-tostem-blue inline-block" />
+          <span className="w-1 h-1 rounded-full bg-tostem-blue inline-block" />
+        </span>
       </h2>
       {/* Decorative gradient underline */}
-      <div className={cn('flex mb-6', align === 'center' ? 'justify-center' : 'justify-start')}>
+      <div className={cn('flex items-center gap-2 mb-6', align === 'center' ? 'justify-center' : 'justify-start')}>
+        <div className={cn('w-3 h-0.5 rounded-full', light ? 'bg-tostem-blue/40' : 'bg-tostem-blue/30')} />
         <div
           className={cn(
             'h-1 rounded-full',
@@ -60,6 +79,7 @@ export default function SectionHeading({
           )}
           style={{ width: '100px' }}
         />
+        <div className={cn('w-3 h-0.5 rounded-full', light ? 'bg-tostem-blue/40' : 'bg-tostem-blue/30')} />
       </div>
       {description && (
         <p

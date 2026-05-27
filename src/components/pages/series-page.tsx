@@ -345,7 +345,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="group p-6 rounded-xl bg-white dark:bg-[#222] border border-gray-100 dark:border-white/10 hover:border-tostem-blue/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 card-shine relative overflow-hidden"
+                    className="group p-6 rounded-xl bg-white/80 dark:bg-white/5 backdrop-blur-md border border-gray-100 dark:border-white/10 hover:border-tostem-blue/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 card-shine tilt-hover gradient-border-hover relative overflow-hidden"
                   >
                     {/* Accent gradient on hover */}
                     <div className="absolute top-0 right-0 w-24 h-24 bg-tostem-blue/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-tostem-blue/10 transition-colors" />
@@ -388,7 +388,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="group p-6 rounded-xl bg-tostem-light-gray dark:bg-[#1a1a1a] border border-gray-100 dark:border-white/10 hover:border-tostem-blue/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                    className="group p-6 rounded-xl bg-white/80 dark:bg-white/5 backdrop-blur-md border border-gray-100 dark:border-white/10 hover:border-tostem-blue/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 tilt-hover gradient-border-hover"
                   >
                     <div className="w-12 h-12 rounded-xl bg-tostem-blue/10 flex items-center justify-center mb-4 group-hover:bg-tostem-blue group-hover:text-white transition-colors duration-300">
                       <Icon className="w-6 h-6 text-tostem-blue group-hover:text-white transition-colors duration-300" />
@@ -443,7 +443,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
               { name: 'Awning Windows', slug: 'aluminium-hung-awning-windows' },
               { name: 'French Windows', slug: 'aluminium-french-windows' },
             ].map((item) => (
-              <a key={item.slug} href={`#/${item.slug}`} onClick={(e) => { e.preventDefault(); navigateTo(item.slug); }} className="bg-white dark:bg-[#222] rounded-lg p-4 text-center hover:shadow-md transition-shadow group">
+              <a key={item.slug} href={`#/${item.slug}`} onClick={(e) => { e.preventDefault(); navigateTo(item.slug); }} className="bg-white/80 dark:bg-white/5 backdrop-blur-md rounded-lg p-4 text-center hover:shadow-md transition-all group tilt-hover gradient-border-hover border border-gray-100 dark:border-white/10">
                 <div className="text-sm font-medium text-tostem-dark dark:text-gray-200 group-hover:text-tostem-blue transition-colors">{item.name}</div>
                 <ArrowRight className="w-3 h-3 text-tostem-blue mx-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
