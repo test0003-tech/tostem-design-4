@@ -53,6 +53,17 @@ export default function Header() {
     return () => window.removeEventListener('tostem:open-search', handleOpenSearch);
   }, []);
 
+  // Close mega menu when hash changes (page navigation)
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveDropdown(null);
+      setMobileMenuOpen(false);
+      setMobileExpanded(null);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -73,6 +84,8 @@ export default function Header() {
     setActiveDropdown(null);
     if (href.startsWith('#/')) {
       window.location.hash = href;
+      // Force close mega menu after navigation
+      setTimeout(() => setActiveDropdown(null), 100);
     } else if (href.startsWith('http')) {
       window.open(href, '_blank');
     }

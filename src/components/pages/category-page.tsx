@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Ear, Zap, Wrench, Shield, DoorOpen, Lock, Sun, Wind, Bug, CloudRain, Building, GlassWater, Maximize2, FolderSync } from 'lucide-react';
+import { ArrowRight, Ear, Zap, Wrench, Shield, DoorOpen, Lock, Sun, Wind, Bug, CloudRain, Building, GlassWater, Maximize2, FolderSync, Flame, ChevronRight, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
@@ -203,12 +203,63 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
   const benefits = whyChooseData[slug] || whyChooseData['aluminium-windows-design-prices'];
   const faqs = faqData[slug] || faqData['aluminium-windows-design-prices'];
 
+  // Popular designs in each category
+  const popularDesigns: Record<string, string[]> = {
+    'aluminium-windows-design-prices': ['aluminium-sliding-windows-designs', 'aluminium-casement-windows', 'aluminium-fixed-window'],
+    'aluminium-doors-design-prices': ['aluminium-sliding-doors', 'aluminium-bi-folding-doors', 'aluminium-french-doors'],
+    'steel-entrance-doors': ['giesta-doors'],
+    'airflow-system': ['aluminum-louver', 'ventilation-slots'],
+    'facades': ['facade-curtain-wall'],
+    'interior': ['hanging-door', 'swing-door'],
+  };
+
+  const popular = popularDesigns[slug] || [];
+
+  // Breadcrumb progress steps
+  const breadcrumbSteps = [
+    { label: 'Home', slug: 'home' },
+    { label: 'Our Products', slug: 'aluminium-doors-design-prices' },
+    { label: info.title, slug: slug },
+  ];
+
   return (
     <div className="pt-[88px] lg:pt-[132px]">
-      {/* Hero */}
+      {/* Breadcrumb Progress Indicator */}
+      <div className="bg-tostem-dark/95 dark:bg-[#111]/95 backdrop-blur-sm border-b border-white/5">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-3">
+          <div className="flex items-center gap-2">
+            {breadcrumbSteps.map((step, i) => (
+              <div key={step.label} className="flex items-center gap-2">
+                {i > 0 && <ChevronRight className="w-3 h-3 text-white/30" />}
+                <button
+                  onClick={() => navigateTo(step.slug === 'home' ? 'home' : step.slug)}
+                  className={`text-xs font-medium transition-colors duration-200 ${
+                    i === breadcrumbSteps.length - 1
+                      ? 'text-tostem-blue font-bold'
+                      : 'text-white/50 hover:text-white/80'
+                  }`}
+                >
+                  {i === 0 && <Home className="w-3 h-3 inline mr-1" />}
+                  {step.label}
+                </button>
+                {/* Progress bar for current step */}
+                {i < breadcrumbSteps.length - 1 && (
+                  <div className="hidden sm:block w-6 h-0.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-tostem-blue/40 rounded-full" style={{ width: '100%' }} />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Hero with Ken Burns */}
       <section className="relative h-[350px] md:h-[450px] overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${info.image})` }} />
+        <div className="absolute inset-0 bg-cover bg-center ken-burns" style={{ backgroundImage: `url(${info.image})` }} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+        {/* Noise overlay */}
+        <div className="absolute inset-0 noise-overlay" />
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -260,7 +311,9 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Our Designs</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {info.designs.map((design, i) => (
+            {info.designs.map((design, i) => {
+              const isPopular = popular.includes(design.slug);
+              return (
               <motion.a
                 key={design.slug}
                 href={`#/${design.slug}`}
@@ -268,8 +321,13 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-white/10"
+                className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-white/10 card-shine relative"
               >
+                {isPopular && (
+                  <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">
+                    <Flame className="w-3 h-3" /> Popular
+                  </div>
+                )}
                 <div className="aspect-[16/9] relative overflow-hidden bg-tostem-light-gray dark:bg-[#222]">
                   <div className="absolute inset-0 bg-gradient-to-br from-tostem-blue/20 to-tostem-dark/20 flex items-center justify-center">
                     <span className="text-4xl font-black text-tostem-blue/20">{design.name[0]}</span>
@@ -284,7 +342,8 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                   </div>
                 </div>
               </motion.a>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

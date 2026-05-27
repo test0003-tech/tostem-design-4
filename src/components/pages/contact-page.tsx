@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion';
 import {
   Home, ChevronRight, Phone, Mail, MapPin, Clock, Send,
-  Facebook, Instagram, Linkedin, Youtube, MapPinned, CheckCircle,
+  Facebook, Instagram, Linkedin, Youtube, CheckCircle,
   Building2, TrendingUp, Users, Award
 } from 'lucide-react';
+import StudioFinder from '@/components/studio-finder';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -613,27 +614,9 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Map Placeholder */}
-          <div className="relative w-full h-[280px] md:h-[360px] rounded-2xl bg-gray-200 overflow-hidden mb-10 border border-gray-300">
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-tostem-blue/10 flex items-center justify-center mb-4">
-                <MapPinned className="w-8 h-8 text-tostem-blue" />
-              </div>
-              <h3 className="text-lg font-bold text-tostem-dark mb-1">Interactive Map Coming Soon</h3>
-              <p className="text-sm text-tostem-text-light">We&apos;re building an interactive map to help you find the nearest Tostem office.</p>
-              <div className="flex flex-wrap justify-center gap-2 mt-4">
-                {offices.map((office) => (
-                  <span key={office.city} className="px-3 py-1 rounded-full bg-white text-xs font-medium text-tostem-dark shadow-sm border border-gray-100">
-                    {office.city}
-                  </span>
-                ))}
-              </div>
-            </div>
-            {/* Decorative map grid lines */}
-            <div className="absolute inset-0 opacity-[0.08]" style={{
-              backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }} />
+          {/* Interactive Studio Map */}
+          <div className="relative w-full rounded-2xl bg-white overflow-hidden mb-10 border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+            <StudioFinder />
           </div>
 
           {/* Offices Grid */}

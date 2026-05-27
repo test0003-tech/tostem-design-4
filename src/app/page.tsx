@@ -9,6 +9,7 @@ import ScrollProgress from '@/components/scroll-progress';
 import FloatingCTABar from '@/components/floating-cta-bar';
 import BackToTop from '@/components/back-to-top';
 import SocialProof from '@/components/social-proof';
+import ExitIntentPopup from '@/components/exit-intent-popup';
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
       <SocialProof />
       <FloatingCTABar />
       <BackToTop />
+      <ExitIntentPopup />
     </div>
   );
 }

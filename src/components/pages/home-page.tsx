@@ -27,6 +27,9 @@ import { ComparisonBar, CompareCheckbox, ComparisonDialog } from '@/components/p
 import ProductWizard from '@/components/product-wizard';
 import PriceEstimator, { PriceEstimatorCTA } from '@/components/price-estimator';
 import RecentlyViewed from '@/components/recently-viewed';
+import { RecommendationCTA } from '@/components/recommendation-engine';
+import WarrantyShowcase from '@/components/warranty-showcase';
+import { ProjectCalculatorCTA } from '@/components/project-calculator';
 import { useSiteStore } from '@/lib/store';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
@@ -73,12 +76,28 @@ function navigateTo(slug: string) {
 
 // ====== Animated Counter Hook ======
 function useCountUp(target: number, duration: number = 2000, startOnView: boolean = true) {
-  const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [count, setCount] = useState(startOnView ? 0 : target);
+  const [hasStarted, setHasStarted] = useState(!startOnView);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!startOnView) return;
+    if (hasStarted) return;
+    
+    const checkVisible = () => {
+      if (ref.current && !hasStarted) {
+        const rect = ref.current.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          setHasStarted(true);
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Check immediately (element might already be visible)
+    if (checkVisible()) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasStarted) {
@@ -89,18 +108,12 @@ function useCountUp(target: number, duration: number = 2000, startOnView: boolea
     );
     if (ref.current) {
       observer.observe(ref.current);
-      // Check if already intersecting on mount
-      const rect = ref.current.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0 && !hasStarted) {
-        // Use microtask to avoid setState-in-effect lint error
-        queueMicrotask(() => setHasStarted(true));
-      }
     }
     return () => observer.disconnect();
   }, [hasStarted, startOnView]);
 
   useEffect(() => {
-    if (!hasStarted && startOnView) return;
+    if (!hasStarted) return;
     const startTime = Date.now();
     const animate = () => {
       const elapsed = Date.now() - startTime;
@@ -110,7 +123,7 @@ function useCountUp(target: number, duration: number = 2000, startOnView: boolea
       if (progress < 1) requestAnimationFrame(animate);
     };
     requestAnimationFrame(animate);
-  }, [hasStarted, target, duration, startOnView]);
+  }, [hasStarted, target, duration]);
 
   return { count, ref };
 }
@@ -173,6 +186,18 @@ export default function HomePage() {
   // Show all designs state
   const [showAllDesigns, setShowAllDesigns] = useState(false);
 
+  // Typing animation state
+  const [typedText, setTypedText] = useState('');
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const typingPhrases = useMemo(() => [
+    'Japanese Precision',
+    'Indian Craftsmanship',
+    'Premium Aluminium',
+    'Innovative Design',
+  ], []);
+
   // Testimonials carousel state
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [testimonialPaused, setTestimonialPaused] = useState(false);
@@ -223,6 +248,28 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, []);
 
+  // Typing animation effect
+  useEffect(() => {
+    const currentPhrase = typingPhrases[phraseIndex];
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setTypedText(currentPhrase.slice(0, charIndex + 1));
+        setCharIndex((prev) => prev + 1);
+        if (charIndex + 1 === currentPhrase.length) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setTypedText(currentPhrase.slice(0, charIndex - 1));
+        setCharIndex((prev) => prev - 1);
+        if (charIndex - 1 === 0) {
+          setIsDeleting(false);
+          setPhraseIndex((prev) => (prev + 1) % typingPhrases.length);
+        }
+      }
+    }, isDeleting ? 40 : 80);
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, phraseIndex, typingPhrases]);
+
   const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), []);
   const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length), []);
 
@@ -257,7 +304,7 @@ export default function HomePage() {
   return (
     <div className="pt-[88px] lg:pt-[132px]">
       {/* ===== HERO ===== */}
-      <section className="relative h-[85vh] min-h-[500px] overflow-hidden">
+      <section className="relative h-[85vh] min-h-[500px] overflow-hidden noise-overlay">
         {heroSlides.map((slide, index) => (
           <motion.div key={index} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: index === currentSlide ? 1 : 0 }} transition={{ duration: 1.2, ease: 'easeInOut' }}>
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${slide.image})`, transform: `translateY(${scrollY * 0.3}px)` }} />
@@ -308,7 +355,10 @@ export default function HomePage() {
                 </Badge>
               </motion.div>
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mt-4 mb-2 drop-shadow-lg">{heroSlides[currentSlide].title}</h1>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-white/90 mb-6" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>{heroSlides[currentSlide].subtitle}</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-white/90 mb-6" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
+                <span className="text-gradient-animated">{typedText}</span>
+                <span className="typing-cursor" />
+              </h2>
               <p className="text-base md:text-lg text-white/70 leading-relaxed mb-10 max-w-xl">{heroSlides[currentSlide].description}</p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('aluminium-doors-design-prices')}>
@@ -405,19 +455,24 @@ export default function HomePage() {
           <SectionHeading label="Why Tostem" title="The Tostem Advantage" description="Discover why architects, builders, and homeowners across India trust Tostem." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyTostemItems.map((item: WhyTostemItem) => (
-              <motion.div key={item.title} variants={itemVariants} className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] border border-transparent hover:border-l-[4px] hover:border-l-tostem-blue hover:border-t-tostem-blue/30 hover:border-r-tostem-blue/30 hover:border-b-tostem-blue/30 transition-all duration-300 group cursor-pointer relative overflow-hidden" onClick={() => {
+              <motion.div key={item.title} variants={itemVariants} className="group rounded-xl p-[1px] cursor-pointer relative overflow-hidden bg-transparent hover:bg-gradient-to-br hover:from-tostem-blue hover:via-tostem-blue-light hover:to-tostem-blue transition-all duration-500" onClick={() => {
                 const slugMap: Record<string, string> = { 'Japanese Innovation': 'japanese-innovation', 'Pre-Engineered System': 'pre-engineered-system-windows', 'Quality Assurance': 'quality-assurance-and-services', 'Anodized Aluminum': 'anodized-aluminum-windows-surface-colour-protection', 'Soundproof Insulated': 'soundproof-insulated-doors-and-windows', 'System Aluminum Windows': 'system-aluminum-windows' };
                 navigateTo(slugMap[item.title] || 'japanese-innovation');
               }}>
-                <div className="text-tostem-blue mb-4 group-hover:scale-110 transition-transform">{iconMap[item.icon]}</div>
+                <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 h-full shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-300 relative">
+                  <div className="text-tostem-blue mb-4 group-hover:scale-110 transition-transform">{iconMap[item.icon]}</div>
                 <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200 mb-2">{item.title}</h3>
                 <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{item.detailed}</p>
                 <div className="mt-4 flex items-center gap-1 text-tostem-blue text-sm font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Learn More <ArrowRight className="w-3 h-3" /></div>
+                </div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
+
+      {/* ===== WARRANTY SHOWCASE ===== */}
+      <WarrantyShowcase />
 
       {/* ===== PROCESS TIMELINE ===== */}
       <section className="py-16 md:py-24 bg-white dark:bg-[#111] overflow-hidden">
@@ -542,6 +597,13 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== RECOMMENDATION ENGINE CTA ===== */}
+      <section className="py-8 md:py-12 bg-white dark:bg-[#111]">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <RecommendationCTA />
+        </div>
+      </section>
+
       {/* ===== PRICE ESTIMATOR CTA ===== */}
       <section className="py-10 md:py-16 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
@@ -594,6 +656,13 @@ export default function HomePage() {
               </TabsContent>
             ))}
           </Tabs>
+        </div>
+      </section>
+
+      {/* ===== PROJECT CALCULATOR CTA ===== */}
+      <section className="py-8 md:py-12 bg-white dark:bg-[#111]">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <ProjectCalculatorCTA />
         </div>
       </section>
 
@@ -690,9 +759,15 @@ export default function HomePage() {
           <AnimatePresence mode="wait">
             <motion.div key={galleryFilter} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {filteredGallery.map((item, i) => (
-                <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.05 }} className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300" onClick={() => navigateTo('gallery')}>
+                <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.05 }} className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 hover-lift card-shine" onClick={() => navigateTo('gallery')}>
                   <div className="aspect-[4/3] relative">
-                    <div className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style={{ backgroundImage: `url(${item.image})` }} />
+                    <motion.div
+                      className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+                      style={{
+                        backgroundImage: `url(${item.image})`,
+                        y: scrollY * (0.05 + (i % 3) * 0.02),
+                      }}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                       <Badge className="bg-tostem-blue/80 text-white text-[10px] mb-2">{item.category}</Badge>
@@ -976,6 +1051,41 @@ export default function HomePage() {
 
       {/* ===== RECENTLY VIEWED ===== */}
       <RecentlyViewed />
+
+      {/* ===== SOCIAL PROOF STRIP ===== */}
+      <section className="py-8 md:py-10 bg-tostem-blue/5 dark:bg-tostem-blue/10 border-y border-tostem-blue/10">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {['bg-tostem-blue/80', 'bg-tostem-blue-light/80', 'bg-tostem-dark/60', 'bg-amber-600/70', 'bg-emerald-600/70'].map((bg, i) => (
+                  <div key={i} className={`w-8 h-8 rounded-full ${bg} border-2 border-white dark:border-[#111] flex items-center justify-center text-white text-[10px] font-bold`}>
+                    {['A', 'R', 'S', 'P', 'M'][i]}
+                  </div>
+                ))}
+              </div>
+              <span className="text-sm font-bold text-tostem-dark dark:text-gray-200">10,000+</span>
+            </div>
+            <div className="hidden md:block w-px h-6 bg-tostem-blue/20" />
+            <p className="text-sm text-tostem-text-light dark:text-gray-400 text-center">
+              Trusted by <span className="font-bold text-tostem-dark dark:text-gray-200">10,000+ homeowners</span>, <span className="font-bold text-tostem-dark dark:text-gray-200">500+ architects</span>, and <span className="font-bold text-tostem-dark dark:text-gray-200">200+ builders</span> across India
+            </p>
+            <div className="hidden md:block w-px h-6 bg-tostem-blue/20" />
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star key={s} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              ))}
+              <span className="text-sm font-bold text-tostem-dark dark:text-gray-200 ml-1">4.8/5</span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ===== CTA ===== */}
       <section className="py-16 md:py-24 bg-tostem-dark relative overflow-hidden">

@@ -1,13 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronRight, ArrowRight, Home, CheckCircle, ShieldCheck, VolumeX, Sparkles, Download, ImageIcon, X, Maximize, Layers, Palette, Eye } from 'lucide-react';
+import { ChevronRight, ArrowRight, Home, CheckCircle, ShieldCheck, VolumeX, Sparkles, Download, ImageIcon, X, Maximize, Layers, Palette, Eye, Share2, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import type { PageRegistryItem } from '@/lib/tostem-data';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
 import ShareButtons from '@/components/share-buttons';
+import { WarrantyShowcaseCompact } from '@/components/warranty-showcase';
 
 function navigateTo(slug: string) {
   window.location.hash = `/${slug}`;
@@ -375,11 +376,21 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
   const [lightboxImage, setLightboxImage] = useState('');
   const [activeSection, setActiveSection] = useState('overview');
   const [hoveredSwatch, setHoveredSwatch] = useState<string | null>(null);
+  const [showShareFab, setShowShareFab] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   const openLightbox = (img: string) => {
     setLightboxImage(img);
     setLightboxOpen(true);
   };
+
+  // Track scroll for floating elements
+  useEffect(() => {
+    if (!details) return;
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [details]);
 
   // Track active section on scroll
   useEffect(() => {
@@ -448,8 +459,118 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
     return true;
   });
 
+  // Get category slug for back button
+  const categorySlug = designCategoryMap[slug];
+  const categoryHrefMap: Record<string, string> = {
+    windows: 'aluminium-windows-design-prices',
+    doors: 'aluminium-doors-design-prices',
+    'steel-doors': 'steel-entrance-doors',
+    airflow: 'airflow-system',
+    facades: 'facades',
+    interior: 'interior',
+  };
+  const categoryHref = categoryHrefMap[categorySlug || ''] || 'aluminium-windows-design-prices';
+  const categoryLabelMap: Record<string, string> = {
+    windows: 'Windows',
+    doors: 'Doors',
+    'steel-doors': 'Steel Doors',
+    airflow: 'Airflow',
+    facades: 'Facades',
+    interior: 'Interior',
+  };
+  const categoryLabel = categoryLabelMap[categorySlug || ''] || 'Category';
+
+  // Compute spec percentage values for progress bars
+  const getSpecPercentage = (label: string, value: string): number => {
+    const lower = label.toLowerCase();
+    if (lower.includes('width') || lower.includes('height')) {
+      const num = parseFloat(value);
+      if (num <= 0) return 10;
+      return Math.min(100, (num / 2700) * 100);
+    }
+    if (lower.includes('sound') || lower.includes('acoustic')) {
+      const num = parseFloat(value);
+      if (num <= 0) return 10;
+      return Math.min(100, (num / 50) * 100);
+    }
+    if (lower.includes('thermal') || lower.includes('u-value')) {
+      const num = parseFloat(value);
+      if (num <= 0) return 10;
+      return Math.min(100, Math.max(20, (2.5 - num) / 1.5 * 100));
+    }
+    if (lower.includes('water') || lower.includes('wind')) {
+      const num = parseFloat(value);
+      if (num <= 0) return 10;
+      return Math.min(100, (num / 600) * 100);
+    }
+    return 65;
+  };
+
   return (
     <div className="pt-[88px] lg:pt-[132px]">
+      {/* Floating Back to Category button */}
+      {details && scrollY > 200 && (
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 z-30 lg:hidden bg-tostem-dark/80 backdrop-blur-sm text-white rounded-full px-3 py-2 flex items-center gap-1.5 shadow-lg hover:bg-tostem-blue transition-colors duration-200"
+          onClick={() => navigateTo(categoryHref)}
+          aria-label={`Back to ${categoryLabel}`}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-xs font-medium">{categoryLabel}</span>
+        </motion.button>
+      )}
+
+      {/* Share This Design FAB */}
+      {details && (
+        <div className="fixed right-4 md:right-6 bottom-28 z-30">
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1, type: 'spring' }}
+            onClick={() => setShowShareFab(!showShareFab)}
+            className="w-12 h-12 rounded-full bg-tostem-blue text-white shadow-lg shadow-tostem-blue/30 flex items-center justify-center hover:bg-tostem-blue-light transition-colors"
+            aria-label="Share this design"
+          >
+            <Share2 className="w-5 h-5" />
+          </motion.button>
+          {showShareFab && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              className="absolute bottom-14 right-0 bg-white dark:bg-[#1a1a1a] rounded-xl shadow-xl border border-gray-100 dark:border-white/10 p-3 min-w-[180px]"
+            >
+              <p className="text-xs font-bold text-tostem-dark dark:text-gray-200 mb-2">Share This Design</p>
+              <div className="space-y-1.5">
+                {[
+                  { name: 'WhatsApp', color: 'bg-green-500', link: `https://wa.me/?text=${encodeURIComponent(`Check out ${details.title} by Tostem India!`)}` },
+                  { name: 'Facebook', color: 'bg-[#1877F2]', link: `https://www.facebook.com/sharer/sharer.php` },
+                  { name: 'Twitter', color: 'bg-[#1DA1F2]', link: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${details.title} by Tostem India!`)}` },
+                  { name: 'Copy Link', color: 'bg-gray-500', link: '#copy' },
+                ].map((s) => (
+                  <button
+                    key={s.name}
+                    onClick={() => {
+                      if (s.link === '#copy') {
+                        navigator.clipboard.writeText(window.location.href);
+                      } else {
+                        window.open(s.link, '_blank');
+                      }
+                      setShowShareFab(false);
+                    }}
+                    className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-sm text-tostem-dark dark:text-gray-300"
+                  >
+                    <div className={`w-5 h-5 rounded ${s.color} flex items-center justify-center text-white text-[8px] font-bold`}>{s.name[0]}</div>
+                    {s.name}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
       {/* Sticky Side Navigation - desktop only */}
       <div className="hidden lg:block fixed left-6 top-1/2 -translate-y-1/2 z-30">
         <nav className="flex flex-col items-center gap-3" aria-label="Page sections">
@@ -553,15 +674,28 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
               <h2 className="text-2xl font-bold text-tostem-dark mb-6">Specifications</h2>
               <div className="grid grid-cols-2 gap-4">
-                {details.specs.map((spec) => (
-                  <div key={spec.label} className="bg-tostem-light-gray rounded-lg p-4 card-lift border border-transparent hover:border-tostem-blue/20">
+                {details.specs.map((spec) => {
+                  const pct = getSpecPercentage(spec.label, spec.value);
+                  return (
+                  <div key={spec.label} className="bg-tostem-light-gray rounded-lg p-4 card-lift border border-transparent hover:border-tostem-blue/20 relative overflow-hidden">
                     <div className="flex items-center gap-2 mb-2">
                       {getSpecIcon(spec.label)}
                       <span className="text-xs text-tostem-text-muted uppercase tracking-wider">{spec.label}</span>
                     </div>
                     <div className="text-lg font-bold text-tostem-dark">{spec.value}</div>
+                    {/* Animated progress bar */}
+                    <div className="mt-2 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-tostem-blue to-tostem-blue-light rounded-full"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${pct}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+                      />
+                    </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Quick benefits */}
               <div className="mt-6 space-y-3">
@@ -601,15 +735,23 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
               {colorSwatches.map((swatch) => (
                 <div key={swatch.name} className="flex flex-col items-center gap-2">
                   <button
-                    className="relative w-10 h-10 rounded-full border-2 border-gray-200 hover:border-tostem-blue transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-tostem-blue/30 focus:ring-offset-2"
+                    className="relative w-14 h-20 rounded-lg border-2 border-gray-200 hover:border-tostem-blue transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-tostem-blue/30 focus:ring-offset-2 shadow-sm hover:shadow-md overflow-hidden"
                     style={{ background: swatch.color }}
                     onMouseEnter={() => setHoveredSwatch(swatch.name)}
                     onMouseLeave={() => setHoveredSwatch(null)}
                     aria-label={`Finish: ${swatch.name}`}
                   >
+                    {/* Realistic texture overlay */}
+                    <div className="absolute inset-0 opacity-20" style={{
+                      backgroundImage: swatch.name === 'Wood Grain'
+                        ? 'repeating-linear-gradient(90deg, transparent, rgba(0,0,0,0.05) 2px, transparent 4px)'
+                        : 'none',
+                    }} />
                     {swatch.name === 'White' && (
-                      <div className="absolute inset-0 rounded-full border border-gray-300" />
+                      <div className="absolute inset-0 rounded-lg border border-gray-300" />
                     )}
+                    {/* Corner shine effect */}
+                    <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-br from-white/40 to-transparent rounded-tl-lg" />
                   </button>
                   <span className={`text-[10px] font-medium transition-opacity duration-200 ${
                     hoveredSwatch === swatch.name ? 'text-tostem-dark opacity-100' : 'text-tostem-text-muted opacity-60'
@@ -732,6 +874,13 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
           </div>
         </section>
       )}
+
+      {/* Warranty & Certifications */}
+      <section className="py-8 md:py-12 bg-white dark:bg-[#111]">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <WarrantyShowcaseCompact />
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="py-12 md:py-16 bg-tostem-dark">

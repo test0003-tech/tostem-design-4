@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle, Thermometer, VolumeX, Droplets, Wind, Building2, Home, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle, Thermometer, VolumeX, Droplets, Wind, Building2, Home, Sparkles, Waves, Mountain, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { seriesData } from '@/lib/tostem-data';
 import type { PageRegistryItem } from '@/lib/tostem-data';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
+import { useState, useEffect } from 'react';
 
 function navigateTo(slug: string) {
   window.location.hash = `/${slug}`;
@@ -100,12 +101,44 @@ const idealForData: Record<string, { icon: React.ElementType; title: string; des
   ],
 };
 
+// Best For scenario cards per series
+const bestForScenarios: Record<string, { icon: React.ElementType; title: string; description: string }[]> = {
+  atis: [
+    { icon: Waves, title: 'Best for Coastal Areas', description: 'Superior corrosion resistance and 600Pa water tightness make ATIS ideal for homes near the sea, where salt air and monsoon winds demand the highest weather protection.' },
+    { icon: Building2, title: 'Best for High-Rise', description: 'With the highest wind load rating and air permeability class, ATIS performs flawlessly on upper floors of tall buildings where wind pressure is extreme.' },
+    { icon: VolumeX, title: 'Best for Noise Zones', description: 'Up to 40dB sound reduction makes ATIS the top choice for homes near airports, highways, and busy commercial districts.' },
+  ],
+  grants: [
+    { icon: Home, title: 'Best for Family Homes', description: 'The perfect balance of quality and value, Grants series delivers reliable performance for family homes in urban and suburban settings.' },
+    { icon: Sparkles, title: 'Best for Renovations', description: 'Flexible design options and competitive pricing make Grants ideal for home renovation and upgrade projects.' },
+    { icon: Mountain, title: 'Best for Hill Stations', description: 'Good thermal insulation at a mid-range price, Grants keeps homes comfortable in cooler hill station climates.' },
+  ],
+  we70: [
+    { icon: Home, title: 'Best for Budget Projects', description: 'Maximum value with Tostem quality assurance. We 70 delivers essential performance at the most accessible price point.' },
+    { icon: Building2, title: 'Best for Mass Housing', description: 'Consistent quality across hundreds of units makes We 70 the preferred choice for large-scale residential developments.' },
+    { icon: Sun, title: 'Best for Mild Climates', description: 'Adequate thermal and acoustic performance for regions with moderate weather, without paying for premium specs you may not need.' },
+  ],
+  weplus: [
+    { icon: Wind, title: 'Best for Windy Regions', description: 'Class 4 air permeability and 500Pa water resistance provide excellent performance in regions with strong seasonal winds.' },
+    { icon: Sparkles, title: 'Best for Green Buildings', description: 'Near-premium U-value of 1.4 makes We Plus an excellent choice for IGBC and LEED certified green building projects.' },
+    { icon: Home, title: 'Best for Smart Homes', description: 'Performance-oriented design that complements modern smart home aesthetics with slim profiles and premium finishes.' },
+  ],
+};
+
 interface SeriesPageProps {
   slug: string;
   pageInfo: PageRegistryItem;
 }
 
 export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const series = seriesData.find((s) => {
     const slugMap: Record<string, string> = {
       'grants-windows-doors-series': 'grants',
@@ -130,9 +163,9 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
 
   return (
     <div className="pt-[88px] lg:pt-[132px]">
-      {/* Hero */}
-      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${series.image})` }} />
+      {/* Hero with Parallax */}
+      <section className="relative h-[400px] md:h-[500px] overflow-hidden noise-overlay">
+        <div className="absolute inset-0 bg-cover bg-center ken-burns" style={{ backgroundImage: `url(${series.image})`, transform: `translateY(${scrollY * 0.2}px)` }} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
@@ -179,7 +212,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
         </div>
       </section>
 
-      {/* Series Comparison Mini-Table */}
+      {/* Series Comparison Animated Chart */}
       <section className="py-10 md:py-14 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1000px] mx-auto px-4 lg:px-8">
           <motion.div
@@ -194,43 +227,64 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
                 How {series.name} Compares
               </h2>
             </div>
-            <div className="rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-white/10">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-tostem-dark text-white">
-                    <th className="py-3 px-4 text-left font-semibold">Feature</th>
-                    {Object.keys(comparison[0]?.values || {}).map((key) => (
-                      <th
-                        key={key}
-                        className={`py-3 px-4 text-center font-semibold ${key === series.id ? 'bg-tostem-blue' : ''}`}
-                      >
-                        {seriesNames[key] || key}
-                        {key === series.id && (
-                          <span className="block text-[10px] font-normal opacity-80">Current</span>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparison.map((row, i) => (
-                    <tr
-                      key={row.label}
-                      className={`${i % 2 === 0 ? 'bg-white dark:bg-[#222]' : 'bg-tostem-light-gray dark:bg-[#1a1a1a]'} border-t border-gray-100 dark:border-white/5`}
-                    >
-                      <td className="py-3 px-4 font-medium text-tostem-dark dark:text-gray-200">{row.label}</td>
-                      {Object.entries(row.values).map(([key, value]) => (
-                        <td
-                          key={key}
-                          className={`py-3 px-4 text-center ${key === series.id ? 'bg-tostem-blue/5 dark:bg-tostem-blue/10 font-semibold text-tostem-blue' : 'text-tostem-text-light dark:text-gray-400'}`}
-                        >
-                          {value}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Animated Bar Chart */}
+            <div className="bg-white dark:bg-[#222] rounded-xl p-6 shadow-md border border-gray-100 dark:border-white/10">
+              {comparison.map((row, rowIdx) => {
+                // Find the max numeric value for this row (to compute bar widths)
+                const getBarWidth = (key: string) => {
+                  const val = row.values[key];
+                  // Extract numeric part for bar scaling
+                  const numMatch = val.match(/(\d+\.?\d*)/);
+                  if (!numMatch) return 50; // default for non-numeric
+                  const num = parseFloat(numMatch[1]);
+                  // Get max across all series for this row
+                  const allNums = Object.values(row.values).map(v => {
+                    const m = v.match(/(\d+\.?\d*)/);
+                    return m ? parseFloat(m[1]) : 0;
+                  });
+                  const maxNum = Math.max(...allNums);
+                  if (maxNum <= 0) return 50;
+                  return Math.max(15, (num / maxNum) * 100);
+                };
+
+                return (
+                  <div key={row.label} className={`${rowIdx > 0 ? 'mt-6 pt-6 border-t border-gray-100 dark:border-white/10' : ''}`}>
+                    <div className="text-sm font-bold text-tostem-dark dark:text-gray-200 mb-3">{row.label}</div>
+                    <div className="space-y-2">
+                      {Object.entries(row.values).map(([key, value]) => {
+                        const isCurrent = key === series.id;
+                        const barWidth = getBarWidth(key);
+                        return (
+                          <div key={key} className="flex items-center gap-3">
+                            <span className={`text-xs font-semibold w-16 text-right ${isCurrent ? 'text-tostem-blue' : 'text-tostem-text-muted'}`}>
+                              {seriesNames[key] || key}
+                              {isCurrent && <span className="text-[9px] block">(current)</span>}
+                            </span>
+                            <div className="flex-1 h-6 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden relative">
+                              <motion.div
+                                className={`h-full rounded-full ${
+                                  isCurrent
+                                    ? 'bg-gradient-to-r from-tostem-blue to-tostem-blue-light'
+                                    : 'bg-gray-300 dark:bg-white/20'
+                                }`}
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${barWidth}%` }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: rowIdx * 0.15 + 0.2, ease: 'easeOut' }}
+                              />
+                              <span className={`absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold ${
+                                isCurrent ? 'text-white' : 'text-tostem-text-muted'
+                              }`}>
+                                {value.replace(/★.*$/, '').trim()}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -263,6 +317,48 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Best For Scenario Cards */}
+      <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Best For</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+                Perfect Scenarios for {series.name}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {bestForScenarios[series.id]?.map((scenario, i) => {
+                const Icon = scenario.icon;
+                return (
+                  <motion.div
+                    key={scenario.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="group p-6 rounded-xl bg-white dark:bg-[#222] border border-gray-100 dark:border-white/10 hover:border-tostem-blue/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 card-shine relative overflow-hidden"
+                  >
+                    {/* Accent gradient on hover */}
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-tostem-blue/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-tostem-blue/10 transition-colors" />
+                    <div className="w-12 h-12 rounded-xl bg-tostem-blue/10 flex items-center justify-center mb-4 group-hover:bg-tostem-blue group-hover:text-white transition-colors duration-300">
+                      <Icon className="w-6 h-6 text-tostem-blue group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <h3 className="text-base font-bold text-tostem-dark dark:text-gray-200 mb-2">{scenario.title}</h3>
+                    <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{scenario.description}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
         </div>
       </section>
 
