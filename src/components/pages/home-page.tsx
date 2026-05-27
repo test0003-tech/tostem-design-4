@@ -6,7 +6,7 @@ import {
   Star, Trophy, Calendar, Clock, ShieldCheck, Settings,
   Award, Sparkles, VolumeX, CheckCircle, ChevronDown,
   MessageSquare, Palette, Factory, Wrench, Mail, Users,
-  Building2, ArrowUpRight,
+  Building2, ArrowUpRight, Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +23,7 @@ import {
 import type { WhyTostemItem, DesignData } from '@/lib/tostem-data';
 import SectionHeading from '@/components/section-heading';
 import { DesignQuickViewModal, DesignQuickViewButton } from '@/components/design-quick-view';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 const iconMap: Record<string, React.ReactNode> = {
   'shield-check': <ShieldCheck className="w-8 h-8" />,
@@ -123,6 +123,52 @@ export default function HomePage() {
   const [quickViewDesign, setQuickViewDesign] = useState<DesignData | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
 
+  // FAQ search state
+  const [faqSearch, setFaqSearch] = useState('');
+
+  // Testimonials carousel state
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [testimonialPaused, setTestimonialPaused] = useState(false);
+  const [testimonialDirection, setTestimonialDirection] = useState<1 | -1>(1);
+
+  // Testimonials per view - responsive
+  const [testimonialsPerView, setTestimonialsPerView] = useState(1);
+
+  useEffect(() => {
+    const updatePerView = () => {
+      if (window.innerWidth >= 1024) setTestimonialsPerView(3);
+      else if (window.innerWidth >= 640) setTestimonialsPerView(2);
+      else setTestimonialsPerView(1);
+    };
+    updatePerView();
+    window.addEventListener('resize', updatePerView);
+    return () => window.removeEventListener('resize', updatePerView);
+  }, []);
+
+  const maxTestimonialIndex = Math.max(0, testimonials.length - testimonialsPerView);
+
+  // Testimonials auto-rotation
+  useEffect(() => {
+    if (testimonialPaused) return;
+    const timer = setInterval(() => {
+      setTestimonialDirection(1);
+      setTestimonialIndex((prev) => prev >= maxTestimonialIndex ? 0 : prev + 1);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [testimonialPaused, maxTestimonialIndex]);
+
+  // Filtered FAQs
+  const filteredFaqs = useMemo(() => {
+    if (!faqSearch.trim()) return faqData;
+    const lower = faqSearch.toLowerCase();
+    return faqData.filter(
+      (faq) =>
+        faq.question.toLowerCase().includes(lower) ||
+        faq.answer.toLowerCase().includes(lower) ||
+        (faq.category && faq.category.toLowerCase().includes(lower))
+    );
+  }, [faqSearch]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -189,9 +235,9 @@ export default function HomePage() {
                   <span className="mr-1.5">★</span> 50+ Years of Japanese Craftsmanship
                 </Badge>
               </motion.div>
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-2 drop-shadow-lg">{heroSlides[currentSlide].title}</h1>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white/90 mb-6">{heroSlides[currentSlide].subtitle}</h2>
-              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-8 max-w-xl">{heroSlides[currentSlide].description}</p>
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mt-4 mb-2 drop-shadow-lg">{heroSlides[currentSlide].title}</h1>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-white/90 mb-6" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>{heroSlides[currentSlide].subtitle}</h2>
+              <p className="text-base md:text-lg text-white/70 leading-relaxed mb-10 max-w-xl">{heroSlides[currentSlide].description}</p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('aluminium-doors-design-prices')}>
                   Explore Products <ArrowRight className="w-4 h-4 ml-2" />
@@ -239,14 +285,14 @@ export default function HomePage() {
       </section>
 
       {/* ===== ABOUT ===== */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label={aboutData.subtitle} title={aboutData.title} description={aboutData.description} />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
             {aboutData.stats.map((stat) => (
               <motion.div key={stat.label} variants={itemVariants} className="text-center p-6 rounded-xl bg-tostem-light-gray">
                 <div className="text-3xl md:text-4xl font-black text-tostem-blue mb-1">{stat.number}</div>
-                <div className="text-sm font-bold text-tostem-dark mb-1">{stat.label}</div>
+                <div className="text-sm font-bold text-tostem-dark dark:text-gray-200 mb-1">{stat.label}</div>
                 <div className="text-xs text-tostem-text-light">{stat.desc}</div>
               </motion.div>
             ))}
@@ -280,18 +326,18 @@ export default function HomePage() {
       </section>
 
       {/* ===== WHY TOSTEM ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Why Tostem" title="The Tostem Advantage" description="Discover why architects, builders, and homeowners across India trust Tostem." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyTostemItems.map((item: WhyTostemItem) => (
-              <motion.div key={item.title} variants={itemVariants} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] border border-transparent hover:border-l-[4px] hover:border-l-tostem-blue hover:border-t-tostem-blue/30 hover:border-r-tostem-blue/30 hover:border-b-tostem-blue/30 transition-all duration-300 group cursor-pointer relative overflow-hidden" onClick={() => {
+              <motion.div key={item.title} variants={itemVariants} className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] border border-transparent hover:border-l-[4px] hover:border-l-tostem-blue hover:border-t-tostem-blue/30 hover:border-r-tostem-blue/30 hover:border-b-tostem-blue/30 transition-all duration-300 group cursor-pointer relative overflow-hidden" onClick={() => {
                 const slugMap: Record<string, string> = { 'Japanese Innovation': 'japanese-innovation', 'Pre-Engineered System': 'pre-engineered-system-windows', 'Quality Assurance': 'quality-assurance-and-services', 'Anodized Aluminum': 'anodized-aluminum-windows-surface-colour-protection', 'Soundproof Insulated': 'soundproof-insulated-doors-and-windows', 'System Aluminum Windows': 'system-aluminum-windows' };
                 navigateTo(slugMap[item.title] || 'japanese-innovation');
               }}>
                 <div className="text-tostem-blue mb-4 group-hover:scale-110 transition-transform">{iconMap[item.icon]}</div>
-                <h3 className="text-lg font-bold text-tostem-dark mb-2">{item.title}</h3>
-                <p className="text-sm text-tostem-text-light leading-relaxed">{item.detailed}</p>
+                <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200 mb-2">{item.title}</h3>
+                <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{item.detailed}</p>
                 <div className="mt-4 flex items-center gap-1 text-tostem-blue text-sm font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Learn More <ArrowRight className="w-3 h-3" /></div>
               </motion.div>
             ))}
@@ -300,7 +346,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== PROCESS TIMELINE ===== */}
-      <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111] overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Process" title="From Vision to Reality" description="A streamlined 4-step journey that ensures precision at every stage." />
           <div className="relative">
@@ -363,7 +409,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== PRODUCTS ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Products" title="Premium Aluminium Solutions" description="From elegant windows to grand entrances, explore our comprehensive range." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -390,7 +436,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== SERIES ===== */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Series" title="Choose Your Series" description="Tostem offers multiple series, each tailored to different needs and budgets." />
           <Tabs defaultValue="atis" className="w-full">
@@ -437,7 +483,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== DESIGNS GRID ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Designs" title="Explore Our Designs" description="From classic to contemporary, our design catalogue covers every architectural vision." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -478,7 +524,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== TADA AWARDS ===== */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Awards & Recognition" title="TADA Award Winners" description="Tostem's commitment to excellence has been recognized with multiple industry awards." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -502,7 +548,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== GALLERY ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Project Gallery" title="Our Work Speaks" description="Browse through our collection of residential, commercial, interior, and exterior projects." />
           <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -531,7 +577,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== BLOG ===== */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Knowledge Centre" title="Latest from Our Blog" description="Stay informed with expert insights and the latest trends." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -615,18 +661,56 @@ export default function HomePage() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Frequently Asked Questions" title="Got Questions?" description="Find answers to the most common questions about Tostem products." />
           <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-3">
-              {faqData.map((faq, i) => (
-                <AccordionItem key={i} value={`item-${i}`} className="bg-white rounded-xl px-6 border-0 shadow-sm">
-                  <AccordionTrigger className="text-left text-sm font-semibold text-tostem-dark hover:text-tostem-blue hover:no-underline py-5">{faq.question}</AccordionTrigger>
-                  <AccordionContent className="text-sm text-tostem-text-light leading-relaxed pb-5">{faq.answer}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            {/* Search input */}
+            <div className="max-w-md mx-auto mb-6 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tostem-text-muted" />
+              <Input
+                type="text"
+                placeholder="Search questions..."
+                value={faqSearch}
+                onChange={(e) => setFaqSearch(e.target.value)}
+                className="pl-10 h-11 bg-white border-gray-200 focus-visible:border-tostem-blue focus-visible:ring-tostem-blue/20 rounded-lg"
+              />
+            </div>
+            {/* Count */}
+            {faqSearch && (
+              <p className="text-center text-sm text-tostem-text-muted mb-4">
+                Showing {filteredFaqs.length} of {faqData.length} questions
+              </p>
+            )}
+            <AnimatePresence mode="wait">
+              {filteredFaqs.length > 0 ? (
+                <motion.div
+                  key={faqSearch}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Accordion type="single" collapsible className="space-y-3">
+                    {filteredFaqs.map((faq, i) => (
+                      <AccordionItem key={faq.question} value={`item-${i}`} className="bg-white rounded-xl px-6 border-0 shadow-sm">
+                        <AccordionTrigger className="text-left text-sm font-semibold text-tostem-dark hover:text-tostem-blue hover:no-underline py-5">{faq.question}</AccordionTrigger>
+                        <AccordionContent className="text-sm text-tostem-text-light leading-relaxed pb-5">{faq.answer}</AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12"
+                >
+                  <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                  <p className="text-tostem-text-muted text-sm">No questions found. Try a different search term.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>
@@ -686,24 +770,76 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== TESTIMONIALS ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray">
+      {/* ===== TESTIMONIALS CAROUSEL ===== */}
+      <section className="py-16 md:py-24 bg-tostem-light-gray"
+        onMouseEnter={() => setTestimonialPaused(true)}
+        onMouseLeave={() => setTestimonialPaused(false)}
+      >
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Testimonials" title="What Our Clients Say" description="Hear from architects, builders, and homeowners who have experienced the Tostem difference." />
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {testimonials.map((testimonial) => (
-              <motion.div key={testimonial.id} variants={itemVariants} className="bg-white rounded-xl p-5 relative hover:shadow-md transition-shadow cursor-pointer border border-transparent hover:border-tostem-blue/20" onClick={() => navigateTo('testimonials')}>
-                <Quote className="w-6 h-6 text-tostem-blue/20 absolute top-4 right-4" />
-                <div className="flex gap-0.5 mb-3">{Array.from({ length: testimonial.rating }).map((_, j) => (<Star key={j} className="w-3 h-3 fill-yellow-400 text-yellow-400" />))}</div>
-                <p className="text-sm text-tostem-text-light leading-relaxed mb-4 line-clamp-4">{testimonial.text}</p>
-                <div className="text-xs text-tostem-blue font-medium mb-3">{testimonial.project}</div>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-tostem-blue/10 flex items-center justify-center text-tostem-blue font-bold text-sm">{testimonial.name[0]}</div>
-                  <div><div className="text-sm font-bold text-tostem-dark">{testimonial.name}</div><div className="text-xs text-tostem-text-muted">{testimonial.role}, {testimonial.location}</div></div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="relative">
+            {/* Navigation arrows */}
+            <button
+              onClick={() => { setTestimonialDirection(-1); setTestimonialIndex((prev) => Math.max(0, prev - 1)); }}
+              disabled={testimonialIndex === 0}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-tostem-dark hover:bg-tostem-blue hover:text-white transition-colors disabled:opacity-30 disabled:pointer-events-none hidden md:flex"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => { setTestimonialDirection(1); setTestimonialIndex((prev) => Math.min(maxTestimonialIndex, prev + 1)); }}
+              disabled={testimonialIndex >= maxTestimonialIndex}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-tostem-dark hover:bg-tostem-blue hover:text-white transition-colors disabled:opacity-30 disabled:pointer-events-none hidden md:flex"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            {/* Carousel viewport */}
+            <div className="overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={testimonialIndex}
+                  initial={{ opacity: 0, x: testimonialDirection * 80 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: testimonialDirection * -80 }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+                >
+                  {testimonials.slice(testimonialIndex, testimonialIndex + testimonialsPerView).map((testimonial) => (
+                    <motion.div
+                      key={testimonial.id}
+                      className="bg-white rounded-xl p-6 relative hover:shadow-lg transition-shadow cursor-pointer border border-transparent hover:border-tostem-blue/20"
+                      onClick={() => navigateTo('testimonials')}
+                      whileHover={{ y: -4 }}
+                    >
+                      <Quote className="w-8 h-8 text-tostem-blue/15 absolute top-4 right-4" />
+                      <div className="flex gap-0.5 mb-3">{Array.from({ length: testimonial.rating }).map((_, j) => (<Star key={j} className="w-4 h-4 fill-yellow-400 text-yellow-400" />))}</div>
+                      <p className="text-sm text-tostem-text-light leading-relaxed mb-4 line-clamp-5">{testimonial.text}</p>
+                      <div className="text-xs text-tostem-blue font-medium mb-3">{testimonial.project}</div>
+                      <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+                        <div className="w-10 h-10 rounded-full bg-tostem-blue/10 flex items-center justify-center text-tostem-blue font-bold text-sm">{testimonial.name[0]}</div>
+                        <div><div className="text-sm font-bold text-tostem-dark">{testimonial.name}</div><div className="text-xs text-tostem-text-muted">{testimonial.role}, {testimonial.location}</div></div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Dot indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: maxTestimonialIndex + 1 }).map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => { setTestimonialDirection(idx > testimonialIndex ? 1 : -1); setTestimonialIndex(idx); }}
+                  className={`h-2 rounded-full transition-all duration-300 ${idx === testimonialIndex ? 'w-6 bg-tostem-blue' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

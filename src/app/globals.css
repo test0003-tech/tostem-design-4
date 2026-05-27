@@ -209,6 +209,15 @@
     animation: explore-pulse 2s ease-in-out infinite;
   }
 
+  /* Marquee animation for announcement ticker */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;

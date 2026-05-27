@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import type { PageRegistryItem } from '@/lib/tostem-data';
+import BreadcrumbNav from '@/components/breadcrumb-nav';
 
 function navigateTo(slug: string) {
   window.location.hash = `/${slug}`;
@@ -352,12 +353,7 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-tostem-dark via-tostem-dark/80 to-tostem-blue/30" />
           <div className="absolute inset-0 flex items-center">
             <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
-              <nav className="flex items-center gap-2 text-sm text-white/50 mb-4">
-                <Home className="w-3 h-3" />
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home'); }} className="hover:text-white">Home</a>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-white">{pageInfo.title}</span>
-              </nav>
+              <BreadcrumbNav items={[{ label: pageInfo.title }]} />
               <h1 className="text-3xl md:text-5xl font-black text-white">{pageInfo.title}</h1>
             </div>
           </div>
@@ -386,14 +382,12 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <nav className="flex items-center gap-2 text-sm text-white/50 mb-4">
-                <Home className="w-3 h-3" />
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home'); }} className="hover:text-white">Home</a>
-                <ChevronRight className="w-3 h-3" />
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo(pageInfo.type === 'design' ? 'aluminium-doors-design-prices' : 'home'); }} className="hover:text-white">Our Products</a>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-white">{details.title}</span>
-              </nav>
+              <BreadcrumbNav
+                items={[
+                  { label: 'Our Products', href: 'aluminium-doors-design-prices' },
+                  { label: details.title },
+                ]}
+              />
               <Badge className="bg-tostem-blue text-white mb-3">{details.subtitle}</Badge>
               <h1 className="text-3xl md:text-5xl font-black text-white mb-4">{details.title}</h1>
               <p className="text-base text-white/70 max-w-2xl">{details.description}</p>

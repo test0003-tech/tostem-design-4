@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSiteStore } from '@/lib/store';
 import { pageRegistry } from '@/lib/tostem-data';
@@ -16,9 +16,12 @@ import GlossaryPage from '@/components/pages/glossary-page';
 import TadaPage from '@/components/pages/tada-page';
 import HomePage from '@/components/pages/home-page';
 import EcataloguePage from '@/components/pages/ecatalogue-page';
+import PageSkeleton from '@/components/page-skeleton';
 
 export default function PageRouter() {
   const { currentPage, setCurrentPage } = useSiteStore();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   // Listen for hash changes
   useEffect(() => {
@@ -34,6 +37,28 @@ export default function PageRouter() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [setCurrentPage]);
+
+  // Show skeleton during page transitions
+  useEffect(() => {
+    const skeletonTimer = setTimeout(() => {
+      setIsTransitioning(true);
+      setShowSkeleton(true);
+    }, 0);
+
+    const hideSkeletonTimer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 400);
+
+    const transitionTimer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
+
+    return () => {
+      clearTimeout(skeletonTimer);
+      clearTimeout(hideSkeletonTimer);
+      clearTimeout(transitionTimer);
+    };
+  }, [currentPage]);
 
   // Scroll to top when page changes
   useEffect(() => {
@@ -96,17 +121,31 @@ export default function PageRouter() {
     }
   };
 
+  const isHome = currentPage === 'home' || !currentPage;
+
   return (
     <AnimatePresence mode="wait">
-      <motion.div
-        key={currentPage}
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -40 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-      >
-        {renderPage()}
-      </motion.div>
+      {showSkeleton ? (
+        <motion.div
+          key={`skeleton-${currentPage}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <PageSkeleton variant={isHome ? 'home' : 'generic'} />
+        </motion.div>
+      ) : (
+        <motion.div
+          key={currentPage}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -40 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+        >
+          {renderPage()}
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }

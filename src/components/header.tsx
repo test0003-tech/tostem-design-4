@@ -17,8 +17,19 @@ export default function Header() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [activeProductTab, setActiveProductTab] = useState('aluminium-doors');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [announcementVisible, setAnnouncementVisible] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('tostem-announcement-dismissed');
+    }
+    return false;
+  });
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { theme, setTheme } = useTheme();
+
+  const dismissAnnouncement = useCallback(() => {
+    setAnnouncementVisible(false);
+    localStorage.setItem('tostem-announcement-dismissed', 'true');
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -65,6 +76,28 @@ export default function Header() {
     <>
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <header className="fixed top-0 left-0 right-0 z-50">
+        {/* Announcement Ticker Bar */}
+        {announcementVisible && (
+          <div className="h-8 bg-tostem-blue text-white flex items-center relative overflow-hidden">
+            <div className="flex-1 overflow-hidden">
+              <div className="whitespace-nowrap animate-marquee flex items-center h-8">
+                <span className="mx-8 text-xs font-medium">🔥 Free Installation on orders above ₹50,000</span>
+                <span className="mx-8 text-xs font-medium">📞 Call 1800-266-7500 for Expert Advice</span>
+                <span className="mx-8 text-xs font-medium">📥 Download our new E-Catalogue</span>
+                <span className="mx-8 text-xs font-medium">🔥 Free Installation on orders above ₹50,000</span>
+                <span className="mx-8 text-xs font-medium">📞 Call 1800-266-7500 for Expert Advice</span>
+                <span className="mx-8 text-xs font-medium">📥 Download our new E-Catalogue</span>
+              </div>
+            </div>
+            <button
+              onClick={dismissAnnouncement}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+              aria-label="Dismiss announcement"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
         {/* Top Bar */}
         <div className={`bg-white dark:bg-[#1a1a1a] border-b border-gray-100 dark:border-white/10 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 flex items-center justify-between">

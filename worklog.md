@@ -5,11 +5,11 @@ Building a React/Next.js 16 clone of the Tostem India website (https://www.toste
 
 ## Current Project Status
 - **Status**: Stable, fully functional with 60+ pages
-- **Homepage**: 8/10 visual quality (VLM rated, improved from 7/10)
+- **Homepage**: 8/10 visual quality (VLM rated, maintained)
 - **Subpages**: 7-8/10 visual quality across all page types
 - **Lint**: Clean, no errors
 - **Dev Server**: Running on port 3000, all pages HTTP 200
-- **Features**: Search overlay, cookie consent, animated counters, process timeline, newsletter, channel partners marquee, lightbox gallery, reading progress bar, table of contents auto-generation, dark mode, page transitions, floating CTA bar, scroll progress indicator, product quick view modal, back-to-top button, WhatsApp chat, Find a Studio section, e-catalogue with form capture
+- **Features**: Search overlay, cookie consent, animated counters, process timeline, newsletter, channel partners marquee, lightbox gallery, reading progress bar, table of contents auto-generation, dark mode, page transitions, floating CTA bar, scroll progress indicator, product quick view modal, back-to-top button, WhatsApp chat, Find a Studio section, e-catalogue with form capture, page loading skeletons, testimonials carousel, FAQ search, floating label contact form, social proof notifications, announcement ticker, reusable breadcrumb component
 
 ## Current Goals / Completed Modifications
 1. ✅ Core infrastructure with mega-menu navigation and hash-based routing
@@ -18,29 +18,29 @@ Building a React/Next.js 16 clone of the Tostem India website (https://www.toste
 4. ✅ All 26 design pages with detailed specs and features
 5. ✅ Search overlay with real-time filtering across all pages
 6. ✅ Cookie consent with preferences modal
-7. ✅ Enhanced subpages: Gallery (masonry + lightbox), Blog (featured post + categories), Testimonials (stats + filters), Glossary (search + sticky nav), Contact (validation + FAQ), Generic (TOC + progress bar)
+7. ✅ Enhanced subpages: Gallery, Blog, Testimonials, Glossary, Contact, Generic
 8. ✅ Dark mode toggle with next-themes
-9. ✅ Page transitions with slide+fade animation
+9. ✅ Page transitions with slide+fade animation + loading skeletons
 10. ✅ E-Catalogue page with download form capture
 11. ✅ WhatsApp floating chat button
 12. ✅ Enhanced footer with trust badges, newsletter, Find a Studio
 13. ✅ Consistent CTA button styling across all pages
-14. ✅ Styling improvements: hero typography, nav spacing, accent bars, decorative elements
-15. ✅ New features: Floating CTA bar, scroll progress, quick view modal, back-to-top button
+14. ✅ Styling improvements: hero typography, nav spacing, accent bars, decorative elements, dark mode refinements
+15. ✅ New features: Floating CTA bar, scroll progress, quick view modal, back-to-top button, social proof, announcement ticker, breadcrumbs, testimonials carousel, FAQ search, floating label form
 
 ## Unresolved Issues / Risks
 1. **API dependency**: Generic pages fetch content from the live Tostem site via server-side API; if the site is down, fallback content is shown
 2. **Images**: Using Unsplash URLs as placeholders; real Tostem images would improve authenticity
 3. **Performance**: Some pages with heavy animations could benefit from lazy loading
-4. **Cookie banner**: VLM noted it could be more prominent with higher contrast
+4. **Social proof overlap**: Fixed positioning but could conflict with other floating elements on small screens
 
 ## Priority Recommendations for Next Phase
 1. Replace Unsplash images with actual Tostem product images from tostemindia.com
 2. Add product comparison feature (side-by-side comparison of designs)
 3. Implement "Find a Studio" interactive map integration
-4. Add animated page loading skeleton screens
-5. Implement keyboard navigation for mega menu
-6. Add micro-interactions on form fields (floating labels, animated validation)
+4. Implement keyboard navigation for mega menu
+5. Add A/B testing for CTA buttons
+6. Performance optimization with lazy loading and code splitting
 
 ---
 
@@ -689,3 +689,124 @@ Stage Summary:
 - Mobile experience improved with sticky CTA bar
 - Reading progress shown globally via thin top bar
 - No lint errors, dev server stable
+
+---
+
+Task ID: QA-Round5-Features
+Agent: Full-stack Developer
+Task: Add 5 new features and functionality to Tostem India website
+
+Work Log:
+
+### Feature 1: Page Loading Skeleton (`page-skeleton.tsx`)
+- Created `/home/z/my-project/src/components/page-skeleton.tsx`
+- Two variants: `home` (hero skeleton + 4 stat boxes + 3 content blocks) and `generic` (hero skeleton + content skeleton)
+- All skeleton elements use `animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg` styling
+- Integrated into `page-router.tsx`: skeleton shows for 400ms during page transitions before actual page renders
+- Uses framer-motion AnimatePresence for smooth skeleton ↔ content transitions
+- Page-router now has `showSkeleton` state that shows skeleton on every page change, then fades to actual content
+
+### Feature 2: Testimonials Carousel (`home-page.tsx`)
+- Converted static 4-column grid testimonials to auto-rotating carousel
+- Responsive: 1 testimonial on mobile, 2 on tablet (sm:), 3 on desktop (lg:)
+- Auto-rotates every 5 seconds with pause on hover (mouseEnter/mouseLeave)
+- Left/right navigation arrows (ChevronLeft/ChevronRight) with disabled states
+- Dot indicators at bottom showing current slide position (active dot: wider + tostem-blue)
+- Framer-motion AnimatePresence with directional slide transitions (slide left/right with opacity)
+- Testimonial cards enhanced: larger star icons (w-4), Quote icon, divider line above author, hover lift effect (whileHover y:-4)
+
+### Feature 3: Interactive FAQ with Search (`home-page.tsx`)
+- Added search input above the FAQ accordion: `max-w-md mx-auto mb-6` with Search icon inside input
+- Real-time filtering of FAQ items by question text, answer text, and category
+- Shows count: "Showing X of Y questions" when search is active
+- Empty state with Search icon and message: "No questions found. Try a different search term."
+- Smooth AnimatePresence transitions for filtering (fade + y translate)
+- Uses `useMemo` for filtered results computation
+- Added `Search` icon import from lucide-react
+
+### Feature 4: Enhanced Contact Form with Floating Labels (`contact-page.tsx`)
+- Created `FloatingLabelInput` component: label moves from center (placeholder) to top-left (floating) on focus/value
+  - Style: `text-tostem-blue text-xs font-medium` when floating, `text-tostem-text-muted text-base` when placeholder
+  - Relative positioning on wrapper, absolute label with transition-all duration-200
+  - Input has `pt-5 pb-2` to accommodate floating label
+- Created `FloatingLabelSelect` component: same floating label behavior for dropdowns
+- Added "Preferred Contact Time" dropdown: Morning (9AM-12PM), Afternoon (12PM-4PM), Evening (4PM-7PM)
+- Added "Product Interest" dropdown: Windows, Doors, Steel Doors, Airflow Systems, Facades, Interior Solutions
+- Added character counter on message textarea (max 500 chars): shows count `X/500`, turns orange at 450+
+- Added animated checkmark (CheckCircle with motion scale animation) in each field when validation passes
+- Form state management via `formValues` object for controlled components
+- Green border on valid fields, red border on invalid, animated checkmark appears via framer-motion
+
+### Feature 5: Social Proof Notification (`social-proof.tsx`)
+- Created `/home/z/my-project/src/components/social-proof.tsx`
+- Small notification toast in bottom-left area (above WhatsApp button, `bottom-24 left-4`)
+- 6 pre-defined messages rotating every 8 seconds (Priya/Mumbai, Rahul/Delhi, Ananya/Bangalore, Vikram/Hyderabad, Meera/Chennai, Suresh/Pune)
+- Each notification shows for 4 seconds then fades out, 4-second pause before next
+- Small avatar circle with initial + name + city + action text
+- Style: `bg-white dark:bg-[#1a1a1a] shadow-lg rounded-lg p-3 max-w-xs border border-gray-100`
+- Green dot "Recently" indicator
+- Framer-motion slide-in/out animations (x: -40 + opacity)
+- Shows 10 seconds after page load (initial delay)
+- Dismiss permanently via small X button (stores `tostem-social-proof-dismissed` in localStorage)
+- Uses lazy state initialization to read localStorage without calling setState in effect
+- Integrated into `page.tsx` between WhatsAppButton and FloatingCTABar
+
+### General
+- All new components use 'use client' directive
+- All use Tostem brand colors (tostem-dark: #333, tostem-blue: #2E5A87, tostem-blue-light: #3a6fa3, tostem-light-gray: #f5f5f5)
+- No indigo/blue-purple colors used
+- All use shadcn/ui components where applicable (Button, Badge, Input, Accordion)
+- All responsive (mobile-first)
+- All use framer-motion for animations
+- Lint passes with 0 errors
+- Dev server compiling successfully (HTTP 200)
+
+Stage Summary:
+- 5 new features added: Page Loading Skeleton, Testimonials Carousel, FAQ Search, Floating Label Contact Form, Social Proof Notification
+- Homepage testimonials section upgraded from static grid to interactive carousel
+- Homepage FAQ section enhanced with real-time search and filtering
+- Contact form completely rebuilt with floating labels, dropdowns, character counter, and animated validation
+- Social proof notifications create urgency and trust
+- Page loading skeletons provide smooth transition feedback during navigation
+- No lint errors, dev server stable
+
+---
+
+Task ID: QA-Round5-Styling
+Agent: Full-stack Developer
+Task: Fix QA issues and improve styling (VLM rated homepage 7/10, series page 6/10)
+
+Work Log:
+
+### 1. Hero Typography & Spacing (home-page.tsx)
+- Added `mt-4` to h1 element for more spacing between badge and heading
+- Increased h2 subtitle size from `text-2xl md:text-3xl lg:text-4xl` to `text-3xl md:text-4xl lg:text-5xl`
+- Added inline `text-shadow: 0 2px 10px rgba(0,0,0,0.3)` style to h2 for better contrast over images
+- Increased hero description mb from `mb-8` to `mb-10` for more space before buttons
+
+### 2. Series Page Visual Hierarchy (series-page.tsx)
+- Made hero h1 title larger: `text-4xl md:text-5xl lg:text-7xl`
+- Added "Key Highlights" summary row below hero with 4 icon stat cards
+- Added visual product image banner section after features/specs
+- Replaced inline breadcrumb nav with BreadcrumbNav component
+
+### 3. Breadcrumb Component (breadcrumb-nav.tsx)
+- Created reusable breadcrumb component
+- Integrated into: series-page.tsx, category-page.tsx, design-page.tsx, contact-page.tsx
+
+### 4. Announcement Ticker Bar (header.tsx)
+- Added thin scrolling announcement bar with marquee animation
+- Dismissable with X button, persisted to localStorage
+
+### 5. Dark Mode Refinements
+- Added dark: variants to all homepage sections
+- Series and category pages also received dark mode classes
+
+### 6. Category Page Enhancement (category-page.tsx)
+- Added "Popular Series" highlight strip
+- Added hover animations on design cards
+- Added SVG cross background pattern to CTA section
+
+### 7. Lint Fixes
+- Fixed set-state-in-effect in header.tsx, page-router.tsx, and social-proof.tsx
+- All lint errors resolved: 0 errors

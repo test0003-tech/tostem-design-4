@@ -1,10 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronRight, ArrowRight, Home, CheckCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { pageRegistry, type PageRegistryItem } from '@/lib/tostem-data';
+import BreadcrumbNav from '@/components/breadcrumb-nav';
 
 function navigateTo(slug: string) {
   window.location.hash = `/${slug}`;
@@ -131,14 +132,12 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <nav className="flex items-center gap-2 text-sm text-white/50 mb-4">
-                <Home className="w-3 h-3" />
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home'); }} className="hover:text-white transition-colors">Home</a>
-                <ChevronRight className="w-3 h-3" />
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home'); }} className="hover:text-white transition-colors">Our Products</a>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-white">{info.title}</span>
-              </nav>
+              <BreadcrumbNav
+                items={[
+                  { label: 'Our Products' },
+                  { label: info.title },
+                ]}
+              />
               <h1 className="text-3xl md:text-5xl font-black text-white mb-4">{info.title}</h1>
               <p className="text-base text-white/70 max-w-2xl">{info.description}</p>
             </motion.div>
@@ -146,10 +145,40 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
         </div>
       </section>
 
+      {/* Popular Series Highlight Strip */}
+      {info.series.length > 0 && (
+        <section className="py-6 md:py-8 bg-tostem-blue/5 dark:bg-tostem-blue/10 border-y border-tostem-blue/10">
+          <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Popular Series</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              {info.series.slice(0, 4).map((s) => (
+                <motion.a
+                  key={s.slug}
+                  href={`#/${s.slug}`}
+                  onClick={(e) => { e.preventDefault(); navigateTo(s.slug); }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="group flex items-center justify-between bg-white dark:bg-[#1a1a1a] rounded-lg px-4 py-3 shadow-sm hover:shadow-md transition-all border border-tostem-blue/10 hover:border-tostem-blue/30"
+                >
+                  <div>
+                    <div className="text-sm font-bold text-tostem-dark dark:text-gray-200">{s.name}</div>
+                    <div className="text-xs text-tostem-text-muted line-clamp-1">{s.tagline}</div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-tostem-blue opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 flex-shrink-0" />
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Designs Grid */}
       <section className="py-12 md:py-16">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <h2 className="text-2xl font-bold text-tostem-dark mb-8">Our Designs</h2>
+          <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Our Designs</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {info.designs.map((design, i) => (
               <motion.a
@@ -159,9 +188,9 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
+                className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-white/10"
               >
-                <div className="aspect-[16/9] relative overflow-hidden bg-tostem-light-gray">
+                <div className="aspect-[16/9] relative overflow-hidden bg-tostem-light-gray dark:bg-[#222]">
                   <div className="absolute inset-0 bg-gradient-to-br from-tostem-blue/20 to-tostem-dark/20 flex items-center justify-center">
                     <span className="text-4xl font-black text-tostem-blue/20">{design.name[0]}</span>
                   </div>
@@ -169,7 +198,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                   <Badge className="absolute top-3 left-3 bg-tostem-blue/90 text-white text-[10px]">{info.title}</Badge>
                 </div>
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-tostem-dark group-hover:text-tostem-blue transition-colors">{design.name}</h3>
+                  <h3 className="text-base font-bold text-tostem-dark dark:text-gray-200 group-hover:text-tostem-blue transition-colors">{design.name}</h3>
                   <div className="mt-3 flex items-center gap-1 text-tostem-blue text-sm font-medium group-hover:gap-2 transition-all">
                     View Details <ArrowRight className="w-3 h-3" />
                   </div>
@@ -182,9 +211,9 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
 
       {/* Series Section */}
       {info.series.length > 0 && (
-        <section className="py-12 md:py-16 bg-tostem-light-gray">
+        <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-            <h2 className="text-2xl font-bold text-tostem-dark mb-8">Available Series</h2>
+            <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Available Series</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {info.series.map((series, i) => (
                 <motion.a
@@ -194,10 +223,10 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300"
+                  className="group bg-white dark:bg-[#222] rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300"
                 >
                   <div className="text-2xl font-black text-tostem-blue mb-2">{series.name}</div>
-                  <p className="text-sm text-tostem-text-light mb-4">{series.tagline}</p>
+                  <p className="text-sm text-tostem-text-light dark:text-gray-400 mb-4">{series.tagline}</p>
                   <div className="flex items-center gap-1 text-tostem-blue text-sm font-medium group-hover:gap-2 transition-all">
                     Explore Series <ArrowRight className="w-3 h-3" />
                   </div>
@@ -209,8 +238,12 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
       )}
 
       {/* CTA */}
-      <section className="py-12 md:py-16 bg-tostem-dark">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 text-center">
+      <section className="py-12 md:py-16 bg-tostem-dark relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+        }} />
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 text-center relative z-10">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Interested in {info.title}?</h2>
           <p className="text-white/60 mb-6">Get a free consultation and quotation for your project.</p>
           <div className="flex flex-wrap justify-center gap-4">

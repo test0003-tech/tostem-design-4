@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import {
   Home, ChevronRight, Phone, Mail, MapPin, Clock, Send,
-  Facebook, Instagram, Linkedin, Youtube, MapPinned
+  Facebook, Instagram, Linkedin, Youtube, MapPinned, CheckCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -52,14 +52,163 @@ const socialLinks = [
   { icon: Youtube, label: 'YouTube', href: 'https://www.youtube.com/@tostemindia' },
 ];
 
+const productInterests = [
+  'Windows',
+  'Doors',
+  'Steel Doors',
+  'Airflow Systems',
+  'Facades',
+  'Interior Solutions',
+];
+
+const contactTimes = [
+  { value: 'morning', label: 'Morning (9AM-12PM)' },
+  { value: 'afternoon', label: 'Afternoon (12PM-4PM)' },
+  { value: 'evening', label: 'Evening (4PM-7PM)' },
+];
+
 interface FormErrors {
   name?: string;
   phone?: string;
   email?: string;
+  message?: string;
+}
+
+// Floating label input component
+function FloatingLabelInput({
+  id,
+  label,
+  type = 'text',
+  required = false,
+  error,
+  valid,
+  value,
+  onChange,
+  onBlur,
+  placeholder,
+}: {
+  id: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  error?: string;
+  valid?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+}) {
+  const [focused, setFocused] = useState(false);
+  const isFloating = focused || value.length > 0;
+
+  return (
+    <div className="relative">
+      <label
+        htmlFor={id}
+        className={`absolute left-3 transition-all duration-200 pointer-events-none z-10 ${
+          isFloating
+            ? 'top-1 text-xs font-medium text-tostem-blue'
+            : 'top-1/2 -translate-y-1/2 text-base text-tostem-text-muted'
+        }`}
+      >
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
+      </label>
+      <Input
+        id={id}
+        name={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onBlur={(e) => { setFocused(false); onBlur(e); }}
+        onFocus={() => setFocused(true)}
+        placeholder={isFloating ? placeholder : ''}
+        className={`pt-5 pb-2 h-auto bg-white ${
+          error ? 'border-red-400 focus:border-red-500 focus:ring-red-200' :
+          valid ? 'border-green-400 focus:border-green-500 focus:ring-green-200' :
+          'border-gray-200 focus:border-tostem-blue focus:ring-tostem-blue/20'
+        }`}
+      />
+      {/* Animated checkmark */}
+      {valid && !error && (
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="absolute right-3 top-1/2 -translate-y-1/2"
+        >
+          <CheckCircle className="w-4 h-4 text-green-500" />
+        </motion.div>
+      )}
+      {error && (
+        <p className="text-xs text-red-500 mt-1">{error}</p>
+      )}
+    </div>
+  );
+}
+
+// Floating label select component
+function FloatingLabelSelect({
+  id,
+  label,
+  options,
+  value,
+  onChange,
+  required = false,
+}: {
+  id: string;
+  label: string;
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  required?: boolean;
+}) {
+  const [focused, setFocused] = useState(false);
+  const isFloating = focused || value.length > 0;
+
+  return (
+    <div className="relative">
+      <label
+        htmlFor={id}
+        className={`absolute left-3 transition-all duration-200 pointer-events-none z-10 ${
+          isFloating
+            ? 'top-1 text-xs font-medium text-tostem-blue'
+            : 'top-1/2 -translate-y-1/2 text-base text-tostem-text-muted'
+        }`}
+      >
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
+      </label>
+      <select
+        id={id}
+        name={id}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="w-full pt-5 pb-2 h-12 px-3 border rounded-md text-sm bg-white border-gray-200 focus:border-tostem-blue focus:ring-tostem-blue/20 focus:outline-none focus:ring-2 appearance-none"
+      >
+        <option value="">Select...</option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+      {/* Dropdown arrow */}
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        <ChevronRight className="w-4 h-4 text-tostem-text-muted rotate-90" />
+      </div>
+    </div>
+  );
 }
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [formValues, setFormValues] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    city: '',
+    productInterest: '',
+    contactTime: '',
+    message: '',
+  });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
@@ -74,6 +223,7 @@ export default function ContactPage() {
       if (!value.trim()) error = 'Email is required';
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) error = 'Enter a valid email address';
     }
+    if (field === 'message' && value.length > 500) error = 'Message must be 500 characters or less';
     return error;
   };
 
@@ -84,10 +234,25 @@ export default function ContactPage() {
   };
 
   const handleChange = (field: string, value: string) => {
+    setFormValues((prev) => ({ ...prev, [field]: value }));
     if (touched[field]) {
       const error = validateField(field, value);
       setFormErrors((prev) => ({ ...prev, [field]: error }));
     }
+  };
+
+  const isFieldValid = (field: string) => {
+    if (!touched[field]) return false;
+    const value = formValues[field as keyof typeof formValues];
+    if (!value || !value.toString().trim()) return false;
+    return !validateField(field, value.toString());
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    setTouched({});
+    setFormErrors({});
+    setFormValues({ name: '', phone: '', email: '', city: '', productInterest: '', contactTime: '', message: '' });
   };
 
   return (
@@ -129,97 +294,139 @@ export default function ContactPage() {
                   </div>
                   <h3 className="text-lg font-bold text-green-800 mb-2">Thank you!</h3>
                   <p className="text-green-700">We&apos;ve received your enquiry and will get back to you shortly.</p>
-                  <Button className="mt-4 bg-tostem-blue text-white" onClick={() => { setSubmitted(false); setTouched({}); setFormErrors({}); }}>
+                  <Button className="mt-4 bg-tostem-blue text-white" onClick={handleReset}>
                     Submit Another Enquiry
                   </Button>
                 </motion.div>
               ) : (
                 <form
-                  className="space-y-4"
+                  className="space-y-5"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    const name = formData.get('name') as string;
-                    const phone = formData.get('phone') as string;
-                    const email = formData.get('email') as string;
                     const errors: FormErrors = {};
-                    const nameErr = validateField('name', name);
+                    const nameErr = validateField('name', formValues.name);
                     if (nameErr) errors.name = nameErr;
-                    const phoneErr = validateField('phone', phone);
+                    const phoneErr = validateField('phone', formValues.phone);
                     if (phoneErr) errors.phone = phoneErr;
-                    const emailErr = validateField('email', email);
+                    const emailErr = validateField('email', formValues.email);
                     if (emailErr) errors.email = emailErr;
+                    const msgErr = validateField('message', formValues.message);
+                    if (msgErr) errors.message = msgErr;
                     setFormErrors(errors);
-                    setTouched({ name: true, phone: true, email: true });
+                    setTouched({ name: true, phone: true, email: true, message: true });
                     if (Object.keys(errors).length === 0) {
                       setSubmitted(true);
                     }
                   }}
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-tostem-dark mb-1 block">Name *</label>
-                      <Input
-                        name="name"
-                        placeholder="Your Name"
-                        required
-                        className={`${touched.name && formErrors.name ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : touched.name && !formErrors.name ? 'border-green-400 focus:border-green-500 focus:ring-green-200' : ''}`}
-                        onBlur={(e) => handleBlur('name', e.target.value)}
-                        onChange={(e) => handleChange('name', e.target.value)}
-                      />
-                      {touched.name && formErrors.name && (
-                        <p className="text-xs text-red-500 mt-1">{formErrors.name}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-tostem-dark mb-1 block">Phone *</label>
-                      <Input
-                        name="phone"
-                        placeholder="+91 XXXXX XXXXX"
-                        type="tel"
-                        required
-                        className={`${touched.phone && formErrors.phone ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : touched.phone && !formErrors.phone ? 'border-green-400 focus:border-green-500 focus:ring-green-200' : ''}`}
-                        onBlur={(e) => handleBlur('phone', e.target.value)}
-                        onChange={(e) => handleChange('phone', e.target.value)}
-                      />
-                      {touched.phone && formErrors.phone && (
-                        <p className="text-xs text-red-500 mt-1">{formErrors.phone}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-tostem-dark mb-1 block">Email *</label>
-                      <Input
-                        name="email"
-                        placeholder="you@example.com"
-                        type="email"
-                        required
-                        className={`${touched.email && formErrors.email ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : touched.email && !formErrors.email ? 'border-green-400 focus:border-green-500 focus:ring-green-200' : ''}`}
-                        onBlur={(e) => handleBlur('email', e.target.value)}
-                        onChange={(e) => handleChange('email', e.target.value)}
-                      />
-                      {touched.email && formErrors.email && (
-                        <p className="text-xs text-red-500 mt-1">{formErrors.email}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-tostem-dark mb-1 block">City</label>
-                      <Input placeholder="Your City" />
-                    </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FloatingLabelInput
+                      id="name"
+                      label="Name"
+                      required
+                      value={formValues.name}
+                      onChange={(e) => handleChange('name', e.target.value)}
+                      onBlur={(e) => handleBlur('name', e.target.value)}
+                      error={touched.name ? formErrors.name : undefined}
+                      valid={isFieldValid('name')}
+                      placeholder="Your full name"
+                    />
+                    <FloatingLabelInput
+                      id="phone"
+                      label="Phone"
+                      type="tel"
+                      required
+                      value={formValues.phone}
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      onBlur={(e) => handleBlur('phone', e.target.value)}
+                      error={touched.phone ? formErrors.phone : undefined}
+                      valid={isFieldValid('phone')}
+                      placeholder="+91 XXXXX XXXXX"
+                    />
+                    <FloatingLabelInput
+                      id="email"
+                      label="Email"
+                      type="email"
+                      required
+                      value={formValues.email}
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      onBlur={(e) => handleBlur('email', e.target.value)}
+                      error={touched.email ? formErrors.email : undefined}
+                      valid={isFieldValid('email')}
+                      placeholder="you@example.com"
+                    />
+                    <FloatingLabelInput
+                      id="city"
+                      label="City"
+                      value={formValues.city}
+                      onChange={(e) => handleChange('city', e.target.value)}
+                      onBlur={(e) => handleBlur('city', e.target.value)}
+                      placeholder="Your city"
+                    />
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-tostem-dark mb-1 block">Product Interest</label>
-                    <select className="w-full h-10 px-3 border rounded-md text-sm border-gray-200 focus:border-tostem-blue focus:ring-tostem-blue/20 focus:outline-none focus:ring-2">
-                      <option>Aluminium Windows</option>
-                      <option>Aluminium Doors</option>
-                      <option>Steel Entrance Doors</option>
-                      <option>Facades</option>
-                      <option>Interior Solutions</option>
-                      <option>Other</option>
-                    </select>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FloatingLabelSelect
+                      id="productInterest"
+                      label="Product Interest"
+                      options={productInterests.map((p) => ({ value: p.toLowerCase().replace(/\s+/g, '-'), label: p }))}
+                      value={formValues.productInterest}
+                      onChange={(e) => handleChange('productInterest', e.target.value)}
+                    />
+                    <FloatingLabelSelect
+                      id="contactTime"
+                      label="Preferred Contact Time"
+                      options={contactTimes}
+                      value={formValues.contactTime}
+                      onChange={(e) => handleChange('contactTime', e.target.value)}
+                    />
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-tostem-dark mb-1 block">Message</label>
-                    <Textarea placeholder="Tell us about your project..." rows={4} />
+                  <div className="relative">
+                    <div className="relative">
+                      <label
+                        htmlFor="message"
+                        className={`absolute left-3 transition-all duration-200 pointer-events-none z-10 ${
+                          formValues.message.length > 0 || touched.message
+                            ? 'top-1 text-xs font-medium text-tostem-blue'
+                            : 'top-3 text-base text-tostem-text-muted'
+                        }`}
+                      >
+                        Message
+                      </label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formValues.message}
+                        onChange={(e) => handleChange('message', e.target.value)}
+                        onBlur={() => handleBlur('message', formValues.message)}
+                        placeholder={formValues.message.length > 0 ? 'Tell us about your project...' : ''}
+                        rows={4}
+                        maxLength={500}
+                        className={`pt-7 pb-2 bg-white resize-none ${
+                          formErrors.message ? 'border-red-400 focus:border-red-500 focus:ring-red-200' :
+                          isFieldValid('message') ? 'border-green-400 focus:border-green-500 focus:ring-green-200' :
+                          'border-gray-200 focus:border-tostem-blue focus:ring-tostem-blue/20'
+                        }`}
+                      />
+                      {/* Animated checkmark */}
+                      {isFieldValid('message') && !formErrors.message && (
+                        <motion.div
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="absolute right-3 top-3"
+                        >
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                        </motion.div>
+                      )}
+                    </div>
+                    {/* Character counter */}
+                    <div className="flex justify-between items-center mt-1">
+                      {touched.message && formErrors.message ? (
+                        <p className="text-xs text-red-500">{formErrors.message}</p>
+                      ) : <span />}
+                      <span className={`text-xs ${formValues.message.length > 450 ? 'text-orange-500' : 'text-tostem-text-muted'}`}>
+                        {formValues.message.length}/500
+                      </span>
+                    </div>
                   </div>
                   <Button type="submit" className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8">
                     <Send className="w-4 h-4 mr-2" /> Submit Enquiry

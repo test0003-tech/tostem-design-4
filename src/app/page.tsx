@@ -8,6 +8,7 @@ import WhatsAppButton from '@/components/whatsapp-button';
 import ScrollProgress from '@/components/scroll-progress';
 import FloatingCTABar from '@/components/floating-cta-bar';
 import BackToTop from '@/components/back-to-top';
+import SocialProof from '@/components/social-proof';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Footer />
       <CookieConsent />
       <WhatsAppButton />
+      <SocialProof />
       <FloatingCTABar />
       <BackToTop />
     </div>
