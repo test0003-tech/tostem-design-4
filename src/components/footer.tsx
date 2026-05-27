@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin, Twitter, ArrowUp, Shield, CheckCircle, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin, Twitter, ArrowUp, Shield, CheckCircle, Send, MessageCircle, FileText, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -146,12 +146,12 @@ export default function Footer() {
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-5 pb-2 border-b border-white/10">
               Quick Links
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {footerQuickLinks.map((link) => (
-                <li key={link.label}>
+                <li key={link.label} className="min-h-[44px] flex items-center">
                   <button
                     onClick={() => handleLinkClick(link.href)}
-                    className="text-sm text-gray-400 hover:text-white hover:pl-1 transition-all duration-200"
+                    className="text-sm text-gray-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded px-2 -mx-2 min-h-[44px] flex items-center w-full"
                   >
                     {link.label}
                   </button>
@@ -165,12 +165,12 @@ export default function Footer() {
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-5 pb-2 border-b border-white/10">
               Products
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {footerProductLinks.map((link) => (
-                <li key={link.label}>
+                <li key={link.label} className="min-h-[44px] flex items-center">
                   <button
                     onClick={() => handleLinkClick(link.href)}
-                    className="text-sm text-gray-400 hover:text-white hover:pl-1 transition-all duration-200"
+                    className="text-sm text-gray-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded px-2 -mx-2 min-h-[44px] flex items-center w-full"
                   >
                     {link.label}
                   </button>
@@ -247,14 +247,14 @@ export default function Footer() {
                     placeholder="Enter your email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 text-sm h-9"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 text-sm h-11 md:h-9"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleNewsletterSubmit();
                     }}
                   />
                   <Button
                     size="sm"
-                    className="bg-tostem-blue hover:bg-tostem-blue-light text-white h-9 px-3 flex-shrink-0"
+                    className="bg-tostem-blue hover:bg-tostem-blue-light text-white h-11 md:h-9 px-3 flex-shrink-0"
                     onClick={handleNewsletterSubmit}
                     disabled={!newsletterEmail}
                   >
@@ -298,6 +298,42 @@ export default function Footer() {
             >
               <ArrowUp className="w-3 h-3" />
               Back to Top
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions - Mobile Only */}
+      <div className="lg:hidden border-t border-white/10">
+        <div className="max-w-[1400px] mx-auto px-4 py-4">
+          <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1">
+            <button
+              onClick={() => window.open(`tel:${siteMetadata.phone}`, '_self')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-tostem-blue/40 text-tostem-blue text-xs font-semibold whitespace-nowrap hover:bg-tostem-blue hover:text-white transition-colors flex-shrink-0"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              Call Us
+            </button>
+            <button
+              onClick={() => navigateTo('contact')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-tostem-blue/40 text-tostem-blue text-xs font-semibold whitespace-nowrap hover:bg-tostem-blue hover:text-white transition-colors flex-shrink-0"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              Get Quote
+            </button>
+            <button
+              onClick={() => navigateTo('contact')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-tostem-blue/40 text-tostem-blue text-xs font-semibold whitespace-nowrap hover:bg-tostem-blue hover:text-white transition-colors flex-shrink-0"
+            >
+              <Search className="w-3.5 h-3.5" />
+              Find Studio
+            </button>
+            <button
+              onClick={() => navigateTo('e-catalogue')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-tostem-blue/40 text-tostem-blue text-xs font-semibold whitespace-nowrap hover:bg-tostem-blue hover:text-white transition-colors flex-shrink-0"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Brochure
             </button>
           </div>
         </div>

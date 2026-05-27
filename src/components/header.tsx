@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Menu, X, ChevronDown, ChevronRight, Download, MessageCircle, Search, Sun, Moon } from 'lucide-react';
+import { Phone, Menu, X, ChevronDown, ChevronRight, Download, MessageCircle, Search, Sun, Moon, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { mainNavigation, productMegaMenuTabs, siteMetadata } from '@/lib/tostem-data';
 import SearchOverlay from '@/components/search-overlay';
+import ProductWizard from '@/components/product-wizard';
 import type { NavSection, NavItem, MegaMenuTab } from '@/lib/tostem-data';
 import { useSiteStore } from '@/lib/store';
 import { useTheme } from 'next-themes';
@@ -24,7 +25,9 @@ export default function Header() {
     return false;
   });
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
   const { theme, setTheme } = useTheme();
+  const { wizardOpen, setWizardOpen } = useSiteStore();
 
   const dismissAnnouncement = useCallback(() => {
     setAnnouncementVisible(false);
@@ -41,6 +44,13 @@ export default function Header() {
     const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileMenuOpen(false); };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  // Listen for custom search open event (from 404 page etc.)
+  useEffect(() => {
+    const handleOpenSearch = () => setSearchOpen(true);
+    window.addEventListener('tostem:open-search', handleOpenSearch);
+    return () => window.removeEventListener('tostem:open-search', handleOpenSearch);
   }, []);
 
   useEffect(() => {
@@ -72,9 +82,114 @@ export default function Header() {
     setMobileExpanded((prev) => (prev === label ? null : label));
   }, []);
 
+  // ====== Keyboard Navigation ======
+  const handleNavKeyDown = useCallback((e: React.KeyboardEvent, sectionIndex: number, section: NavSection) => {
+    const navItems = navRef.current?.querySelectorAll<HTMLElement>('[data-nav-item]');
+    if (!navItems) return;
+
+    const hasDropdown = !!(section.children || section.columns);
+
+    switch (e.key) {
+      case 'Enter':
+      case ' ': {
+        e.preventDefault();
+        if (hasDropdown) {
+          setActiveDropdown(activeDropdown === section.label ? null : section.label);
+          // Focus first dropdown link after opening
+          setTimeout(() => {
+            const dropdown = navRef.current?.querySelector<HTMLElement>(`[data-dropdown="${section.label}"] [data-dropdown-link]`);
+            if (dropdown) dropdown.focus();
+          }, 50);
+        } else {
+          handleNavClick(section.href);
+        }
+        break;
+      }
+      case 'Escape': {
+        e.preventDefault();
+        setActiveDropdown(null);
+        // Return focus to the nav trigger
+        navItems[sectionIndex]?.focus();
+        break;
+      }
+      case 'ArrowRight': {
+        e.preventDefault();
+        setActiveDropdown(null);
+        const nextIndex = (sectionIndex + 1) % mainNavigation.length;
+        navItems[nextIndex]?.focus();
+        break;
+      }
+      case 'ArrowLeft': {
+        e.preventDefault();
+        setActiveDropdown(null);
+        const prevIndex = (sectionIndex - 1 + mainNavigation.length) % mainNavigation.length;
+        navItems[prevIndex]?.focus();
+        break;
+      }
+      case 'ArrowDown': {
+        e.preventDefault();
+        if (hasDropdown) {
+          if (activeDropdown !== section.label) {
+            setActiveDropdown(section.label);
+          }
+          setTimeout(() => {
+            const dropdown = navRef.current?.querySelector<HTMLElement>(`[data-dropdown="${section.label}"] [data-dropdown-link]`);
+            if (dropdown) dropdown.focus();
+          }, 50);
+        }
+        break;
+      }
+    }
+  }, [activeDropdown, handleNavClick]);
+
+  const handleDropdownLinkKeyDown = useCallback((e: React.KeyboardEvent, section: NavSection) => {
+    const dropdownLinks = navRef.current?.querySelectorAll<HTMLElement>(`[data-dropdown="${section.label}"] [data-dropdown-link]`);
+    if (!dropdownLinks) return;
+
+    const currentIndex = Array.from(dropdownLinks).indexOf(e.currentTarget as HTMLElement);
+
+    switch (e.key) {
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIndex = currentIndex + 1 < dropdownLinks.length ? currentIndex + 1 : 0;
+        dropdownLinks[nextIndex]?.focus();
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        if (currentIndex === 0) {
+          // Focus back to nav trigger
+          const navItems = navRef.current?.querySelectorAll<HTMLElement>('[data-nav-item]');
+          const sectionIndex = mainNavigation.findIndex((s) => s.label === section.label);
+          if (navItems && sectionIndex >= 0) navItems[sectionIndex]?.focus();
+          setActiveDropdown(null);
+        } else {
+          dropdownLinks[currentIndex - 1]?.focus();
+        }
+        break;
+      }
+      case 'Tab': {
+        // If on last item and tabbing forward, close dropdown
+        if (!e.shiftKey && currentIndex === dropdownLinks.length - 1) {
+          setActiveDropdown(null);
+        }
+        break;
+      }
+      case 'Escape': {
+        e.preventDefault();
+        setActiveDropdown(null);
+        const navItems = navRef.current?.querySelectorAll<HTMLElement>('[data-nav-item]');
+        const sectionIndex = mainNavigation.findIndex((s) => s.label === section.label);
+        if (navItems && sectionIndex >= 0) navItems[sectionIndex]?.focus();
+        break;
+      }
+    }
+  }, []);
+
   return (
     <>
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ProductWizard open={wizardOpen} onOpenChange={setWizardOpen} />
       <header className="fixed top-0 left-0 right-0 z-50">
         {/* Announcement Ticker Bar */}
         {announcementVisible && (
@@ -111,6 +226,13 @@ export default function Header() {
                 <Search className="w-4 h-4" />
               </button>
               <button
+                onClick={() => setWizardOpen(true)}
+                className="w-10 h-10 rounded-full bg-tostem-light-gray dark:bg-white/10 flex items-center justify-center text-tostem-dark dark:text-gray-300 hover:bg-tostem-blue hover:text-white dark:hover:bg-tostem-blue dark:hover:text-white transition-colors"
+                aria-label="Product Finder"
+              >
+                <Compass className="w-4 h-4" />
+              </button>
+              <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="w-10 h-10 rounded-full bg-tostem-light-gray dark:bg-white/10 flex items-center justify-center text-tostem-dark dark:text-gray-300 hover:bg-tostem-mid-gray dark:hover:bg-white/20 transition-colors"
                 aria-label="Toggle theme"
@@ -127,12 +249,27 @@ export default function Header() {
         </div>
 
         {/* Navigation Bar - Desktop */}
-        <nav className={`hidden lg:block bg-tostem-dark transition-all duration-300 ${scrolled ? 'shadow-lg' : ''}`} onMouseLeave={() => setActiveDropdown(null)}>
+        <nav ref={navRef} className={`hidden lg:block bg-tostem-dark transition-all duration-300 ${scrolled ? 'shadow-lg' : ''}`} onMouseLeave={() => setActiveDropdown(null)} role="menubar" aria-label="Main navigation">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <div className="flex items-center justify-center">
-              {mainNavigation.map((section) => (
+              {mainNavigation.map((section, index) => (
                 <div key={section.label} className="relative" onMouseEnter={() => handleMouseEnter(section.label)} onMouseLeave={handleMouseLeave}>
-                  <button className={`nav-item flex items-center gap-1 whitespace-nowrap ${activeDropdown === section.label ? 'bg-white/10' : ''}`} onClick={() => handleNavClick(section.href)}>
+                  <button
+                    data-nav-item
+                    tabIndex={0}
+                    role="menuitem"
+                    aria-expanded={activeDropdown === section.label}
+                    aria-haspopup={!!(section.children || section.columns)}
+                    className={`nav-item flex items-center gap-1 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-2 focus-visible:ring-offset-tostem-dark ${activeDropdown === section.label ? 'bg-white/10' : ''}`}
+                    onClick={() => {
+                      if (section.children || section.columns) {
+                        setActiveDropdown(activeDropdown === section.label ? null : section.label);
+                      } else {
+                        handleNavClick(section.href);
+                      }
+                    }}
+                    onKeyDown={(e) => handleNavKeyDown(e, index, section)}
+                  >
                     {section.label === 'ABOUT TOSTEM' ? 'About Tostem' : section.label === 'WHY TOSTEM' ? 'Why Tostem' : section.label === 'OUR PRODUCT' ? 'Our Product' : section.label === 'DRIVING EXPERIENCE' ? 'Driving Experience' : section.label === 'KNOWLEDGE EXPERIENCE' ? 'Knowledge Experience' : section.label === 'REACH US' ? 'Reach Us' : section.label}
                     {(section.children || section.columns) && <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === section.label ? 'rotate-180' : ''}`} />}
                   </button>
@@ -152,6 +289,7 @@ export default function Header() {
               onMouseEnter={() => handleMouseEnter(activeDropdown)}
               onMouseLeave={handleMouseLeave}
               onNavClick={handleNavClick}
+              onDropdownLinkKeyDown={handleDropdownLinkKeyDown}
             />
           )}
         </AnimatePresence>
@@ -174,13 +312,13 @@ export default function Header() {
 }
 
 // ============ Desktop Mega Menu ============
-function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMouseEnter, onMouseLeave, onNavClick }: {
-  section: NavSection; activeProductTab: string; setActiveProductTab: (tab: string) => void; onMouseEnter: () => void; onMouseLeave: () => void; onNavClick: (href: string) => void;
+function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMouseEnter, onMouseLeave, onNavClick, onDropdownLinkKeyDown }: {
+  section: NavSection; activeProductTab: string; setActiveProductTab: (tab: string) => void; onMouseEnter: () => void; onMouseLeave: () => void; onNavClick: (href: string) => void; onDropdownLinkKeyDown: (e: React.KeyboardEvent, section: NavSection) => void;
 }) {
   const isProduct = section.label === 'OUR PRODUCT';
 
   return (
-    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="absolute left-0 right-0 bg-white shadow-2xl border-t border-gray-100 z-50" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="absolute left-0 right-0 bg-white shadow-2xl border-t border-gray-100 z-50" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} data-dropdown={section.label} role="menu" aria-label={`${section.label} submenu`}>
       {isProduct ? (
         // Tabbed mega menu for Our Product
         <div className="max-w-[1400px] mx-auto px-8 py-0">
@@ -200,10 +338,10 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
                 <div key={tab.id} className="grid grid-cols-2 gap-8">
                   <div>
                     <h3 className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Designs</h3>
-                    <ul className="space-y-0.5">
+                    <ul className="space-y-0.5" role="menu">
                       {tab.designs.map((item) => (
-                        <li key={item.label}>
-                          <a href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors">{item.label}</a>
+                        <li key={item.label} role="none">
+                          <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
                         </li>
                       ))}
                     </ul>
@@ -211,10 +349,10 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
                   {tab.series.length > 0 && (
                     <div>
                       <h3 className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Series</h3>
-                      <ul className="space-y-0.5">
+                      <ul className="space-y-0.5" role="menu">
                         {tab.series.map((item) => (
-                          <li key={item.label}>
-                            <a href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors">{item.label}</a>
+                          <li key={item.label} role="none">
+                            <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
                           </li>
                         ))}
                       </ul>
@@ -228,10 +366,10 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
       ) : section.children ? (
         // Simple dropdown menu
         <div className="max-w-[1400px] mx-auto px-8 py-4">
-          <div className="grid grid-cols-1 gap-0 max-w-xs">
+          <div className="grid grid-cols-1 gap-0 max-w-xs" role="menu">
             {section.children.map((child) => (
-              <div key={child.label}>
-                <a href={child.href} onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} className="flex items-center gap-2 px-3 py-2.5 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors">
+              <div key={child.label} role="none">
+                <a href={child.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">
                   {child.label}
                   {child.children && <ChevronRight className="w-3 h-3 ml-auto" />}
                 </a>
@@ -239,7 +377,7 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
                 {child.children && (
                   <div className="pl-6">
                     {child.children.map((sub) => (
-                      <a key={sub.label} href={sub.href} onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} className="block px-3 py-2 text-sm text-tostem-text-muted hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors">{sub.label}</a>
+                      <a key={sub.label} href={sub.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-3 py-2 text-sm text-tostem-text-muted hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{sub.label}</a>
                     ))}
                   </div>
                 )}

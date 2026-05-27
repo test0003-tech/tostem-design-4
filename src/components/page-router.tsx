@@ -16,6 +16,7 @@ import GlossaryPage from '@/components/pages/glossary-page';
 import TadaPage from '@/components/pages/tada-page';
 import HomePage from '@/components/pages/home-page';
 import EcataloguePage from '@/components/pages/ecatalogue-page';
+import NotFoundPage from '@/components/pages/not-found-page';
 import PageSkeleton from '@/components/page-skeleton';
 
 export default function PageRouter() {
@@ -84,6 +85,17 @@ export default function PageRouter() {
   // Find page info in registry
   const pageInfo = pageRegistry.find((p) => p.slug === currentPage);
 
+  // Update document title when page changes
+  useEffect(() => {
+    if (currentPage === 'home' || !currentPage) {
+      document.title = 'Leading Aluminium Windows and Doors Manufacturer | Tostem India';
+    } else if (pageInfo) {
+      document.title = `${pageInfo.title} | Tostem India`;
+    } else {
+      document.title = `${currentPage.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} | Tostem India`;
+    }
+  }, [currentPage, pageInfo]);
+
   // Render the appropriate page component
   const renderPage = () => {
     if (currentPage === 'home' || !currentPage) {
@@ -91,7 +103,7 @@ export default function PageRouter() {
     }
 
     if (!pageInfo) {
-      return <GenericPage slug={currentPage} />;
+      return <NotFoundPage />;
     }
 
     switch (pageInfo.type) {

@@ -23,6 +23,9 @@ import {
 import type { WhyTostemItem, DesignData } from '@/lib/tostem-data';
 import SectionHeading from '@/components/section-heading';
 import { DesignQuickViewModal, DesignQuickViewButton } from '@/components/design-quick-view';
+import { ComparisonBar, CompareCheckbox, ComparisonDialog } from '@/components/product-comparison';
+import ProductWizard from '@/components/product-wizard';
+import { useSiteStore } from '@/lib/store';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -123,8 +126,18 @@ export default function HomePage() {
   const [quickViewDesign, setQuickViewDesign] = useState<DesignData | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
 
+  // Comparison state
+  const [comparisonItems, setComparisonItems] = useState<DesignData[]>([]);
+  const [comparisonOpen, setComparisonOpen] = useState(false);
+
+  // Product Wizard state (synced with global store)
+  const { wizardOpen, setWizardOpen } = useSiteStore();
+
   // FAQ search state
   const [faqSearch, setFaqSearch] = useState('');
+
+  // Show all designs state
+  const [showAllDesigns, setShowAllDesigns] = useState(false);
 
   // Testimonials carousel state
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -181,6 +194,21 @@ export default function HomePage() {
 
   const galleryCategories = ['All', 'Residential', 'Commercial', 'Interior', 'Exterior'];
   const filteredGallery = galleryFilter === 'All' ? galleryData : galleryData.filter((item) => item.category === galleryFilter);
+
+  // Comparison helpers
+  const toggleComparisonItem = useCallback((design: DesignData) => {
+    setComparisonItems((prev) => {
+      if (prev.find((d) => d.id === design.id)) {
+        return prev.filter((d) => d.id !== design.id);
+      }
+      if (prev.length >= 3) return prev;
+      return [...prev, design];
+    });
+  }, []);
+
+  const removeComparisonItem = useCallback((id: string) => {
+    setComparisonItems((prev) => prev.filter((d) => d.id !== id));
+  }, []);
 
   return (
     <div className="pt-[88px] lg:pt-[132px]">
@@ -435,6 +463,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== PRODUCT FINDER ===== */}
+      <section className="py-16 md:py-20 bg-white dark:bg-[#111] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-tostem-blue rounded-full blur-3xl" />
+        </div>
+        <div className="max-w-[800px] mx-auto px-4 lg:px-8 relative z-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge className="bg-tostem-blue/10 text-tostem-blue text-xs px-4 py-1.5 rounded-full mb-4">
+              <Sparkles className="w-3 h-3 mr-1.5" /> AI-Powered
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-black text-tostem-dark dark:text-white mb-3">
+              Find Your Perfect Product
+            </h2>
+            <p className="text-base md:text-lg text-tostem-text-light dark:text-gray-400 leading-relaxed mb-8 max-w-lg mx-auto">
+              Not sure which product is right for you? Answer 3 simple questions and get personalized recommendations.
+            </p>
+            <Button
+              size="lg"
+              className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8 shadow-lg shadow-tostem-blue/20"
+              onClick={() => setWizardOpen(true)}
+            >
+              <Sparkles className="w-4 h-4 mr-2" /> Start Product Finder <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== SERIES ===== */}
       <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
@@ -487,13 +547,14 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Designs" title="Explore Our Designs" description="From classic to contemporary, our design catalogue covers every architectural vision." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {designsData.map((design) => (
+            {(showAllDesigns ? designsData : designsData.slice(0, 8)).map((design) => (
               <motion.div key={design.id} variants={itemVariants} className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-xl hover:scale-[1.03] border-2 border-transparent hover:border-tostem-blue/30 transition-all duration-300" onClick={() => navigateTo(design.slug)}>
                 <div className="aspect-[4/3] relative">
                   <div className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" style={{ backgroundImage: `url(${design.image})` }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-3 left-3"><Badge className="bg-tostem-blue/90 text-white text-[10px]">{design.category}</Badge></div>
                   <DesignQuickViewButton onClick={(e) => { e.stopPropagation(); setQuickViewDesign(design); setQuickViewOpen(true); }} />
+                  <CompareCheckbox isSelected={comparisonItems.some((c) => c.id === design.id)} isDisabled={comparisonItems.length >= 3 && !comparisonItems.some((c) => c.id === design.id)} onClick={(e) => { e.stopPropagation(); toggleComparisonItem(design); }} />
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <h3 className="text-sm font-bold text-white leading-tight">{design.name}</h3>
                     <p className="text-xs text-white/60 mt-1 line-clamp-2">{design.description}</p>
@@ -502,6 +563,21 @@ export default function HomePage() {
               </motion.div>
             ))}
           </motion.div>
+          {!showAllDesigns && designsData.length > 8 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mt-10"
+            >
+              <Button
+                className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8"
+                onClick={() => setShowAllDesigns(true)}
+              >
+                Show All Designs ({designsData.length}) <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -875,6 +951,22 @@ export default function HomePage() {
           onOpenChange={setQuickViewOpen}
         />
       )}
+
+      {/* Comparison Bar & Dialog */}
+      <ComparisonBar
+        selectedItems={comparisonItems}
+        onRemoveItem={removeComparisonItem}
+        onCompareNow={() => setComparisonOpen(true)}
+        onClearAll={() => setComparisonItems([])}
+      />
+      <ComparisonDialog
+        items={comparisonItems}
+        open={comparisonOpen}
+        onOpenChange={setComparisonOpen}
+      />
+
+      {/* Product Wizard */}
+      <ProductWizard open={wizardOpen} onOpenChange={setWizardOpen} />
     </div>
   );
 }

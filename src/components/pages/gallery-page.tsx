@@ -240,8 +240,7 @@ function MasonryCard({ item, index, onClick }: { item: GalleryItem; index: numbe
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.4, delay: (index % 4) * 0.08 }}
-      break-inside-avoid
-      className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 mb-5"
+      className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 mb-5 break-inside-avoid"
       onClick={onClick}
     >
       <div className={`${aspectClass} relative`}>

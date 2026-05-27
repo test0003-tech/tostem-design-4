@@ -29,6 +29,10 @@ interface SiteState {
   currentPage: string;
   setCurrentPage: (page: string) => void;
 
+  // Product Wizard
+  wizardOpen: boolean;
+  setWizardOpen: (open: boolean) => void;
+
   // Scrolled state
   isScrolled: boolean;
   setIsScrolled: (scrolled: boolean) => void;
@@ -63,6 +67,10 @@ export const useSiteStore = create<SiteState>((set) => ({
   // Current page - hash-based routing
   currentPage: 'home',
   setCurrentPage: (page) => set({ currentPage: page }),
+
+  // Product Wizard
+  wizardOpen: false,
+  setWizardOpen: (open) => set({ wizardOpen: open }),
 
   // Scrolled state
   isScrolled: false,
