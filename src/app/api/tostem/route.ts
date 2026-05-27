@@ -1,9 +1,8 @@
-import ZAI from 'z-ai-web-dev-sdk';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-// Simple in-memory cache
+// Simple in-memory cache (per-isolate on Cloudflare)
 const cache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
@@ -17,7 +16,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ pages });
   }
 
-  // Fetch content from Tostem page
+  // Fetch content from Tostem page using native fetch (edge-compatible)
   const url = searchParams.get('url');
   const slug = searchParams.get('slug');
 
@@ -38,13 +37,32 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const zai = await ZAI.create();
-    const result = await zai.functions.invoke('page_reader', { url: targetUrl });
+    // Use native fetch instead of z-ai SDK for edge compatibility
+    const response = await fetch(targetUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; TostemBot/1.0)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const html = await response.text();
+
+    // Extract basic content from HTML
+    const title = extractMeta(html, '<title>', '</title>') || 'Tostem Page';
+    const description = extractMeta(html, 'name="description" content="', '"') || extractMeta(html, 'property="og:description" content="', '"') || '';
 
     const responseData = {
       url: targetUrl,
       slug: slug || targetUrl.split('/').filter(Boolean).pop() || '',
-      data: result.data,
+      data: {
+        title,
+        description,
+        html: html.substring(0, 50000), // Limit content size
+      },
       fetchedAt: new Date().toISOString(),
     };
 
@@ -56,6 +74,15 @@ export async function GET(request: NextRequest) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+function extractMeta(html: string, start: string, end: string): string | null {
+  const startIndex = html.indexOf(start);
+  if (startIndex === -1) return null;
+  const contentStart = startIndex + start.length;
+  const endIndex = html.indexOf(end, contentStart);
+  if (endIndex === -1) return null;
+  return html.substring(contentStart, endIndex).trim();
 }
 
 function getAllPages() {

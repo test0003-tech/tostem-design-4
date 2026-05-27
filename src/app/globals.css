@@ -439,3 +439,195 @@ html {
   margin-left: 2px;
   font-weight: 300;
 }
+
+/* ===== Enhanced Glassmorphism Card ===== */
+.glass-card-enhanced {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.dark .glass-card-enhanced {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Button Ripple Effect ===== */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.btn-ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  transition: 0s;
+}
+
+/* ===== Button Scale Hover ===== */
+.btn-scale-hover {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.btn-scale-hover:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(46, 90, 135, 0.25);
+}
+.btn-scale-hover:active {
+  transform: scale(0.97);
+}
+
+/* ===== Dot Pattern Background ===== */
+.pattern-dots {
+  background-image: radial-gradient(circle, rgba(46, 90, 135, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.dark .pattern-dots {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+/* ===== Grid Pattern Background ===== */
+.pattern-grid {
+  background-image:
+    linear-gradient(rgba(46, 90, 135, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 90, 135, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .pattern-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* ===== Diagonal Lines Pattern ===== */
+.pattern-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(46, 90, 135, 0.03) 10px,
+    rgba(46, 90, 135, 0.03) 12px
+  );
+}
+.dark .pattern-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.02) 10px,
+    rgba(255, 255, 255, 0.02) 12px
+  );
+}
+
+/* ===== Image Shimmer Overlay ===== */
+@keyframes image-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.image-shimmer-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.image-shimmer-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: image-shimmer 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+.dark .image-shimmer-wrap::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* ===== Parallax Section ===== */
+.parallax-section {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ===== Floating Particles ===== */
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px) scale(0.95);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-25px) translateX(15px) scale(1.05);
+    opacity: 0.7;
+  }
+}
+.particle {
+  animation: float-particle var(--duration, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ===== 360 Product Rotation ===== */
+@keyframes rotate-360 {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.rotate-3d {
+  animation: rotate-360 var(--rotation-speed, 8s) linear infinite;
+  transform-style: preserve-3d;
+}
+.rotate-3d:hover {
+  animation-play-state: paused;
+}
+
+/* ===== Gradient Border ===== */
+.gradient-border {
+  position: relative;
+  background-clip: padding-box;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #2E5A87, #3a6fa3, #5a9fd4, #3a6fa3);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
