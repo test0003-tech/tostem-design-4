@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ArrowRight, Clock, Trash2 } from 'lucide-react';
+import { Search, X, ArrowRight, Clock, Trash2, Mic, MicOff } from 'lucide-react';
 import { pageRegistry } from '@/lib/tostem-data';
 import type { PageRegistryItem } from '@/lib/tostem-data';
 import { Badge } from '@/components/ui/badge';
@@ -66,8 +66,11 @@ function clearRecentSearches() {
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceSupported] = useState(() => typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window));
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<unknown>(null);
 
   // Wrapped onClose that also clears the query
   const handleClose = useCallback(() => {
@@ -222,6 +225,38 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                     <X className="w-4 h-4 text-tostem-text-muted" />
                   </button>
                 )}
+                {/* Voice Search Button */}
+                {voiceSupported && (
+                  <button
+                    onClick={() => {
+                      if (isListening) {
+                        (recognitionRef.current as { stop: () => void })?.stop();
+                        setIsListening(false);
+                      } else {
+                        const SpeechRecognition = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition;
+                        if (SpeechRecognition) {
+                          const recognition = new (SpeechRecognition as new () => { lang: string; interimResults: boolean; onresult: (e: { results: { transcript: string }[][] }) => void; onerror: () => void; onend: () => void; start: () => void; stop: () => void })();
+                          recognition.lang = 'en-IN';
+                          recognition.interimResults = false;
+                          recognition.onresult = (e: { results: { transcript: string }[][] }) => {
+                            const transcript = e.results[0][0].transcript;
+                            setQuery(transcript);
+                            setIsListening(false);
+                          };
+                          recognition.onerror = () => setIsListening(false);
+                          recognition.onend = () => setIsListening(false);
+                          recognitionRef.current = recognition;
+                          recognition.start();
+                          setIsListening(true);
+                        }
+                      }
+                    }}
+                    className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'hover:bg-gray-100 text-tostem-text-muted'}`}
+                    aria-label={isListening ? 'Stop voice search' : 'Start voice search'}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+                )}
                 <button
                   onClick={handleClose}
                   className="hidden sm:flex items-center gap-1.5 text-xs text-tostem-text-muted bg-gray-100 rounded-md px-2 py-1.5 hover:bg-gray-200 transition-colors"
@@ -229,6 +264,19 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   ESC
                 </button>
               </div>
+
+              {/* Voice Listening Indicator */}
+              {isListening && (
+                <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center animate-pulse">
+                    <Mic className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-red-700">Listening...</p>
+                    <p className="text-xs text-red-500">Speak now to search</p>
+                  </div>
+                </div>
+              )}
 
               {/* Results */}
               <div

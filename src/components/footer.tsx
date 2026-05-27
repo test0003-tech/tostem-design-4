@@ -65,8 +65,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-tostem-footer text-gray-300 relative">
-      {/* Gradient top border */}
-      <div className="h-1 bg-gradient-to-r from-tostem-blue via-tostem-blue-light to-tostem-blue" />
+      {/* Animated gradient top border */}
+      <div className="h-1.5 overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-tostem-blue via-tostem-blue-light via-[#5a9fd4] to-tostem-blue bg-[length:200%_100%] animate-[gradient-shift_4s_ease_infinite]" />
+      </div>
 
       {/* Find a Studio Banner */}
       <div className="bg-tostem-blue text-white">
