@@ -52,3 +52,18 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# QA screenshots and temp files
+qa-*.png
+qa_*.json
+tostem_*.json
+scroll*_check.json
+about_check.json
+local_site_check.json
+*.bak
+agent-ctx/
+content/
+download/
+examples/
+mini-services/
+db/
