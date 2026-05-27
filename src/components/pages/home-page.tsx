@@ -1119,6 +1119,37 @@ export default function HomePage() {
       {/* ===== CUSTOMER STORIES ===== */}
       <CustomerStories />
 
+      {/* ===== SUSTAINABILITY ===== */}
+      <section className="py-16 md:py-24 bg-tostem-dark text-white overflow-hidden relative">
+        <div className="absolute inset-0 pattern-grid opacity-30" />
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+          <SectionHeading label="Sustainability" title="Building a Greener Future" description="TOSTEM is committed to sustainable manufacturing and eco-friendly practices that reduce environmental impact." light />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+            {[
+              { icon: '🌿', title: 'Recyclable Aluminium', stat: '100%', desc: 'All our aluminium profiles are 100% recyclable without loss of quality.' },
+              { icon: '⚡', title: 'Energy Efficient', stat: '40%', desc: 'Our windows reduce energy consumption by up to 40% with advanced thermal insulation.' },
+              { icon: '🏭', title: 'Green Manufacturing', stat: 'ISO 14001', desc: 'Certified environmental management system ensuring sustainable production processes.' },
+              { icon: '♻️', title: 'Zero-Waste Goal', stat: '2027', desc: 'Committed to achieving zero manufacturing waste to landfill by 2027.' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="glass-card-enhanced p-6 text-center hover:scale-[1.03] transition-transform duration-300 cursor-pointer group"
+                onClick={() => navigateTo('quality-assurance-and-services')}
+              >
+                <span className="text-4xl block mb-3 group-hover:scale-110 transition-transform">{item.icon}</span>
+                <div className="text-2xl md:text-3xl font-black text-tostem-blue-light mb-1">{item.stat}</div>
+                <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-xs text-white/60 leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== RECENTLY VIEWED ===== */}
       <RecentlyViewed />
 
