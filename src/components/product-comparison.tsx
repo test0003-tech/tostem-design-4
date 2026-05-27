@@ -171,7 +171,7 @@ export function CompareCheckbox({ isSelected, isDisabled, onClick }: CompareChec
           ? 'bg-tostem-blue text-white'
           : isDisabled
           ? 'bg-gray-400/80 text-gray-300 cursor-not-allowed opacity-0 group-hover:opacity-100'
-          : 'bg-white/90 hover:bg-tostem-blue text-tostem-dark hover:text-white opacity-0 group-hover:opacity-100'
+          : 'bg-white/90 hover:bg-tostem-blue text-tostem-dark hover:text-white'
       }`}
       aria-label={isSelected ? 'Remove from comparison' : isDisabled ? 'Comparison full (max 3)' : 'Add to comparison'}
       aria-pressed={isSelected}
@@ -208,7 +208,7 @@ export function ComparisonDialog({ items, open, onOpenChange }: ComparisonDialog
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar" onPointerDownOutside={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-tostem-dark text-xl flex items-center gap-2">
             <GitCompare className="w-5 h-5 text-tostem-blue" />

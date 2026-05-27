@@ -760,7 +760,7 @@ export const categoryData: CategoryData[] = [
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80",
     count: 24,
-    href: "#windows",
+    href: "#/aluminium-windows-design-prices",
   },
   {
     id: "doors",
@@ -770,7 +770,7 @@ export const categoryData: CategoryData[] = [
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80",
     count: 28,
-    href: "#doors",
+    href: "#/aluminium-doors-design-prices",
   },
   {
     id: "interior",
@@ -780,7 +780,7 @@ export const categoryData: CategoryData[] = [
     image:
       "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80",
     count: 8,
-    href: "#interior",
+    href: "#/interior",
   },
   {
     id: "exterior",
@@ -790,7 +790,7 @@ export const categoryData: CategoryData[] = [
     image:
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&q=80",
     count: 12,
-    href: "#exterior",
+    href: "#/facades",
   },
 ];
 

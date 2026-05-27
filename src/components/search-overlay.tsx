@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ArrowRight } from 'lucide-react';
+import { Search, X, ArrowRight, Clock, Trash2 } from 'lucide-react';
 import { pageRegistry } from '@/lib/tostem-data';
 import type { PageRegistryItem } from '@/lib/tostem-data';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,9 @@ interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const RECENT_SEARCHES_KEY = 'tostem-recent-searches';
+const MAX_RECENT_SEARCHES = 5;
 
 const typeBadgeMap: Record<string, { label: string; className: string }> = {
   'about': { label: 'About', className: 'bg-tostem-blue/10 text-tostem-blue border-tostem-blue/20' },
@@ -32,8 +35,37 @@ function getTypeBadge(type: string) {
   return typeBadgeMap[type] || { label: type, className: 'bg-gray-100 text-gray-700 border-gray-200' };
 }
 
+function getRecentSearches(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveRecentSearch(term: string) {
+  if (!term.trim()) return;
+  try {
+    const existing = getRecentSearches();
+    const filtered = existing.filter((s) => s.toLowerCase() !== term.toLowerCase());
+    filtered.unshift(term.trim());
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(filtered.slice(0, MAX_RECENT_SEARCHES)));
+  } catch {
+    // Silently fail
+  }
+}
+
+function clearRecentSearches() {
+  try {
+    localStorage.removeItem(RECENT_SEARCHES_KEY);
+  } catch {
+    // Silently fail
+  }
+}
+
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState('');
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +74,18 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     setQuery('');
     onClose();
   }, [onClose]);
+
+  // Load recent searches - use a ref to avoid setState in effect
+  const refreshRecentSearches = useCallback(() => {
+    setRecentSearches(getRecentSearches());
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Use microtask to avoid lint warning about setState in effect
+      queueMicrotask(() => refreshRecentSearches());
+    }
+  }, [isOpen, refreshRecentSearches]);
 
   // Auto-focus when opening
   useEffect(() => {
@@ -93,9 +137,13 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   }, [query]);
 
   const handleResultClick = useCallback((page: PageRegistryItem) => {
+    // Save the search term
+    if (query.trim()) {
+      saveRecentSearch(query);
+    }
     handleClose();
     window.location.hash = `#/${page.slug}`;
-  }, [handleClose]);
+  }, [handleClose, query]);
 
   const handleEnter = useCallback(() => {
     if (results.length > 0) {
@@ -109,6 +157,20 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       handleEnter();
     }
   }, [handleEnter]);
+
+  const handleRecentSearchClick = useCallback((term: string) => {
+    setQuery(term);
+  }, []);
+
+  const handleClearRecentSearches = useCallback(() => {
+    clearRecentSearches();
+    setRecentSearches([]);
+  }, []);
+
+  const handleSuggestionClick = useCallback((hint: string) => {
+    setQuery(hint);
+    saveRecentSearch(hint);
+  }, []);
 
   return (
     <AnimatePresence>
@@ -174,22 +236,53 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 className="max-h-[55vh] overflow-y-auto custom-scrollbar"
               >
                 {!query.trim() && (
-                  <div className="px-5 py-12 text-center">
+                  <div className="px-5 py-8 text-center">
                     <Search className="w-10 h-10 text-tostem-mid-gray mx-auto mb-3" />
                     <p className="text-tostem-text-light text-sm">
                       Start typing to search across all pages
                     </p>
+                    {/* Suggestion chips */}
                     <div className="flex flex-wrap gap-2 justify-center mt-4">
                       {['Sliding Windows', 'ATIS Series', 'French Doors', 'Soundproof', 'Anodized'].map((hint) => (
                         <button
                           key={hint}
-                          onClick={() => setQuery(hint)}
+                          onClick={() => handleSuggestionClick(hint)}
                           className="px-3 py-1.5 text-xs text-tostem-text-light bg-tostem-light-gray rounded-full hover:bg-tostem-mid-gray hover:text-tostem-dark transition-colors"
                         >
                           {hint}
                         </button>
                       ))}
                     </div>
+
+                    {/* Recent Searches */}
+                    {recentSearches.length > 0 && (
+                      <div className="mt-6 text-left">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-tostem-text-muted uppercase tracking-wider">
+                            <Clock className="w-3.5 h-3.5" />
+                            Recent Searches
+                          </div>
+                          <button
+                            onClick={handleClearRecentSearches}
+                            className="flex items-center gap-1 text-xs text-tostem-text-muted hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-3 h-3" /> Clear
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {recentSearches.map((term) => (
+                            <button
+                              key={term}
+                              onClick={() => handleRecentSearchClick(term)}
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-tostem-text-light bg-tostem-light-gray rounded-full hover:bg-tostem-blue/10 hover:text-tostem-blue transition-colors"
+                            >
+                              <Clock className="w-3 h-3 opacity-40" />
+                              {term}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

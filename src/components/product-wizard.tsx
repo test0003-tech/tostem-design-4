@@ -242,7 +242,7 @@ export default function ProductWizard({ open, onOpenChange }: ProductWizardProps
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar" onPointerDownOutside={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-tostem-dark text-xl flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-tostem-blue" />

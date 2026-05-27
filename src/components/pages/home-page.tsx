@@ -25,8 +25,31 @@ import SectionHeading from '@/components/section-heading';
 import { DesignQuickViewModal, DesignQuickViewButton } from '@/components/design-quick-view';
 import { ComparisonBar, CompareCheckbox, ComparisonDialog } from '@/components/product-comparison';
 import ProductWizard from '@/components/product-wizard';
+import PriceEstimator, { PriceEstimatorCTA } from '@/components/price-estimator';
+import RecentlyViewed from '@/components/recently-viewed';
 import { useSiteStore } from '@/lib/store';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+
+// ====== Section Divider Component ======
+function SectionDivider({ color = '#2E5A87', flip = false }: { color?: string; flip?: boolean }) {
+  return (
+    <div className={`w-full overflow-hidden leading-[0] ${flip ? 'rotate-180' : ''}`}>
+      <svg
+        viewBox="0 0 1440 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-[30px] md:h-[40px]"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0 60L48 52C96 44 192 28 288 22C384 16 480 20 576 28C672 36 768 48 864 48C960 48 1056 36 1152 28C1248 20 1344 16 1392 14L1440 12V60H1392C1344 60 1248 60 1152 60C1056 60 960 60 864 60C768 60 672 60 576 60C480 60 384 60 288 60C192 60 96 60 48 60H0Z"
+          fill="currentColor"
+          style={{ color }}
+        />
+      </svg>
+    </div>
+  );
+}
 
 const iconMap: Record<string, React.ReactNode> = {
   'shield-check': <ShieldCheck className="w-8 h-8" />,
@@ -62,9 +85,17 @@ function useCountUp(target: number, duration: number = 2000, startOnView: boolea
           setHasStarted(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
-    if (ref.current) observer.observe(ref.current);
+    if (ref.current) {
+      observer.observe(ref.current);
+      // Check if already intersecting on mount
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0 && !hasStarted) {
+        // Use microtask to avoid setState-in-effect lint error
+        queueMicrotask(() => setHasStarted(true));
+      }
+    }
     return () => observer.disconnect();
   }, [hasStarted, startOnView]);
 
@@ -132,6 +163,9 @@ export default function HomePage() {
 
   // Product Wizard state (synced with global store)
   const { wizardOpen, setWizardOpen } = useSiteStore();
+
+  // Price Estimator state
+  const [estimatorOpen, setEstimatorOpen] = useState(false);
 
   // FAQ search state
   const [faqSearch, setFaqSearch] = useState('');
@@ -210,13 +244,23 @@ export default function HomePage() {
     setComparisonItems((prev) => prev.filter((d) => d.id !== id));
   }, []);
 
+  // Parallax scroll effect for hero
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="pt-[88px] lg:pt-[132px]">
       {/* ===== HERO ===== */}
       <section className="relative h-[85vh] min-h-[500px] overflow-hidden">
         {heroSlides.map((slide, index) => (
           <motion.div key={index} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: index === currentSlide ? 1 : 0 }} transition={{ duration: 1.2, ease: 'easeInOut' }}>
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${slide.image})` }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${slide.image})`, transform: `translateY(${scrollY * 0.3}px)` }} />
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
           </motion.div>
         ))}
@@ -314,6 +358,7 @@ export default function HomePage() {
 
       {/* ===== ABOUT ===== */}
       <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
+        <SectionDivider color="#f5f5f5" />
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label={aboutData.subtitle} title={aboutData.title} description={aboutData.description} />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
@@ -355,6 +400,7 @@ export default function HomePage() {
 
       {/* ===== WHY TOSTEM ===== */}
       <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
+        <SectionDivider color="#ffffff" />
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Why Tostem" title="The Tostem Advantage" description="Discover why architects, builders, and homeowners across India trust Tostem." />
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -438,6 +484,7 @@ export default function HomePage() {
 
       {/* ===== PRODUCTS ===== */}
       <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
+        <SectionDivider color="#ffffff" />
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Products" title="Premium Aluminium Solutions" description="From elegant windows to grand entrances, explore our comprehensive range." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -495,8 +542,16 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== PRICE ESTIMATOR CTA ===== */}
+      <section className="py-10 md:py-16 bg-white dark:bg-[#111]">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <PriceEstimatorCTA onClick={() => setEstimatorOpen(true)} />
+        </div>
+      </section>
+
       {/* ===== SERIES ===== */}
       <section className="py-16 md:py-24 bg-white dark:bg-[#111]">
+        <SectionDivider color="#2E5A87" />
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <SectionHeading label="Our Series" title="Choose Your Series" description="Tostem offers multiple series, each tailored to different needs and budgets." />
           <Tabs defaultValue="atis" className="w-full">
@@ -919,6 +974,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== RECENTLY VIEWED ===== */}
+      <RecentlyViewed />
+
       {/* ===== CTA ===== */}
       <section className="py-16 md:py-24 bg-tostem-dark relative overflow-hidden">
         <div className="absolute inset-0 opacity-10"><div className="absolute -top-20 -right-20 w-96 h-96 bg-tostem-blue rounded-full blur-3xl" /><div className="absolute -bottom-20 -left-20 w-96 h-96 bg-tostem-blue rounded-full blur-3xl" /></div>
@@ -967,6 +1025,9 @@ export default function HomePage() {
 
       {/* Product Wizard */}
       <ProductWizard open={wizardOpen} onOpenChange={setWizardOpen} />
+
+      {/* Price Estimator */}
+      <PriceEstimator open={estimatorOpen} onOpenChange={setEstimatorOpen} />
     </div>
   );
 }

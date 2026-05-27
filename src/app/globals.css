@@ -218,6 +218,56 @@
     animation: marquee 20s linear infinite;
   }
 
+/* ===== Micro-interactions ===== */
+
+/* Button press effect */
+.btn-press {
+  transition: transform 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Smooth focus rings for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(46, 90, 135, 0.3);
+  border-radius: inherit;
+}
+
+/* Card lift effect */
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.12);
+}
+.dark .card-lift:hover {
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.4);
+}
+
+/* Shimmer loading animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    var(--border) 50%,
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;

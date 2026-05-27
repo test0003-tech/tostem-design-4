@@ -3,15 +3,52 @@
 import { motion } from 'framer-motion';
 import {
   Home, ChevronRight, Phone, Mail, MapPin, Clock, Send,
-  Facebook, Instagram, Linkedin, Youtube, MapPinned, CheckCircle
+  Facebook, Instagram, Linkedin, Youtube, MapPinned, CheckCircle,
+  Building2, TrendingUp, Users, Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function navigateTo(slug: string) { window.location.hash = `/${slug}`; }
+
+// Animated counter hook
+function useCountUp(target: number, duration: number = 2000) {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useState<HTMLDivElement | null>(null)[0];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasStarted) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    const el = document.getElementById('trust-stats');
+    if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    const startTime = Date.now();
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [hasStarted, target, duration]);
+
+  return count;
+}
 
 const offices = [
   { city: 'Gurugram', address: '7th Floor, Tower-B, Emaar Palm Spring, Golf Course Road, Sector-54, Gurugram, Haryana 122003', phone: '+91 124 656 9900' },
@@ -257,21 +294,87 @@ export default function ContactPage() {
 
   return (
     <div className="pt-[88px] lg:pt-[132px]">
-      {/* Hero */}
-      <section className="relative h-[300px] overflow-hidden bg-tostem-dark">
-        <div className="absolute inset-0 bg-gradient-to-r from-tostem-dark via-tostem-dark/80 to-tostem-blue/30" />
+      {/* Decorative Hero Section */}
+      <section className="relative h-[350px] md:h-[420px] overflow-hidden bg-tostem-dark">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-tostem-dark via-tostem-blue/40 to-tostem-dark" />
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.06]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '32px 32px'
+        }} />
+        {/* Floating decorative shapes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <motion.div
+            className="absolute top-[10%] right-[8%] w-40 h-40 md:w-64 md:h-64 rounded-full border border-white/5"
+            animate={{ y: [0, -15, 0], rotate: [0, 3, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute bottom-[15%] right-[25%] w-24 h-24 md:w-36 md:h-36 rounded-full border border-tostem-blue/10 bg-tostem-blue/5"
+            animate={{ y: [0, 12, 0], x: [0, -8, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-[40%] left-[5%] w-1.5 h-20 md:h-32 bg-gradient-to-b from-transparent via-white/10 to-transparent"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-[20%] left-[30%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-tostem-blue/5 blur-3xl"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <nav className="flex items-center gap-2 text-sm text-white/50 mb-4">
                 <Home className="w-3 h-3" />
                 <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home'); }} className="hover:text-white">Home</a>
                 <ChevronRight className="w-3 h-3" />
                 <span className="text-white">Contact</span>
               </nav>
-              <h1 className="text-3xl md:text-5xl font-black text-white mb-2">TOSTEM Offices</h1>
-              <p className="text-white/60">Find a TOSTEM office near you or get in touch with our team.</p>
+              <h1 className="text-3xl md:text-5xl font-black text-white mb-3">Get in Touch</h1>
+              <p className="text-white/60 text-lg max-w-xl">Find a TOSTEM office near you or reach out to our team for expert guidance on your next project.</p>
+              <div className="flex items-center gap-4 mt-6">
+                <a href="tel:18002667500" className="flex items-center gap-2 bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-white text-sm backdrop-blur-sm border border-white/10 transition-colors">
+                  <Phone className="w-4 h-4" /> 1800-266-7500
+                </a>
+                <a href="mailto:info@tostemindia.com" className="flex items-center gap-2 bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full text-white text-sm backdrop-blur-sm border border-white/10 transition-colors">
+                  <Mail className="w-4 h-4" /> info@tostemindia.com
+                </a>
+              </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Stats Bar */}
+      <section id="trust-stats" className="bg-white border-b border-gray-100">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-6 md:py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {[
+              { icon: Building2, value: 6, suffix: '', label: 'Offices', count: useCountUp(6) },
+              { icon: TrendingUp, value: 500, suffix: '+', label: 'Projects', count: useCountUp(500) },
+              { icon: Users, value: 98, suffix: '%', label: 'Satisfaction', count: useCountUp(98) },
+              { icon: Award, value: 24, suffix: 'hr', label: 'Response', count: useCountUp(24) },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <stat.icon className="w-5 h-5 text-tostem-blue mx-auto mb-2" />
+                <div className="text-2xl md:text-3xl font-black text-tostem-dark">
+                  {stat.count}<span className="text-tostem-blue">{stat.suffix}</span>
+                </div>
+                <div className="text-xs text-tostem-text-muted font-medium mt-0.5">{stat.label}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -542,16 +645,20 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all border border-transparent hover:border-tostem-blue/30"
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-transparent hover:border-tostem-blue/30 overflow-hidden card-lift"
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4 text-tostem-blue" />
-                  <h3 className="text-lg font-bold text-tostem-dark">{office.city}</h3>
+                {/* Gradient top border */}
+                <div className="h-1 bg-gradient-to-r from-tostem-blue to-tostem-blue-light" />
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MapPin className="w-4 h-4 text-tostem-blue" />
+                    <h3 className="text-lg font-bold text-tostem-dark">{office.city}</h3>
+                  </div>
+                  <p className="text-sm text-tostem-text-light mb-3 pl-6">{office.address}</p>
+                  <a href={`tel:${office.phone}`} className="flex items-center gap-2 text-sm text-tostem-blue hover:underline pl-6">
+                    <Phone className="w-3 h-3" />{office.phone}
+                  </a>
                 </div>
-                <p className="text-sm text-tostem-text-light mb-3 pl-6">{office.address}</p>
-                <a href={`tel:${office.phone}`} className="flex items-center gap-2 text-sm text-tostem-blue hover:underline pl-6">
-                  <Phone className="w-3 h-3" />{office.phone}
-                </a>
               </motion.div>
             ))}
           </div>

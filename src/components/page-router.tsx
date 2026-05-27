@@ -4,6 +4,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSiteStore } from '@/lib/store';
 import { pageRegistry } from '@/lib/tostem-data';
+import { saveToRecentlyViewed } from '@/components/recently-viewed';
 import GenericPage from '@/components/pages/generic-page';
 import CategoryPage from '@/components/pages/category-page';
 import DesignPage from '@/components/pages/design-page';
@@ -84,6 +85,19 @@ export default function PageRouter() {
 
   // Find page info in registry
   const pageInfo = pageRegistry.find((p) => p.slug === currentPage);
+
+  // Save to recently viewed when page changes
+  useEffect(() => {
+    if (currentPage && currentPage !== 'home' && pageInfo) {
+      saveToRecentlyViewed(
+        currentPage,
+        pageInfo.title,
+        pageInfo.type || 'page'
+      );
+      // Dispatch custom event so RecentlyViewed component updates
+      window.dispatchEvent(new CustomEvent('tostem-recently-viewed-updated'));
+    }
+  }, [currentPage, pageInfo]);
 
   // Update document title when page changes
   useEffect(() => {

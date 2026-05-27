@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronRight, ArrowRight, Home, CheckCircle, ShieldCheck, VolumeX, Sparkles, Download, ImageIcon, X } from 'lucide-react';
+import { ChevronRight, ArrowRight, Home, CheckCircle, ShieldCheck, VolumeX, Sparkles, Download, ImageIcon, X, Maximize, Layers, Palette, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { PageRegistryItem } from '@/lib/tostem-data';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
+import ShareButtons from '@/components/share-buttons';
 
 function navigateTo(slug: string) {
   window.location.hash = `/${slug}`;
@@ -330,6 +331,39 @@ function getGalleryImages(slug: string): string[] {
   ];
 }
 
+// ==================== COLOR SWATCHES ====================
+const colorSwatches = [
+  { name: 'Natural Silver', color: '#C0C0C0' },
+  { name: 'Bronze', color: '#8B6914' },
+  { name: 'Black', color: '#1a1a1a' },
+  { name: 'White', color: '#F5F5F5' },
+  { name: 'Custom RAL', color: 'linear-gradient(135deg, #2E5A87, #3a6fa3)' },
+  { name: 'Wood Grain', color: 'linear-gradient(135deg, #8B6914, #D2B48C)' },
+];
+
+// ==================== SPEC ICON MAPPING ====================
+function getSpecIcon(label: string) {
+  const lower = label.toLowerCase();
+  if (lower.includes('width') || lower.includes('span') || lower.includes('area')) return <Maximize className="w-5 h-5 text-tostem-blue" />;
+  if (lower.includes('height') || lower.includes('length')) return <Maximize className="w-5 h-5 text-tostem-blue" />;
+  if (lower.includes('glass') || lower.includes('thickness') || lower.includes('material')) return <Layers className="w-5 h-5 text-tostem-blue" />;
+  if (lower.includes('sound') || lower.includes('acoustic')) return <VolumeX className="w-5 h-5 text-tostem-blue" />;
+  if (lower.includes('security') || lower.includes('rating') || lower.includes('wind')) return <ShieldCheck className="w-5 h-5 text-tostem-blue" />;
+  if (lower.includes('thermal') || lower.includes('u-value') || lower.includes('insulation')) return <Sparkles className="w-5 h-5 text-tostem-blue" />;
+  return <Layers className="w-5 h-5 text-tostem-blue" />;
+}
+
+// ==================== SIDE NAV SECTIONS ====================
+const sideNavSections = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'gallery', label: 'Gallery' },
+  { id: 'features', label: 'Features' },
+  { id: 'specs', label: 'Specs' },
+  { id: 'finishes', label: 'Finishes' },
+  { id: 'series', label: 'Series' },
+  { id: 'related', label: 'Related' },
+];
+
 interface DesignPageProps {
   slug: string;
   pageInfo: PageRegistryItem;
@@ -339,10 +373,44 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
   const details = designDetails[slug];
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState('');
+  const [activeSection, setActiveSection] = useState('overview');
+  const [hoveredSwatch, setHoveredSwatch] = useState<string | null>(null);
 
   const openLightbox = (img: string) => {
     setLightboxImage(img);
     setLightboxOpen(true);
+  };
+
+  // Track active section on scroll
+  useEffect(() => {
+    if (!details) return;
+    const handleScroll = () => {
+      const sectionElements = sideNavSections.map((s) => ({
+        id: s.id,
+        el: document.getElementById(`design-${s.id}`),
+      })).filter((s) => s.el !== null);
+
+      let current = 'overview';
+      for (const section of sectionElements) {
+        if (section.el) {
+          const rect = section.el.getBoundingClientRect();
+          if (rect.top <= 200) {
+            current = section.id;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [details]);
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(`design-${id}`);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 140;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   if (!details) {
@@ -373,12 +441,46 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
   const relatedDesigns = getRelatedDesigns(slug);
   const galleryImages = getGalleryImages(slug);
 
+  // Filter side nav based on available sections
+  const visibleNavSections = sideNavSections.filter((s) => {
+    if (s.id === 'series' && details.series.length === 0) return false;
+    if (s.id === 'related' && relatedDesigns.length === 0) return false;
+    return true;
+  });
+
   return (
     <div className="pt-[88px] lg:pt-[132px]">
-      {/* Hero */}
-      <section className="relative h-[350px] md:h-[450px] overflow-hidden">
+      {/* Sticky Side Navigation - desktop only */}
+      <div className="hidden lg:block fixed left-6 top-1/2 -translate-y-1/2 z-30">
+        <nav className="flex flex-col items-center gap-3" aria-label="Page sections">
+          {visibleNavSections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => scrollToSection(section.id)}
+              className="group relative flex items-center"
+              aria-label={section.label}
+            >
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                activeSection === section.id
+                  ? 'bg-tostem-blue scale-125'
+                  : 'bg-gray-300 hover:bg-tostem-blue/50'
+              }`} />
+              <span className="absolute left-6 whitespace-nowrap text-xs font-medium text-tostem-dark bg-white px-2 py-1 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                {section.label}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Hero - Overview section */}
+      <section id="design-overview" className="relative h-[350px] md:h-[450px] overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${details.image})` }} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+        {/* Share buttons */}
+        <div className="absolute top-4 right-4 md:top-6 md:right-6 z-20">
+          <ShareButtons title={details.title} className="[&_button]:bg-white/20 [&_button]:backdrop-blur-sm [&_button]:border [&_button]:border-white/20" />
+        </div>
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8 w-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -397,7 +499,7 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
       </section>
 
       {/* Image Gallery */}
-      <section className="py-10 md:py-14 bg-white">
+      <section id="design-gallery" className="py-10 md:py-14 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -434,7 +536,7 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
       </section>
 
       {/* Features & Specs */}
-      <section className="py-12 md:py-16">
+      <section id="design-features" className="py-12 md:py-16">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
@@ -452,23 +554,26 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
               <h2 className="text-2xl font-bold text-tostem-dark mb-6">Specifications</h2>
               <div className="grid grid-cols-2 gap-4">
                 {details.specs.map((spec) => (
-                  <div key={spec.label} className="bg-tostem-light-gray rounded-lg p-4">
-                    <div className="text-xs text-tostem-text-muted uppercase tracking-wider">{spec.label}</div>
-                    <div className="text-lg font-bold text-tostem-dark mt-1">{spec.value}</div>
+                  <div key={spec.label} className="bg-tostem-light-gray rounded-lg p-4 card-lift border border-transparent hover:border-tostem-blue/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      {getSpecIcon(spec.label)}
+                      <span className="text-xs text-tostem-text-muted uppercase tracking-wider">{spec.label}</span>
+                    </div>
+                    <div className="text-lg font-bold text-tostem-dark">{spec.value}</div>
                   </div>
                 ))}
               </div>
               {/* Quick benefits */}
               <div className="mt-6 space-y-3">
-                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100">
+                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100 card-lift">
                   <ShieldCheck className="w-5 h-5 text-tostem-blue" />
                   <span className="text-sm text-tostem-text-light">100+ quality checks per product</span>
                 </div>
-                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100">
+                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100 card-lift">
                   <VolumeX className="w-5 h-5 text-tostem-blue" />
                   <span className="text-sm text-tostem-text-light">Up to 40dB sound reduction</span>
                 </div>
-                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100">
+                <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-100 card-lift">
                   <Sparkles className="w-5 h-5 text-tostem-blue" />
                   <span className="text-sm text-tostem-text-light">5x harder anodized finish</span>
                 </div>
@@ -478,9 +583,53 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
         </div>
       </section>
 
+      {/* Available Finishes */}
+      <section id="design-finishes" className="py-12 md:py-16 bg-tostem-light-gray">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Palette className="w-6 h-6 text-tostem-blue" />
+              <h2 className="text-2xl font-bold text-tostem-dark">Available Finishes</h2>
+            </div>
+            <p className="text-sm text-tostem-text-light mb-8">Choose from a wide range of premium surface finishes to match your architectural vision.</p>
+            <div className="flex flex-wrap gap-6">
+              {colorSwatches.map((swatch) => (
+                <div key={swatch.name} className="flex flex-col items-center gap-2">
+                  <button
+                    className="relative w-10 h-10 rounded-full border-2 border-gray-200 hover:border-tostem-blue transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-tostem-blue/30 focus:ring-offset-2"
+                    style={{ background: swatch.color }}
+                    onMouseEnter={() => setHoveredSwatch(swatch.name)}
+                    onMouseLeave={() => setHoveredSwatch(null)}
+                    aria-label={`Finish: ${swatch.name}`}
+                  >
+                    {swatch.name === 'White' && (
+                      <div className="absolute inset-0 rounded-full border border-gray-300" />
+                    )}
+                  </button>
+                  <span className={`text-[10px] font-medium transition-opacity duration-200 ${
+                    hoveredSwatch === swatch.name ? 'text-tostem-dark opacity-100' : 'text-tostem-text-muted opacity-60'
+                  }`}>
+                    {swatch.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex items-center gap-2 text-xs text-tostem-text-muted">
+              <Eye className="w-3.5 h-3.5" />
+              <span>Hover over swatches to see finish names. Contact us for physical samples.</span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Available Series */}
       {details.series.length > 0 && (
-        <section className="py-12 md:py-16 bg-tostem-light-gray">
+        <section id="design-series" className="py-12 md:py-16 bg-white">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <h2 className="text-2xl font-bold text-tostem-dark mb-8">Available in These Series</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -538,7 +687,7 @@ export default function DesignPage({ slug, pageInfo }: DesignPageProps) {
 
       {/* Related Designs */}
       {relatedDesigns.length > 0 && (
-        <section className="py-12 md:py-16 bg-tostem-light-gray">
+        <section id="design-related" className="py-12 md:py-16 bg-tostem-light-gray">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <motion.h2
               initial={{ opacity: 0, y: 10 }}
