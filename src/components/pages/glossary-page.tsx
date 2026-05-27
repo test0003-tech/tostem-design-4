@@ -68,7 +68,7 @@ export default function GlossaryPage() {
       </section>
 
       {/* Search & Count */}
-      <section className="py-8 border-b border-gray-100 bg-white">
+      <section className="py-8 border-b border-gray-100 dark:border-white/10 bg-white dark:bg-[#111]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="relative flex-1 max-w-md">
@@ -80,15 +80,15 @@ export default function GlossaryPage() {
                 className="pl-10 border-gray-200 focus:border-tostem-blue focus:ring-tostem-blue/20"
               />
             </div>
-            <p className="text-sm text-tostem-text-light">
-              <span className="font-bold text-tostem-dark">{filteredTerms.length}</span> term{filteredTerms.length !== 1 ? 's' : ''} found
+              <p className="text-sm text-tostem-text-light dark:text-gray-400">
+              <span className="font-bold text-tostem-dark dark:text-gray-200">{filteredTerms.length}</span> term{filteredTerms.length !== 1 ? 's' : ''} found
             </p>
           </div>
         </div>
       </section>
 
       {/* Sticky Letter Navigation */}
-      <div className="sticky top-20 z-30 bg-white border-b border-gray-100 shadow-sm">
+      <div className="sticky top-20 z-30 bg-white dark:bg-[#111] border-b border-gray-100 dark:border-white/10 shadow-sm dark:shadow-none">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-3">
           <div className="flex flex-wrap gap-1.5 justify-center">
             {allLetters.map((letter) => {
@@ -100,8 +100,8 @@ export default function GlossaryPage() {
                   disabled={!isActive}
                   className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-all duration-200 ${
                     isActive
-                      ? 'bg-tostem-light-gray text-tostem-dark hover:bg-tostem-blue hover:text-white cursor-pointer'
-                      : 'bg-gray-50 text-gray-300 cursor-not-allowed'
+                      ? 'bg-tostem-light-gray dark:bg-white/10 text-tostem-dark dark:text-gray-200 hover:bg-tostem-blue hover:text-white cursor-pointer'
+                      : 'bg-gray-50 dark:bg-white/5 text-gray-300 dark:text-gray-600 cursor-not-allowed'
                   }`}
                 >
                   {letter}
@@ -122,8 +122,8 @@ export default function GlossaryPage() {
               className="text-center py-16"
             >
               <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-tostem-dark mb-2">No terms found</h3>
-              <p className="text-tostem-text-light text-sm">Try adjusting your search query.</p>
+              <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200 mb-2">No terms found</h3>
+              <p className="text-tostem-text-light dark:text-gray-400 text-sm">Try adjusting your search query.</p>
               <Button
                 variant="outline"
                 className="mt-4 border-tostem-blue text-tostem-blue hover:bg-tostem-blue hover:text-white"
@@ -157,19 +157,19 @@ export default function GlossaryPage() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ delay: idx * 0.04 }}
-                          className="bg-white rounded-xl p-5 border border-gray-100 hover:border-tostem-blue/40 transition-all duration-300 hover:shadow-md group"
+                          className="bg-white dark:bg-[#1a1a1a] rounded-xl p-5 border border-gray-100 dark:border-white/10 hover:border-tostem-blue/40 transition-all duration-300 hover:shadow-md group"
                         >
                           <div className="flex items-start justify-between gap-2 mb-2">
-                            <h3 className="text-sm font-bold text-tostem-dark group-hover:text-tostem-blue transition-colors">
+                            <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 group-hover:text-tostem-blue transition-colors duration-200">
                               {term.term}
                             </h3>
                             {term.category && (
-                              <span className="text-[10px] font-medium bg-tostem-light-gray text-tostem-text-light px-2 py-0.5 rounded-full whitespace-nowrap">
+                              <span className="text-[10px] font-medium bg-tostem-light-gray dark:bg-white/10 text-tostem-text-light dark:text-gray-400 px-2 py-0.5 rounded-full whitespace-nowrap">
                                 {term.category}
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-tostem-text-light leading-relaxed">{term.definition}</p>
+                          <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{term.definition}</p>
                         </motion.div>
                       ))}
                   </div>
@@ -190,7 +190,7 @@ export default function GlossaryPage() {
             className="max-w-lg mx-auto"
           >
             <MessageCircle className="w-10 h-10 text-tostem-blue mx-auto mb-4" />
-            <h2 className="text-2xl md:text-3xl font-black text-white mb-3">Still have questions?</h2>
+            <h2 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tight">Still have questions?</h2>
             <p className="text-white/60 mb-6">
               Our experts are ready to help you understand window and door terminology and find the perfect solution for your project.
             </p>

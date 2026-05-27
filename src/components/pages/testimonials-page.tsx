@@ -60,7 +60,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="bg-white border-b">
+      <section className="bg-white dark:bg-[#111] border-b dark:border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
             {stats.map((stat, i) => {
@@ -77,8 +77,8 @@ export default function TestimonialsPage() {
                     <IconComp className="w-5 h-5 md:w-6 md:h-6 text-tostem-blue" />
                   </div>
                   <div>
-                    <div className="text-xl md:text-2xl font-black text-tostem-dark">{stat.value}</div>
-                    <div className="text-xs md:text-sm text-gray-500">{stat.label}</div>
+                    <div className="text-xl md:text-2xl font-black text-tostem-dark dark:text-gray-100">{stat.value}</div>
+                    <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{stat.label}</div>
                   </div>
                 </motion.div>
               );
@@ -88,7 +88,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Filter Tabs */}
-      <section className="bg-tostem-light-gray border-b">
+      <section className="bg-tostem-light-gray dark:bg-[#1a1a1a] border-b dark:border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="flex items-center gap-1 overflow-x-auto py-4 scrollbar-none">
             {roleFilters.map((filter) => (
@@ -98,7 +98,7 @@ export default function TestimonialsPage() {
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                   activeFilter === filter
                     ? 'bg-tostem-blue text-white shadow-sm'
-                    : 'bg-white text-tostem-dark hover:bg-gray-200'
+                    : 'bg-white dark:bg-[#222] text-tostem-dark dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-white/10'
                 }`}
               >
                 {filter === 'Architects' && <Building2 className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />}
@@ -112,7 +112,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Testimonials Content */}
-      <section className="py-12 md:py-16 bg-tostem-light-gray">
+      <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <AnimatePresence mode="wait">
             <motion.div
@@ -128,7 +128,7 @@ export default function TestimonialsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-white rounded-2xl p-8 md:p-10 shadow-lg relative border border-gray-100 mb-8 overflow-hidden"
+                  className="bg-white dark:bg-[#1a1a1a] rounded-2xl p-8 md:p-10 shadow-lg relative border border-gray-100 dark:border-white/10 mb-8 overflow-hidden"
                 >
                   {/* Decorative background */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-tostem-blue/5 rounded-full -translate-y-1/2 translate-x-1/3" />
@@ -139,7 +139,7 @@ export default function TestimonialsPage() {
                       {/* Left: Quote and text */}
                       <div className="flex-1">
                         <Quote className="w-12 h-12 text-tostem-blue/20 mb-4" />
-                        <p className="text-lg md:text-xl text-tostem-dark leading-relaxed mb-6 italic">
+                        <p className="text-lg md:text-xl text-tostem-dark dark:text-gray-200 leading-relaxed mb-6 italic">
                           &ldquo;{featuredTestimonial.text}&rdquo;
                         </p>
                         <div className="flex items-center gap-4 mb-4">
@@ -147,9 +147,9 @@ export default function TestimonialsPage() {
                             {featuredTestimonial.name[0]}
                           </div>
                           <div>
-                            <div className="text-lg font-bold text-tostem-dark">{featuredTestimonial.name}</div>
-                            <div className="text-sm text-gray-500">{featuredTestimonial.role}</div>
-                            <div className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                            <div className="text-lg font-bold text-tostem-dark dark:text-gray-200">{featuredTestimonial.name}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{featuredTestimonial.role}</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 mt-0.5">
                               <MapPin className="w-3 h-3" />
                               {featuredTestimonial.location}
                             </div>
@@ -169,11 +169,11 @@ export default function TestimonialsPage() {
                               />
                             ))}
                           </div>
-                          <div className="text-sm font-medium text-gray-600">
+                          <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
                             {featuredTestimonial.rating}.0 out of 5.0
                           </div>
                         </div>
-                        <div className="bg-tostem-light-gray rounded-lg px-4 py-3 text-right w-full md:w-auto">
+                        <div className="bg-tostem-light-gray dark:bg-white/5 rounded-lg px-4 py-3 text-right w-full md:w-auto">
                           <div className="text-xs text-gray-500 mb-1">Project</div>
                           <div className="text-sm font-semibold text-tostem-dark">{featuredTestimonial.project}</div>
                         </div>
@@ -192,7 +192,7 @@ export default function TestimonialsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.4, delay: i * 0.08 }}
-                    className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative border border-gray-100"
+                    className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 relative border border-gray-100 dark:border-white/10"
                   >
                     <Quote className="w-8 h-8 text-tostem-blue/10 absolute top-4 right-4" />
 
@@ -210,7 +210,7 @@ export default function TestimonialsPage() {
                     </div>
 
                     {/* Quote text */}
-                    <p className="text-sm text-gray-600 leading-relaxed mb-6 line-clamp-4">{t.text}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6 line-clamp-4">{t.text}</p>
 
                     {/* Project */}
                     <div className="text-sm text-tostem-blue font-medium mb-4 flex items-center gap-1.5">
@@ -219,13 +219,13 @@ export default function TestimonialsPage() {
                     </div>
 
                     {/* Author */}
-                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-white/10">
                       <div className="w-10 h-10 rounded-full bg-tostem-blue/10 flex items-center justify-center text-tostem-blue font-bold">
                         {t.name[0]}
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-tostem-dark">{t.name}</div>
-                        <div className="text-xs text-gray-500">{t.role}, {t.location}</div>
+                        <div className="text-sm font-bold text-tostem-dark dark:text-gray-200">{t.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{t.role}, {t.location}</div>
                       </div>
                     </div>
                   </motion.div>
@@ -247,7 +247,7 @@ export default function TestimonialsPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-4">Join thousands of satisfied customers</h2>
+            <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight">Join thousands of satisfied customers</h2>
             <p className="text-white/60 mb-8 max-w-xl mx-auto">Experience the Tostem difference for yourself. Get in touch with our team today.</p>
             <Button
               size="lg"

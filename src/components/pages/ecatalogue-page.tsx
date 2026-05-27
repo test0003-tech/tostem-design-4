@@ -113,7 +113,7 @@ export default function EcataloguePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#111]">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-tostem-dark via-tostem-dark/95 to-tostem-blue/80 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -150,10 +150,10 @@ export default function EcataloguePage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mb-3 tracking-tight">
             Our Product Catalogues
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto">
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
             Download detailed brochures and technical specifications for all Tostem product lines.
           </p>
         </motion.div>
@@ -166,7 +166,7 @@ export default function EcataloguePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-tostem-blue/30 transition-all duration-300"
+              className="group bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300"
             >
               {/* Cover Placeholder */}
               <div className={`relative h-48 bg-gradient-to-br ${catalogue.gradient} flex items-center justify-center overflow-hidden`}>
@@ -184,12 +184,12 @@ export default function EcataloguePage() {
 
               {/* Card Content */}
               <div className="p-5">
-                <h3 className="font-bold text-tostem-dark text-lg mb-1 group-hover:text-tostem-blue transition-colors">
+                <h3 className="font-bold text-tostem-dark dark:text-gray-200 text-lg mb-1 group-hover:text-tostem-blue transition-colors duration-200">
                   {catalogue.title}
                 </h3>
-                <p className="text-sm text-gray-500 mb-3">{catalogue.description}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{catalogue.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
                     <FileText className="w-3 h-3" />
                     {catalogue.pages}
                   </span>
@@ -209,7 +209,7 @@ export default function EcataloguePage() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-tostem-light-gray py-16 md:py-20">
+      <section className="bg-tostem-light-gray dark:bg-[#1a1a1a] py-16 md:py-20">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -218,10 +218,10 @@ export default function EcataloguePage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark mb-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mb-3 tracking-tight">
               How It Works
             </h2>
-            <p className="text-gray-500">Get your catalogue in 3 simple steps</p>
+            <p className="text-gray-500 dark:text-gray-400">Get your catalogue in 3 simple steps</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -253,14 +253,14 @@ export default function EcataloguePage() {
                 transition={{ duration: 0.5, delay: index * 0.15 }}
                 className="text-center"
               >
-                <div className="relative mx-auto w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md mb-5">
+                <div className="relative mx-auto w-20 h-20 bg-white dark:bg-[#222] rounded-full flex items-center justify-center shadow-md mb-5">
                   <step.icon className="w-8 h-8 text-tostem-blue" />
                   <span className="absolute -top-1 -right-1 w-7 h-7 bg-tostem-blue text-white text-xs font-bold rounded-full flex items-center justify-center">
                     {step.step}
                   </span>
                 </div>
-                <h3 className="font-bold text-tostem-dark text-lg mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                <h3 className="font-bold text-tostem-dark dark:text-gray-200 text-lg mb-2">{step.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{step.description}</p>
               </motion.div>
             ))}
           </div>

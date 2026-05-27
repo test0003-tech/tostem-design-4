@@ -164,9 +164,9 @@ export default function PageRouter() {
       ) : (
         <motion.div
           key={currentPage}
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: 40, scale: 0.98 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: -40, scale: 0.98 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
           {renderPage()}

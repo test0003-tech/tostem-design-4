@@ -177,7 +177,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
                 ]}
               />
               <Badge className="bg-tostem-blue text-white mb-4">{series.tagline}</Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-4">{series.name}</h1>
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-balance text-white mb-4">{series.name}</h1>
               <p className="text-base md:text-lg text-white/70 max-w-2xl leading-relaxed">{series.detailedDescription}</p>
             </motion.div>
           </div>
@@ -223,7 +223,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
           >
             <div className="text-center mb-8">
               <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Compare Series</span>
-              <h2 className="text-xl md:text-2xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+              <h2 className="text-xl md:text-2xl font-bold text-tostem-dark dark:text-gray-200 mt-2 tracking-tight">
                 How {series.name} Compares
               </h2>
             </div>
@@ -295,7 +295,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-6">Key Features</h2>
+              <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-6 tracking-tight">Key Features</h2>
               <ul className="space-y-4">
                 {series.features.map((feature) => (
                   <motion.li key={feature} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex items-start gap-3">
@@ -306,7 +306,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
               </ul>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-6">Technical Specifications</h2>
+              <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-6 tracking-tight">Technical Specifications</h2>
               <div className="grid grid-cols-2 gap-4">
                 {series.specifications.map((spec) => (
                   <motion.div key={spec.label} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-tostem-light-gray dark:bg-[#1a1a1a] rounded-lg p-4">
@@ -331,7 +331,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
           >
             <div className="text-center mb-10">
               <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Best For</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2 tracking-tight">
                 Perfect Scenarios for {series.name}
               </h2>
             </div>
@@ -373,7 +373,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
           >
             <div className="text-center mb-10">
               <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Ideal For</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2 tracking-tight">
                 Where {series.name} Shines
               </h2>
               <p className="text-sm text-tostem-text-light dark:text-gray-400 mt-2">Discover the perfect applications for this series</p>
@@ -431,7 +431,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
       {/* Available Products */}
       <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Available Designs in {series.name}</h2>
+          <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8 tracking-tight">Available Designs in {series.name}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[
               { name: 'Sliding Windows', slug: 'aluminium-sliding-windows-designs' },
@@ -455,7 +455,7 @@ export default function SeriesPage({ slug, pageInfo }: SeriesPageProps) {
       {/* CTA */}
       <section className="py-12 md:py-16 bg-tostem-dark">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Choose {series.name} for Your Project</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">Choose {series.name} for Your Project</h2>
           <p className="text-white/60 mb-6">Get a free consultation and quotation for {series.name} series products.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>Get Free Quotation <ArrowRight className="w-4 h-4 ml-2" /></Button>

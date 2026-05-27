@@ -1516,3 +1516,194 @@ Stage Summary:
 4. Add A/B testing for CTA buttons
 5. Add live chat integration alongside WhatsApp
 6. Implement user authentication for quotation tracking
+
+---
+Task ID: 9-features
+Agent: Full-stack Developer
+Task: Add new features - before/after slider, installation tracker, customer stories, enhanced FAQ
+
+Work Log:
+- Created `/home/z/my-project/src/components/before-after-slider.tsx`
+  - Draggable slider overlay revealing "before" (conventional window) and "after" (Tostem pre-engineered window) images
+  - Two Unsplash images side by side with a draggable divider using CSS clipPath
+  - Mouse and touch event support for dragging
+  - Left/right arrow handle on the divider
+  - Labels "Conventional" (left) and "Tostem" (right) on respective sides
+  - Three comparison point cards below (Precision Fit, Weather Sealing, Durability)
+  - Title: "See the Tostem Difference"
+  - Placed between "Why Tostem" and "Warranty Showcase" sections
+- Created `/home/z/my-project/src/components/installation-tracker.tsx`
+  - Visual step-by-step timeline showing 6 installation steps
+  - Steps: Site Survey → Design Finalization → Manufacturing → Quality Check → Delivery → Installation
+  - Each step has icon, title, estimated duration, and description
+  - Animated progress bar connecting steps with step markers
+  - Step 3 "Manufacturing" highlighted as current step (IN PROGRESS badge)
+  - Completed steps show green COMPLETED badge
+  - Upcoming steps shown with muted styling
+  - Estimated total time summary (15-24 Working Days)
+  - Framer-motion staggered reveal animations
+  - Placed between "Process Timeline" and "Products" sections
+- Created `/home/z/my-project/src/components/customer-stories.tsx`
+  - Horizontal card carousel showing 6 detailed customer project stories
+  - Stories: Sharma Residence (Mumbai), ITC Hotel (Bangalore), Patel Villa (Ahmedabad), Prestige Tech Park (Hyderabad), Gupta Residence (Delhi), Lodha Bellissimo (Pune)
+  - Each card: project image, project name, location, product type badge, description, completion date, client name, project size, star rating
+  - Auto-scroll with 4-second interval, pause on hover
+  - Navigation arrows (prev/next) on desktop
+  - Navigation dots at bottom
+  - Responsive: 1 card on mobile, 2 on tablet, 3 on desktop
+  - Framer-motion smooth slide transitions (AnimatePresence)
+  - Placed between "Testimonials" and "Recently Viewed" sections
+- Created `/home/z/my-project/src/components/faq-section.tsx`
+  - Enhanced FAQ with 5 category tabs: General, Products, Installation, Pricing, Warranty
+  - 5 FAQs per category (25 total) with real Tostem-relevant questions and answers
+  - Category tabs with counts, active state with tostem-blue styling
+  - Search filter that searches across all categories
+  - Category badge shown on search results
+  - Accordion with smooth expand/collapse (shadcn Accordion component)
+  - "Still have questions?" CTA at bottom with phone number and Contact Us button
+  - Empty state with clear search button
+  - Replaced the existing simple FAQ section on the homepage
+- Updated `/home/z/my-project/src/components/pages/home-page.tsx`:
+  - Added imports for BeforeAfterSlider, InstallationTracker, CustomerStories, FAQSection
+  - Inserted BeforeAfterSlider between "Why Tostem" and "Warranty Showcase"
+  - Inserted InstallationTracker between "Process Timeline" and "Products"
+  - Inserted CustomerStories between "Testimonials" and "Recently Viewed"
+  - Replaced old FAQ section with FAQSection component
+  - Removed unused imports (Accordion, AccordionItem, AccordionTrigger, AccordionContent, Search)
+  - Removed unused state (faqSearch) and memo (filteredFaqs)
+  - Removed faqData from tostem-data imports
+- Lint passes cleanly (0 errors)
+- Dev server running on port 3000, HTTP 200
+
+Stage Summary:
+- 4 new interactive components added to the homepage
+- Before/After slider with draggable comparison (between Why Tostem and Warranty)
+- Installation tracker with 6-step timeline and progress animation (between Process Timeline and Products)
+- Customer stories carousel with 6 project cards and auto-scroll (between Testimonials and Recently Viewed)
+- Enhanced FAQ with 5 categories, 25 questions, search, and category tabs (replacing old FAQ)
+- All components use 'use client', framer-motion animations, tostem-blue colors, responsive design
+- No lint errors, dev server stable
+
+---
+Task ID: 9-styling
+Agent: Styling Expert
+Task: Improve styling - dark mode refinements, micro-interactions, visual polish
+
+Work Log:
+- Added dark mode classes to header mega menu dropdown (bg-[#1a1a1a], text-gray-400, border-white/10)
+- Added dark mode classes to header mobile menu (bg-[#1a1a1a], dark:text variants)
+- Added dark: variants for all mega menu links, tabs, sub-menus in both desktop and mobile
+- Added dark mode refinements to category-page.tsx (headings tracking-tight, text-balance)
+- Added dark mode refinements to series-page.tsx (headings tracking-tight, text-balance)
+- Added dark mode refinements to blog-page.tsx (sticky category tabs, sidebar cards, post cards)
+- Added dark mode refinements to gallery-page.tsx (filter counts, view mode toggle buttons)
+- Added dark mode refinements to testimonials-page.tsx (stats bar, filter tabs, featured card, grid cards)
+- Added dark mode refinements to contact-page.tsx (social links, offices grid, FAQ accordion, form sidebar)
+- Added dark mode refinements to ecatalogue-page.tsx (catalogue cards, how-it-works, page background)
+- Added dark mode refinements to generic-page.tsx (progress bar, TOC sidebar, share buttons, related pages, contact card)
+- Added dark mode refinements to glossary-page.tsx (search section, letter nav, term cards, category badges)
+- Added page transition scale effect in page-router.tsx (scale from 0.98 to 1 on enter/exit)
+- Added content stagger-fade-in animation in globals.css with 50ms stagger between children
+- Added focus-ring utility class in globals.css for explicit focus-visible rings
+- Added card-standard utility class for consistent card styling (rounded-xl, p-6, shadow-sm hover:shadow-md)
+- Added dark mode to glass-card utility (dark:bg-white/5, dark:border-white/10)
+- Added tracking-tight to all h1 and h2 headings across pages for tighter letter-spacing
+- Added text-balance to h1 headings for better line-break balancing
+- Added transition-colors duration-200 to all interactive elements (links, buttons, tabs)
+- Standardized card hover effects: shadow-sm hover:shadow-md transition-all duration-300
+- Lint passes cleanly with 0 errors
+- Dev server compiling successfully (HTTP 200)
+
+Stage Summary:
+- All 9 page templates now have comprehensive dark mode support with consistent dark: classes
+- Page transitions enhanced with subtle scale effect (0.98→1) for premium feel
+- Content stagger animation added for 50ms staggered section fade-in
+- Typography enhanced: tracking-tight on headings, text-balance on h1s
+- Focus-visible ring styles standardized across all interactive elements
+- Card consistency improved with standardized rounded-xl, p-6, shadow-sm hover:shadow-md pattern
+- Zero lint errors, dev server stable
+
+---
+Task ID: QA-Round9
+Agent: Main Orchestrator
+Task: QA assessment, bug fixes, styling improvements, and new feature development
+
+Work Log:
+- Read /home/z/my-project/worklog.md to assess project status (stable, 60+ pages)
+- Performed QA testing via agent-browser on 8 pages/interactions
+- All pages passed QA: Homepage, Category, Design, Series, Contact, Gallery, Mega Menu, Dark Mode
+- Fixed stat counter "0+" bug: Changed useCountUp hook to show target value immediately, then animate from 0 on scroll into view (threshold: 0 for immediate trigger)
+- Fixed warranty ProgressRing "0%" bug: Same approach - show percentage initially, reset to 0 and animate when visible
+- Launched parallel subagent tasks for styling improvements and new features
+- Final verification: lint passes with 0 errors, dev server HTTP 200
+
+Stage Summary:
+- QA Round 9: All 8 tests PASS
+- Fixed: Stat counters now show final values immediately, animate from 0 when scrolled into view
+- Fixed: Warranty certification percentages show 100% initially, animate properly
+- No critical bugs remain
+
+---
+Task ID: 9-styling
+Agent: Styling Expert
+Task: Improve styling - dark mode refinements, micro-interactions, visual polish
+
+Work Log:
+- Added comprehensive dark: variant classes across all 9 page templates + header mega menu
+- Added page transition scale effect (0.98 → 1) in page-router.tsx
+- Added stagger-fade-in CSS animation for page content sections
+- Added focus-ring utility class and focus-visible styles across all interactive elements
+- Added tracking-tight to all h1/h2 headings, text-balance to h1 headings
+- Added card-standard utility class for consistent card styling
+- Updated glass-card with dark mode variants
+
+Stage Summary:
+- Full dark mode support across all page templates (category, series, blog, gallery, testimonials, contact, ecatalogue, generic, glossary)
+- Page transitions enhanced with scale micro-animation
+- Typography improved with tracking-tight and text-balance
+- Focus accessibility improved with consistent focus-visible rings
+- Lint: 0 errors
+
+---
+Task ID: 9-features
+Agent: Full-stack Developer
+Task: Add new features - before/after slider, installation tracker, customer stories, enhanced FAQ
+
+Work Log:
+- Created before-after-slider.tsx: Draggable comparison slider with conventional vs Tostem images, 3 comparison points
+- Created installation-tracker.tsx: 6-step visual timeline with status badges, estimated duration, animated progress bar
+- Created customer-stories.tsx: 6 project stories with auto-scroll carousel, star ratings, responsive (1/2/3 per view)
+- Created faq-section.tsx: 25 FAQs in 5 category tabs with search filter, replaced old simple FAQ section
+- All 4 features integrated into homepage sections
+
+Stage Summary:
+- 4 new feature components created and integrated
+- Before/After Slider: Interactive product comparison
+- Installation Timeline: 6-step tracker with progress animation
+- Customer Stories: Auto-scroll carousel with 6 project stories
+- Enhanced FAQ: 25 FAQs across 5 categories with search
+- Lint: 0 errors, dev server stable
+
+## Updated Project Status (Post Round 9)
+- **Status**: Stable, fully functional with 60+ pages, extensive feature set
+- **Homepage**: 9/10 visual quality (dark mode refined, new interactive sections)
+- **Dark Mode**: Full support across all page templates
+- **Lint**: Clean, 0 errors
+- **Dev Server**: Running on port 3000, all pages HTTP 200
+- **New Features This Session**: Before/After Slider, Installation Timeline Tracker, Customer Stories Carousel, Enhanced FAQ with Category Tabs
+- **New Styling This Session**: Full dark mode support, page transition scale effect, focus-visible rings, typography enhancements, card standardization
+
+## Unresolved Issues / Risks
+1. **API dependency**: Generic pages fetch content from live Tostem site; fallback content shown if down
+2. **Images**: Using Unsplash URLs as placeholders; real Tostem images would improve authenticity
+3. **Performance**: Heavy animations could benefit from lazy loading
+4. **Floating elements overlap**: Multiple fixed-position elements on small screens may need z-index audit
+5. **Minor framer-motion warnings**: "animate opacity from undefined" console warnings (non-blocking)
+
+## Priority Recommendations for Next Phase
+1. Replace Unsplash images with actual Tostem product images
+2. Performance optimization with lazy loading and code splitting
+3. Fix floating element z-index conflicts on mobile
+4. Add live chat integration alongside WhatsApp
+5. Add product configurator 3D/AR preview
+6. Implement user authentication for quotation tracking

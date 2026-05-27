@@ -58,18 +58,32 @@ function ProgressRing({
   strokeWidth?: number;
   delay?: number;
 }) {
-  const [animatedPercentage, setAnimatedPercentage] = useState(0);
+  const [animatedPercentage, setAnimatedPercentage] = useState(percentage);
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const checkVisible = () => {
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          setIsVisible(true);
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Check immediately
+    if (checkVisible()) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -78,6 +92,7 @@ function ProgressRing({
   useEffect(() => {
     if (!isVisible) return;
     const timer = setTimeout(() => {
+      setAnimatedPercentage(0);
       let start = 0;
       const animate = () => {
         start += 2;

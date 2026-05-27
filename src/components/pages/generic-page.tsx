@@ -185,7 +185,7 @@ export default function GenericPage({ slug }: GenericPageProps) {
                   </span>
                 ))}
               </nav>
-              <h1 className="text-3xl md:text-5xl font-black text-white mb-4">{content?.title || pageInfo?.title || slug}</h1>
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-balance text-white mb-4">{content?.title || pageInfo?.title || slug}</h1>
               {pageInfo?.description && (
                 <p className="text-base text-white/60 max-w-2xl">{pageInfo.description}</p>
               )}
@@ -195,8 +195,8 @@ export default function GenericPage({ slug }: GenericPageProps) {
       </section>
 
       {/* Progress Bar */}
-      <div className="sticky top-[88px] lg:top-[132px] z-30 bg-white">
-        <Progress value={readProgress} className="h-1 rounded-none bg-gray-100 [&>div]:bg-tostem-blue" />
+      <div className="sticky top-[88px] lg:top-[132px] z-30 bg-white dark:bg-[#111]">
+        <Progress value={readProgress} className="h-1 rounded-none bg-gray-100 dark:bg-white/10 [&>div]:bg-tostem-blue" />
       </div>
 
       {/* Main Content */}
@@ -226,9 +226,9 @@ export default function GenericPage({ slug }: GenericPageProps) {
                         { title: 'Quality Assurance', desc: 'Over 100 quality checks per product, backed by international certifications including JIS, ISO 9001, and ISO 14001.' },
                         { title: 'Sound Insulation', desc: 'Up to 40dB sound reduction for peaceful interiors, even in the noisiest urban environments.' },
                       ].map((item) => (
-                        <div key={item.title} className="bg-tostem-light-gray rounded-xl p-6 hover:border-tostem-blue/30 border border-transparent transition-all">
-                          <h3 className="text-lg font-bold text-tostem-dark mb-2">{item.title}</h3>
-                          <p className="text-sm text-tostem-text-light leading-relaxed">{item.desc}</p>
+                        <div key={item.title} className="bg-tostem-light-gray dark:bg-[#1a1a1a] rounded-xl p-6 hover:border-tostem-blue/30 border border-transparent dark:border-white/10 transition-all duration-300">
+                          <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200 mb-2">{item.title}</h3>
+                          <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{item.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -242,17 +242,17 @@ export default function GenericPage({ slug }: GenericPageProps) {
                       { value: '100+', label: 'Quality Checks' },
                       { value: '6', label: 'Series Available' },
                     ].map((stat) => (
-                      <div key={stat.label} className="bg-white rounded-xl p-5 text-center border border-gray-100 shadow-sm">
+                      <div key={stat.label} className="bg-white dark:bg-[#1a1a1a] rounded-xl p-5 text-center border border-gray-100 dark:border-white/10 shadow-sm">
                         <div className="text-2xl md:text-3xl font-black text-tostem-blue mb-1">{stat.value}</div>
-                        <div className="text-xs text-tostem-text-light font-medium">{stat.label}</div>
+                        <div className="text-xs text-tostem-text-light dark:text-gray-400 font-medium">{stat.label}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Why Choose Tostem */}
                   <div>
-                    <h2 className="text-2xl font-black text-tostem-dark mb-4">Why Choose Tostem</h2>
-                    <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
+                    <h2 className="text-2xl font-black text-tostem-dark dark:text-gray-200 mb-4 tracking-tight">Why Choose Tostem</h2>
+                    <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-white/10 p-6 space-y-4">
                       {[
                         'End-to-end manufacturing under controlled conditions ensures zero defect products.',
                         'Advanced Japanese technology adapted for Indian climate and building standards.',
@@ -263,7 +263,7 @@ export default function GenericPage({ slug }: GenericPageProps) {
                           <div className="w-6 h-6 rounded-full bg-tostem-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <span className="text-tostem-blue text-xs font-bold">{i + 1}</span>
                           </div>
-                          <p className="text-sm text-tostem-text-light leading-relaxed">{reason}</p>
+                          <p className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed">{reason}</p>
                         </div>
                       ))}
                     </div>
@@ -288,8 +288,8 @@ export default function GenericPage({ slug }: GenericPageProps) {
               <div className="sticky top-40 space-y-6">
                 {/* Table of Contents (only if items exist) */}
                 {tocItems.length > 0 && (
-                  <div className="bg-white rounded-xl p-6 border border-gray-100">
-                    <h3 className="text-sm font-bold text-tostem-dark uppercase tracking-wider mb-4">On This Page</h3>
+                  <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 border border-gray-100 dark:border-white/10">
+                    <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-4">On This Page</h3>
                     <ul className="space-y-2 max-h-64 overflow-y-auto">
                       {tocItems.map((item) => (
                         <li key={item.id} style={{ paddingLeft: `${(item.level - 2) * 12}px` }}>
@@ -303,7 +303,7 @@ export default function GenericPage({ slug }: GenericPageProps) {
                                 window.scrollTo({ top, behavior: 'smooth' });
                               }
                             }}
-                            className="text-sm text-tostem-text-light hover:text-tostem-blue transition-colors line-clamp-2"
+                            className="text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue transition-colors duration-200 line-clamp-2"
                           >
                             {item.text}
                           </a>
@@ -326,8 +326,8 @@ export default function GenericPage({ slug }: GenericPageProps) {
                 </div>
 
                 {/* Share Buttons */}
-                <div className="bg-white rounded-xl p-6 border border-gray-100">
-                  <h3 className="text-sm font-bold text-tostem-dark uppercase tracking-wider mb-4">Share This Page</h3>
+                <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 border border-gray-100 dark:border-white/10">
+                  <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-4">Share This Page</h3>
                   <div className="flex gap-2">
                     <button
                       onClick={shareWhatsApp}
@@ -355,8 +355,8 @@ export default function GenericPage({ slug }: GenericPageProps) {
 
                 {/* Related Pages */}
                 {pageInfo?.type && (
-                  <div className="bg-white rounded-xl p-6 border border-gray-100">
-                    <h3 className="text-sm font-bold text-tostem-dark uppercase tracking-wider mb-4">Related Pages</h3>
+                  <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 border border-gray-100 dark:border-white/10">
+                    <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-4">Related Pages</h3>
                     <ul className="space-y-2">
                       {pageRegistry
                         .filter((p) => p.type === pageInfo.type && p.slug !== slug)
@@ -366,7 +366,7 @@ export default function GenericPage({ slug }: GenericPageProps) {
                             <a
                               href={`#/${p.slug}`}
                               onClick={(e) => { e.preventDefault(); navigateTo(p.slug); }}
-                              className="text-sm text-tostem-text-light hover:text-tostem-blue transition-colors flex items-center gap-2"
+                              className="text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue transition-colors duration-200 flex items-center gap-2"
                             >
                               <ChevronRight className="w-3 h-3" /> {p.title}
                             </a>
@@ -377,11 +377,11 @@ export default function GenericPage({ slug }: GenericPageProps) {
                 )}
 
                 {/* Contact Card */}
-                <div className="bg-tostem-light-gray rounded-xl p-6">
-                  <h3 className="text-sm font-bold text-tostem-dark uppercase tracking-wider mb-4">Contact Us</h3>
+                <div className="bg-tostem-light-gray dark:bg-[#1a1a1a] rounded-xl p-6">
+                  <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-4">Contact Us</h3>
                   <div className="space-y-3">
-                    <a href="tel:18002667500" className="flex items-center gap-2 text-sm text-tostem-text-light hover:text-tostem-blue transition-colors"><Phone className="w-4 h-4" /> 1800-266-7500</a>
-                    <a href="mailto:info@tostemindia.com" className="flex items-center gap-2 text-sm text-tostem-text-light hover:text-tostem-blue transition-colors"><Mail className="w-4 h-4" /> info@tostemindia.com</a>
+                    <a href="tel:18002667500" className="flex items-center gap-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue transition-colors duration-200"><Phone className="w-4 h-4" /> 1800-266-7500</a>
+                    <a href="mailto:info@tostemindia.com" className="flex items-center gap-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue transition-colors duration-200"><Mail className="w-4 h-4" /> info@tostemindia.com</a>
                   </div>
                 </div>
               </div>

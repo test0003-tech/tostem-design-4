@@ -6,18 +6,15 @@ import {
   Star, Trophy, Calendar, Clock, ShieldCheck, Settings,
   Award, Sparkles, VolumeX, CheckCircle, ChevronDown,
   MessageSquare, Palette, Factory, Wrench, Mail, Users,
-  Building2, ArrowUpRight, Search,
+  Building2, ArrowUpRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
-  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
-} from '@/components/ui/accordion';
-import {
   heroSlides, seriesData, categoryData, whyTostemItems,
-  aboutData, designsData, faqData, blogPosts, testimonials,
+  aboutData, designsData, blogPosts, testimonials,
   galleryData, tadaAwards, glossaryTerms, channelPartners,
 } from '@/lib/tostem-data';
 import type { WhyTostemItem, DesignData } from '@/lib/tostem-data';
@@ -30,6 +27,10 @@ import RecentlyViewed from '@/components/recently-viewed';
 import { RecommendationCTA } from '@/components/recommendation-engine';
 import WarrantyShowcase from '@/components/warranty-showcase';
 import { ProjectCalculatorCTA } from '@/components/project-calculator';
+import BeforeAfterSlider from '@/components/before-after-slider';
+import InstallationTracker from '@/components/installation-tracker';
+import CustomerStories from '@/components/customer-stories';
+import FAQSection from '@/components/faq-section';
 import { useSiteStore } from '@/lib/store';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
@@ -76,19 +77,27 @@ function navigateTo(slug: string) {
 
 // ====== Animated Counter Hook ======
 function useCountUp(target: number, duration: number = 2000, startOnView: boolean = true) {
-  const [count, setCount] = useState(startOnView ? 0 : target);
-  const [hasStarted, setHasStarted] = useState(!startOnView);
+  const [count, setCount] = useState(target);
+  const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!startOnView) return;
-    if (hasStarted) return;
-    
+    // Always start animation - show target value immediately, then count up from 0
+    const startAnimation = () => {
+      setCount(0);
+      setHasStarted(true);
+    };
+
+    if (!startOnView) {
+      startAnimation();
+      return;
+    }
+
     const checkVisible = () => {
-      if (ref.current && !hasStarted) {
+      if (ref.current) {
         const rect = ref.current.getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom > 0) {
-          setHasStarted(true);
+          startAnimation();
           return true;
         }
       }
@@ -100,17 +109,17 @@ function useCountUp(target: number, duration: number = 2000, startOnView: boolea
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
-          setHasStarted(true);
+        if (entry.isIntersecting) {
+          startAnimation();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     );
     if (ref.current) {
       observer.observe(ref.current);
     }
     return () => observer.disconnect();
-  }, [hasStarted, startOnView]);
+  }, [startOnView]);
 
   useEffect(() => {
     if (!hasStarted) return;
@@ -180,9 +189,6 @@ export default function HomePage() {
   // Price Estimator state
   const [estimatorOpen, setEstimatorOpen] = useState(false);
 
-  // FAQ search state
-  const [faqSearch, setFaqSearch] = useState('');
-
   // Show all designs state
   const [showAllDesigns, setShowAllDesigns] = useState(false);
 
@@ -228,18 +234,6 @@ export default function HomePage() {
     }, 5000);
     return () => clearInterval(timer);
   }, [testimonialPaused, maxTestimonialIndex]);
-
-  // Filtered FAQs
-  const filteredFaqs = useMemo(() => {
-    if (!faqSearch.trim()) return faqData;
-    const lower = faqSearch.toLowerCase();
-    return faqData.filter(
-      (faq) =>
-        faq.question.toLowerCase().includes(lower) ||
-        faq.answer.toLowerCase().includes(lower) ||
-        (faq.category && faq.category.toLowerCase().includes(lower))
-    );
-  }, [faqSearch]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -471,6 +465,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== BEFORE/AFTER SLIDER ===== */}
+      <BeforeAfterSlider />
+
       {/* ===== WARRANTY SHOWCASE ===== */}
       <WarrantyShowcase />
 
@@ -536,6 +533,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== INSTALLATION TRACKER ===== */}
+      <InstallationTracker />
 
       {/* ===== PRODUCTS ===== */}
       <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
@@ -866,60 +866,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== FAQ ===== */}
-      <section className="py-16 md:py-24 bg-tostem-light-gray dark:bg-[#1a1a1a]">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <SectionHeading label="Frequently Asked Questions" title="Got Questions?" description="Find answers to the most common questions about Tostem products." />
-          <div className="max-w-3xl mx-auto">
-            {/* Search input */}
-            <div className="max-w-md mx-auto mb-6 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tostem-text-muted" />
-              <Input
-                type="text"
-                placeholder="Search questions..."
-                value={faqSearch}
-                onChange={(e) => setFaqSearch(e.target.value)}
-                className="pl-10 h-11 bg-white border-gray-200 focus-visible:border-tostem-blue focus-visible:ring-tostem-blue/20 rounded-lg"
-              />
-            </div>
-            {/* Count */}
-            {faqSearch && (
-              <p className="text-center text-sm text-tostem-text-muted mb-4">
-                Showing {filteredFaqs.length} of {faqData.length} questions
-              </p>
-            )}
-            <AnimatePresence mode="wait">
-              {filteredFaqs.length > 0 ? (
-                <motion.div
-                  key={faqSearch}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Accordion type="single" collapsible className="space-y-3">
-                    {filteredFaqs.map((faq, i) => (
-                      <AccordionItem key={faq.question} value={`item-${i}`} className="bg-white rounded-xl px-6 border-0 shadow-sm">
-                        <AccordionTrigger className="text-left text-sm font-semibold text-tostem-dark hover:text-tostem-blue hover:no-underline py-5">{faq.question}</AccordionTrigger>
-                        <AccordionContent className="text-sm text-tostem-text-light leading-relaxed pb-5">{faq.answer}</AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-12"
-                >
-                  <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                  <p className="text-tostem-text-muted text-sm">No questions found. Try a different search term.</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </section>
+      {/* ===== ENHANCED FAQ ===== */}
+      <FAQSection />
 
       {/* ===== CHANNEL PARTNERS ===== */}
       <section className="py-16 md:py-20 bg-white overflow-hidden">
@@ -1048,6 +996,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== CUSTOMER STORIES ===== */}
+      <CustomerStories />
 
       {/* ===== RECENTLY VIEWED ===== */}
       <RecentlyViewed />

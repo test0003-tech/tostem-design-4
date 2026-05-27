@@ -85,7 +85,7 @@ export default function BlogPage() {
       </section>
 
       {/* Category Tabs */}
-      <section className="sticky top-[88px] lg:top-[132px] z-30 bg-white border-b shadow-sm">
+      <section className="sticky top-[88px] lg:top-[132px] z-30 bg-white dark:bg-[#111] border-b shadow-sm dark:border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none">
             {blogCategories.map((cat) => (
@@ -95,7 +95,7 @@ export default function BlogPage() {
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                   activeCategory === cat
                     ? 'bg-tostem-blue text-white shadow-sm'
-                    : 'bg-tostem-light-gray text-tostem-dark hover:bg-gray-200'
+                    : 'bg-tostem-light-gray dark:bg-white/10 text-tostem-dark dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-white/20'
                 }`}
               >
                 {cat}
@@ -117,7 +117,7 @@ export default function BlogPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 mb-8 cursor-pointer"
+                  className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-white/10 mb-8 cursor-pointer"
                   onClick={() => navigateTo(featuredPost.id)}
                 >
                   <div className="flex flex-col md:flex-row">
@@ -132,12 +132,12 @@ export default function BlogPage() {
                     </div>
                     <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
                       <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                        <Badge className="bg-tostem-light-gray text-tostem-dark text-[10px] hover:bg-tostem-light-gray">{featuredPost.category}</Badge>
+                        <Badge className="bg-tostem-light-gray dark:bg-white/10 text-tostem-dark dark:text-gray-200 text-[10px] hover:bg-tostem-light-gray">{featuredPost.category}</Badge>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(featuredPost.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{featuredPost.readTime}</span>
                       </div>
-                      <h2 className="text-xl md:text-2xl font-bold text-tostem-dark mb-3 group-hover:text-tostem-blue transition-colors leading-tight">{featuredPost.title}</h2>
-                      <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">{featuredPost.excerpt}</p>
+                      <h2 className="text-xl md:text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-3 group-hover:text-tostem-blue transition-colors leading-tight tracking-tight">{featuredPost.title}</h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4 line-clamp-3">{featuredPost.excerpt}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-tostem-blue font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                           Read Article <ArrowRight className="w-4 h-4" />
@@ -181,7 +181,7 @@ export default function BlogPage() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.4, delay: i * 0.06 }}
-                      className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 cursor-pointer"
+                      className="group bg-white dark:bg-[#1a1a1a] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-white/10 cursor-pointer"
                       onClick={() => navigateTo(post.id)}
                     >
                       <div className="aspect-[16/9] relative overflow-hidden">
@@ -194,13 +194,13 @@ export default function BlogPage() {
                         </div>
                       </div>
                       <div className="p-5">
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mb-3">
                           <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(post.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                           <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.readTime}</span>
                         </div>
-                        <h3 className="text-base font-bold text-tostem-dark mb-2 group-hover:text-tostem-blue transition-colors line-clamp-2">{post.title}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-4">{post.excerpt}</p>
-                        <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                        <h3 className="text-base font-bold text-tostem-dark dark:text-gray-200 mb-2 group-hover:text-tostem-blue transition-colors line-clamp-2">{post.title}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-4">{post.excerpt}</p>
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-50 dark:border-white/10">
                           <span className="text-tostem-blue font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                             Read More <ArrowRight className="w-3.5 h-3.5" />
                           </span>
@@ -246,8 +246,8 @@ export default function BlogPage() {
             <aside className="lg:w-80 shrink-0">
               <div className="sticky top-[180px] space-y-8">
                 {/* Popular Topics */}
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                  <h3 className="text-lg font-bold text-tostem-dark mb-4 flex items-center gap-2">
+                <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-white/10">
+                  <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200 mb-4 flex items-center gap-2">
                     <Tag className="w-4 h-4 text-tostem-blue" />
                     Popular Topics
                   </h3>
@@ -256,7 +256,7 @@ export default function BlogPage() {
                       <button
                         key={topic.slug}
                         onClick={() => navigateTo(topic.slug)}
-                        className="text-xs bg-tostem-light-gray text-tostem-dark px-3 py-1.5 rounded-full hover:bg-tostem-blue hover:text-white transition-colors"
+                        className="text-xs bg-tostem-light-gray dark:bg-white/10 text-tostem-dark dark:text-gray-300 px-3 py-1.5 rounded-full hover:bg-tostem-blue hover:text-white transition-colors duration-200"
                       >
                         {topic.label}
                       </button>
@@ -312,7 +312,7 @@ export default function BlogPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-4">Want expert advice?</h2>
+            <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight">Want expert advice?</h2>
             <p className="text-white/60 mb-8 max-w-xl mx-auto">Our team of specialists is ready to help you choose the perfect windows and doors for your project.</p>
             <Button
               size="lg"

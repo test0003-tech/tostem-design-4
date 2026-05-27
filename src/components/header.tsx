@@ -331,15 +331,15 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
   const isProduct = section.label === 'OUR PRODUCT';
 
   return (
-    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="absolute left-0 right-0 bg-white shadow-2xl border-t border-gray-100 z-50" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} data-dropdown={section.label} role="menu" aria-label={`${section.label} submenu`}>
+    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="absolute left-0 right-0 bg-white dark:bg-[#1a1a1a] shadow-2xl border-t border-gray-100 dark:border-white/10 z-50" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} data-dropdown={section.label} role="menu" aria-label={`${section.label} submenu`}>
       {isProduct ? (
         // Tabbed mega menu for Our Product
         <div className="max-w-[1400px] mx-auto px-8 py-0">
           <div className="flex">
             {/* Left: Vertical tabs */}
-            <div className="w-56 border-r border-gray-100 py-2 flex-shrink-0">
+            <div className="w-56 border-r border-gray-100 dark:border-white/10 py-2 flex-shrink-0">
               {productMegaMenuTabs.map((tab) => (
-                <button key={tab.id} className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors flex items-center justify-between ${activeProductTab === tab.id ? 'bg-tostem-light-gray text-tostem-blue border-l-3 border-tostem-blue' : 'text-tostem-text-light hover:bg-gray-50 hover:text-tostem-dark'}`} onClick={() => setActiveProductTab(tab.id)} onMouseEnter={() => setActiveProductTab(tab.id)}>
+                <button key={tab.id} className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors duration-200 flex items-center justify-between ${activeProductTab === tab.id ? 'bg-tostem-light-gray dark:bg-white/10 text-tostem-blue border-l-3 border-tostem-blue' : 'text-tostem-text-light hover:bg-gray-50 dark:hover:bg-white/5 hover:text-tostem-dark dark:hover:text-gray-200'}`} onClick={() => setActiveProductTab(tab.id)} onMouseEnter={() => setActiveProductTab(tab.id)}>
                   {tab.label}
                   <ChevronRight className="w-3 h-3" />
                 </button>
@@ -350,22 +350,22 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
               {productMegaMenuTabs.filter(t => t.id === activeProductTab).map((tab) => (
                 <div key={tab.id} className="grid grid-cols-2 gap-8">
                   <div>
-                    <h3 className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Designs</h3>
+                    <h3 className="text-xs font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Designs</h3>
                     <ul className="space-y-0.5" role="menu">
                       {tab.designs.map((item) => (
                         <li key={item.label} role="none">
-                          <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
+                          <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light hover:bg-tostem-light-gray dark:hover:bg-white/5 rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
                         </li>
                       ))}
                     </ul>
                   </div>
                   {tab.series.length > 0 && (
                     <div>
-                      <h3 className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Series</h3>
+                      <h3 className="text-xs font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-3 pb-2 border-b-2 border-tostem-blue">Our Series</h3>
                       <ul className="space-y-0.5" role="menu">
                         {tab.series.map((item) => (
                           <li key={item.label} role="none">
-                            <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
+                            <a href={item.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-2 py-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light hover:bg-tostem-light-gray dark:hover:bg-white/5 rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{item.label}</a>
                           </li>
                         ))}
                       </ul>
@@ -382,7 +382,7 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
           <div className="grid grid-cols-1 gap-0 max-w-xs" role="menu">
             {section.children.map((child) => (
               <div key={child.label} role="none">
-                <a href={child.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-tostem-text-light hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">
+                <a href={child.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light hover:bg-tostem-light-gray dark:hover:bg-white/5 rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">
                   {child.label}
                   {child.children && <ChevronRight className="w-3 h-3 ml-auto" />}
                 </a>
@@ -390,7 +390,7 @@ function DesktopMegaMenu({ section, activeProductTab, setActiveProductTab, onMou
                 {child.children && (
                   <div className="pl-6">
                     {child.children.map((sub) => (
-                      <a key={sub.label} href={sub.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-3 py-2 text-sm text-tostem-text-muted hover:text-tostem-blue hover:bg-tostem-light-gray rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{sub.label}</a>
+                      <a key={sub.label} href={sub.href} data-dropdown-link tabIndex={0} role="menuitem" onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} onKeyDown={(e) => onDropdownLinkKeyDown(e, section)} className="block px-3 py-2 text-sm text-tostem-text-muted dark:text-gray-500 hover:text-tostem-blue dark:hover:text-tostem-blue-light hover:bg-tostem-light-gray dark:hover:bg-white/5 rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tostem-blue focus-visible:ring-offset-1">{sub.label}</a>
                     ))}
                   </div>
                 )}
@@ -410,20 +410,20 @@ function MobileMenu({ onNavClick, expandedItem, onToggleExpand, onClose, activeP
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-[60] lg:hidden">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="absolute right-0 top-0 bottom-0 w-[85%] max-w-[400px] bg-white shadow-2xl overflow-y-auto custom-scrollbar">
+      <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="absolute right-0 top-0 bottom-0 w-[85%] max-w-[400px] bg-white dark:bg-[#1a1a1a] shadow-2xl overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <span className="text-xl font-black tracking-[0.15em] text-tostem-dark">TOSTEM</span>
-          <button onClick={onClose} className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-gray-100" aria-label="Close menu"><X className="w-5 h-5" /></button>
+          <span className="text-xl font-black tracking-[0.15em] text-tostem-dark dark:text-gray-100">TOSTEM</span>
+          <button onClick={onClose} className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 text-tostem-dark dark:text-gray-300 transition-colors duration-200" aria-label="Close menu"><X className="w-5 h-5" /></button>
         </div>
         <nav className="p-4">
           {mainNavigation.map((section) => (
             <MobileNavItem key={section.label} section={section} isExpanded={expandedItem === section.label} onToggle={() => onToggleExpand(section.label)} onNavClick={onNavClick} activeProductTab={activeProductTab} setActiveProductTab={setActiveProductTab} />
           ))}
         </nav>
-        <div className="p-4 border-t border-gray-100 space-y-3">
-          <Button className="w-full bg-tostem-blue hover:bg-tostem-blue-light text-white" onClick={() => onNavClick('#/contact')}><MessageCircle className="w-4 h-4 mr-2" />ENQUIRE NOW</Button>
-          <Button variant="outline" className="w-full border-tostem-dark text-tostem-dark hover:bg-tostem-dark hover:text-white" onClick={() => onNavClick('#/contact')}><Download className="w-4 h-4 mr-2" />DOWNLOAD BROCHURE</Button>
-          <a href={`tel:${siteMetadata.phone}`} className="flex items-center justify-center gap-2 w-full py-2 text-tostem-blue font-medium text-sm"><Phone className="w-4 h-4" />{siteMetadata.phone}</a>
+        <div className="p-4 border-t border-gray-100 dark:border-white/10 space-y-3">
+          <Button className="w-full bg-tostem-blue hover:bg-tostem-blue-light text-white transition-colors duration-200" onClick={() => onNavClick('#/contact')}><MessageCircle className="w-4 h-4 mr-2" />ENQUIRE NOW</Button>
+          <Button variant="outline" className="w-full border-tostem-dark dark:border-gray-600 text-tostem-dark dark:text-gray-300 hover:bg-tostem-dark hover:text-white dark:hover:bg-white/10 transition-colors duration-200" onClick={() => onNavClick('#/contact')}><Download className="w-4 h-4 mr-2" />DOWNLOAD BROCHURE</Button>
+          <a href={`tel:${siteMetadata.phone}`} className="flex items-center justify-center gap-2 w-full py-2 text-tostem-blue dark:text-tostem-blue-light font-medium text-sm transition-colors duration-200"><Phone className="w-4 h-4" />{siteMetadata.phone}</a>
         </div>
       </motion.div>
     </motion.div>
@@ -437,8 +437,8 @@ function MobileNavItem({ section, isExpanded, onToggle, onNavClick, activeProduc
   const isProduct = section.label === 'OUR PRODUCT';
 
   return (
-    <div className="border-b border-gray-100">
-      <button className="flex items-center justify-between w-full py-3 px-2 text-sm font-semibold text-tostem-dark uppercase tracking-wide hover:text-tostem-blue transition-colors" onClick={() => { if (hasSubItems) onToggle(); else onNavClick(section.href); }}>
+    <div className="border-b border-gray-100 dark:border-white/10">
+      <button className="flex items-center justify-between w-full py-3 px-2 text-sm font-semibold text-tostem-dark dark:text-gray-200 uppercase tracking-wide hover:text-tostem-blue dark:hover:text-tostem-blue-light transition-colors duration-200" onClick={() => { if (hasSubItems) onToggle(); else onNavClick(section.href); }}>
         {section.label === 'ABOUT TOSTEM' ? 'About Tostem' : section.label === 'WHY TOSTEM' ? 'Why Tostem' : section.label === 'OUR PRODUCT' ? 'Our Product' : section.label === 'DRIVING EXPERIENCE' ? 'Driving Experience' : section.label === 'KNOWLEDGE EXPERIENCE' ? 'Knowledge Experience' : section.label === 'REACH US' ? 'Reach Us' : section.label}
         {hasSubItems && <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />}
       </button>
@@ -451,20 +451,20 @@ function MobileNavItem({ section, isExpanded, onToggle, onNavClick, activeProduc
                 <div>
                   <div className="flex flex-wrap gap-1 mb-3">
                     {productMegaMenuTabs.map((tab) => (
-                      <button key={tab.id} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeProductTab === tab.id ? 'bg-tostem-blue text-white' : 'bg-gray-100 text-tostem-text-light'}`} onClick={() => setActiveProductTab(tab.id)}>{tab.label}</button>
+                      <button key={tab.id} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 ${activeProductTab === tab.id ? 'bg-tostem-blue text-white' : 'bg-gray-100 dark:bg-white/10 text-tostem-text-light dark:text-gray-400'}`} onClick={() => setActiveProductTab(tab.id)}>{tab.label}</button>
                     ))}
                   </div>
                   {productMegaMenuTabs.filter(t => t.id === activeProductTab).map((tab) => (
                     <div key={tab.id}>
-                      <p className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-2">Our Designs</p>
+                      <p className="text-xs font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-2">Our Designs</p>
                       {tab.designs.map((item) => (
-                        <a key={item.label} href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light hover:text-tostem-blue transition-colors">{item.label}</a>
+                        <a key={item.label} href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light transition-colors duration-200">{item.label}</a>
                       ))}
                       {tab.series.length > 0 && (
                         <>
-                          <p className="text-xs font-bold text-tostem-dark uppercase tracking-wider mb-2 mt-3">Our Series</p>
+                          <p className="text-xs font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-2 mt-3">Our Series</p>
                           {tab.series.map((item) => (
-                            <a key={item.label} href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light hover:text-tostem-blue transition-colors">{item.label}</a>
+                            <a key={item.label} href={item.href} onClick={(e) => { e.preventDefault(); onNavClick(item.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light transition-colors duration-200">{item.label}</a>
                           ))}
                         </>
                       )}
@@ -474,9 +474,9 @@ function MobileNavItem({ section, isExpanded, onToggle, onNavClick, activeProduc
               ) : section.children ? (
                 section.children.map((child) => (
                   <div key={child.label}>
-                    <a href={child.href} onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light hover:text-tostem-blue transition-colors">{child.label}</a>
+                    <a href={child.href} onClick={(e) => { e.preventDefault(); onNavClick(child.href); }} className="block py-1.5 px-2 text-sm text-tostem-text-light dark:text-gray-400 hover:text-tostem-blue dark:hover:text-tostem-blue-light transition-colors duration-200">{child.label}</a>
                     {child.children?.map((sub) => (
-                      <a key={sub.label} href={sub.href} onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} className="block py-1.5 px-4 text-sm text-tostem-text-muted hover:text-tostem-blue transition-colors">{sub.label}</a>
+                      <a key={sub.label} href={sub.href} onClick={(e) => { e.preventDefault(); onNavClick(sub.href); }} className="block py-1.5 px-4 text-sm text-tostem-text-muted dark:text-gray-500 hover:text-tostem-blue dark:hover:text-tostem-blue-light transition-colors duration-200">{sub.label}</a>
                     ))}
                   </div>
                 ))

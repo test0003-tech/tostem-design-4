@@ -269,8 +269,8 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
                   { label: info.title },
                 ]}
               />
-              <h1 className="text-3xl md:text-5xl font-black text-white mb-4">{info.title}</h1>
-              <p className="text-base text-white/70 max-w-2xl">{info.description}</p>
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-balance text-white mb-4">{info.title}</h1>
+              <p className="text-base text-white/70 max-w-2xl leading-relaxed">{info.description}</p>
             </motion.div>
           </div>
         </div>
@@ -309,7 +309,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
       {/* Designs Grid */}
       <section className="py-12 md:py-16">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Our Designs</h2>
+          <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8 tracking-tight">Our Designs</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {info.designs.map((design, i) => {
               const isPopular = popular.includes(design.slug);
@@ -359,7 +359,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
           >
             <div className="text-center mb-10">
               <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">Why Choose Tostem</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2 tracking-tight">
                 Why Choose Tostem {info.title}?
               </h2>
             </div>
@@ -392,7 +392,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
       {info.series.length > 0 && (
         <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-            <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8">Available Series</h2>
+            <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-8 tracking-tight">Available Series</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {info.series.map((series, i) => (
                 <motion.a
@@ -427,7 +427,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
           >
             <div className="text-center mb-10">
               <span className="text-xs font-bold text-tostem-blue uppercase tracking-wider">FAQ</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mt-2 tracking-tight">
                 Frequently Asked Questions
               </h2>
               <p className="text-sm text-tostem-text-light dark:text-gray-400 mt-2">Everything you need to know about Tostem {info.title.toLowerCase()}</p>
@@ -459,7 +459,7 @@ export default function CategoryPage({ slug, pageInfo }: CategoryPageProps) {
           backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
         }} />
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 text-center relative z-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Interested in {info.title}?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">Interested in {info.title}?</h2>
           <p className="text-white/60 mb-6">Get a free consultation and quotation for your project.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button className="bg-tostem-blue hover:bg-tostem-blue-light text-white px-8" onClick={() => navigateTo('contact')}>

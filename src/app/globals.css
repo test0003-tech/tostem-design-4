@@ -192,7 +192,7 @@
 
   /* Glass card utility */
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-xl shadow-sm;
+    @apply bg-white/80 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-xl shadow-sm;
   }
 
   /* Tostem gradient text utility */
@@ -237,6 +237,13 @@ textarea:focus-visible,
 [role="button"]:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(46, 90, 135, 0.3);
+  border-radius: inherit;
+}
+
+/* Tostem focus-visible ring for explicit focus elements */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(46, 90, 135, 0.4);
   border-radius: inherit;
 }
 
@@ -358,6 +365,41 @@ html {
 }
 .page-transition {
   animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ===== Content Stagger ===== */
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.stagger-section > * {
+  animation: stagger-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.stagger-section > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-section > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-section > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-section > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-section > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-section > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-section > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-section > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-section > *:nth-child(n+9) { animation-delay: 400ms; }
+
+/* ===== Card Consistency ===== */
+.card-standard {
+  @apply rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-white/10;
+  background: var(--card);
+  color: var(--card-foreground);
+}
+.dark .card-standard {
+  background: #1a1a1a;
 }
 
 /* ===== Noise / Grain Texture ===== */

@@ -84,18 +84,18 @@ export default function GalleryPage() {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">Showing <strong className="text-tostem-dark">{filtered.length}</strong> of <strong className="text-tostem-dark">{galleryData.length}</strong> projects</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Showing <strong className="text-tostem-dark dark:text-gray-200">{filtered.length}</strong> of <strong className="text-tostem-dark dark:text-gray-200">{galleryData.length}</strong> projects</span>
               <div className="flex items-center border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 transition-colors ${viewMode === 'grid' ? 'bg-tostem-blue text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                  className={`p-2 transition-colors duration-200 ${viewMode === 'grid' ? 'bg-tostem-blue text-white' : 'bg-white dark:bg-[#222] text-gray-500 hover:bg-gray-50 dark:hover:bg-white/10'}`}
                   aria-label="Grid view"
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('masonry')}
-                  className={`p-2 transition-colors ${viewMode === 'masonry' ? 'bg-tostem-blue text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                  className={`p-2 transition-colors duration-200 ${viewMode === 'masonry' ? 'bg-tostem-blue text-white' : 'bg-white dark:bg-[#222] text-gray-500 hover:bg-gray-50 dark:hover:bg-white/10'}`}
                   aria-label="Masonry view"
                 >
                   <Columns3 className="w-4 h-4" />
@@ -146,7 +146,7 @@ export default function GalleryPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-4">Want similar results for your project?</h2>
+            <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight">Want similar results for your project?</h2>
             <p className="text-white/60 mb-8 max-w-xl mx-auto">Get in touch with our team to discuss your requirements and see how Tostem can transform your space.</p>
             <Button
               size="lg"

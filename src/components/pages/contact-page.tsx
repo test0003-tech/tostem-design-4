@@ -352,7 +352,7 @@ export default function ContactPage() {
       </section>
 
       {/* Trust Stats Bar */}
-      <section id="trust-stats" className="bg-white border-b border-gray-100">
+      <section id="trust-stats" className="bg-white dark:bg-[#111] border-b border-gray-100 dark:border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-6 md:py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
@@ -386,7 +386,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold text-tostem-dark mb-6">Get in Touch</h2>
+              <h2 className="text-2xl font-bold text-tostem-dark dark:text-gray-200 mb-6 tracking-tight">Get in Touch</h2>
               {submitted ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -569,8 +569,8 @@ export default function ContactPage() {
               </div>
 
               {/* Social Media Links */}
-              <div className="bg-white rounded-xl p-6 border border-gray-100">
-                <h3 className="text-sm font-bold text-tostem-dark uppercase tracking-wider mb-4">Follow Us</h3>
+              <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-6 border border-gray-100 dark:border-white/10">
+                <h3 className="text-sm font-bold text-tostem-dark dark:text-gray-200 uppercase tracking-wider mb-4">Follow Us</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {socialLinks.map((social) => (
                     <a
@@ -578,7 +578,7 @@ export default function ContactPage() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 p-3 rounded-lg bg-tostem-light-gray hover:bg-tostem-blue hover:text-white text-tostem-text-light transition-all duration-200 group"
+                      className="flex items-center gap-2 p-3 rounded-lg bg-tostem-light-gray dark:bg-white/5 hover:bg-tostem-blue hover:text-white text-tostem-text-light dark:text-gray-400 transition-all duration-200 group"
                     >
                       <social.icon className="w-4 h-4 group-hover:text-white" />
                       <span className="text-xs font-medium">{social.label}</span>
@@ -603,10 +603,10 @@ export default function ContactPage() {
       </section>
 
       {/* Map Placeholder + Offices Grid */}
-      <section className="py-12 md:py-16 bg-tostem-light-gray">
+      <section className="py-12 md:py-16 bg-tostem-light-gray dark:bg-[#1a1a1a]">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark mb-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mb-2 tracking-tight">
               {offices.length} Offices Across India
             </h2>
             <p className="text-tostem-text-light text-sm max-w-lg mx-auto">
@@ -628,16 +628,16 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-transparent hover:border-tostem-blue/30 overflow-hidden card-lift"
+                className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-transparent dark:border-white/10 hover:border-tostem-blue/30 overflow-hidden card-lift"
               >
                 {/* Gradient top border */}
                 <div className="h-1 bg-gradient-to-r from-tostem-blue to-tostem-blue-light" />
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-2">
                     <MapPin className="w-4 h-4 text-tostem-blue" />
-                    <h3 className="text-lg font-bold text-tostem-dark">{office.city}</h3>
+                    <h3 className="text-lg font-bold text-tostem-dark dark:text-gray-200">{office.city}</h3>
                   </div>
-                  <p className="text-sm text-tostem-text-light mb-3 pl-6">{office.address}</p>
+                  <p className="text-sm text-tostem-text-light dark:text-gray-400 mb-3 pl-6">{office.address}</p>
                   <a href={`tel:${office.phone}`} className="flex items-center gap-2 text-sm text-tostem-blue hover:underline pl-6">
                     <Phone className="w-3 h-3" />{office.phone}
                   </a>
@@ -657,7 +657,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
             className="text-center mb-8"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark mb-2">Frequently Asked Questions</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-tostem-dark dark:text-gray-200 mb-2 tracking-tight">Frequently Asked Questions</h2>
             <p className="text-tostem-text-light text-sm">Common questions about contacting and working with Tostem.</p>
           </motion.div>
 
@@ -666,12 +666,12 @@ export default function ContactPage() {
               <AccordionItem
                 key={idx}
                 value={`faq-${idx}`}
-                className="bg-white rounded-xl border border-gray-100 px-6 data-[state=open]:border-tostem-blue/20 data-[state=open]:shadow-sm transition-all"
+                className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-white/10 px-6 data-[state=open]:border-tostem-blue/20 data-[state=open]:shadow-sm transition-all duration-300"
               >
-                <AccordionTrigger className="text-left text-sm font-semibold text-tostem-dark hover:text-tostem-blue py-4">
+                <AccordionTrigger className="text-left text-sm font-semibold text-tostem-dark dark:text-gray-200 hover:text-tostem-blue py-4">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-tostem-text-light leading-relaxed pb-4">
+                <AccordionContent className="text-sm text-tostem-text-light dark:text-gray-400 leading-relaxed pb-4">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
