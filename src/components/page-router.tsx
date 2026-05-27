@@ -17,6 +17,7 @@ import GlossaryPage from '@/components/pages/glossary-page';
 import TadaPage from '@/components/pages/tada-page';
 import HomePage from '@/components/pages/home-page';
 import EcataloguePage from '@/components/pages/ecatalogue-page';
+import DownloadCenterPage from '@/components/pages/download-center-page';
 import NotFoundPage from '@/components/pages/not-found-page';
 import PageSkeleton from '@/components/page-skeleton';
 
@@ -142,6 +143,8 @@ export default function PageRouter() {
         return <TadaPage slug={currentPage} pageInfo={pageInfo} />;
       case 'ecatalogue':
         return <EcataloguePage />;
+      case 'download-center':
+        return <DownloadCenterPage />;
       default:
         return <GenericPage slug={currentPage} />;
     }

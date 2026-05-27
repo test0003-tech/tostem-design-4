@@ -1672,6 +1672,7 @@ export const pageRegistry: PageRegistryItem[] = [
 
   // Driving Experience
   { slug: 'e-catalogue', title: 'E-Catalogue', type: 'ecatalogue', description: 'Browse and download Tostem product catalogues and brochures', breadcrumb: ['Driving Experience'], url: 'https://www.tostemindia.com/e-catalogue/' },
+  { slug: 'download-center', title: 'Download Center', type: 'download-center', description: 'Access our complete library of brochures, technical specs, installation guides, and warranty documents.', breadcrumb: ['Resources', 'Download Center'], url: 'https://www.tostemindia.com/download-center/' },
   { slug: 'modern-window-door-design', title: 'Modern Window & Door Design', type: 'experience', description: 'Explore modern window and door design ideas for contemporary homes and spaces.', breadcrumb: ['Driving Experience', 'Modern Design'], url: 'https://www.tostemindia.com/modern-window-door-design/' },
   { slug: 'gallery', title: 'Gallery', type: 'experience-gallery', description: 'Browse our collection of residential, commercial, interior, and exterior projects showcasing Tostem solutions.', breadcrumb: ['Driving Experience', 'Gallery'], url: 'https://www.tostemindia.com/gallery/' },
 

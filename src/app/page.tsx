@@ -10,6 +10,8 @@ import FloatingCTABar from '@/components/floating-cta-bar';
 import BackToTop from '@/components/back-to-top';
 import SocialProof from '@/components/social-proof';
 import ExitIntentPopup from '@/components/exit-intent-popup';
+import KeyboardShortcuts from '@/components/keyboard-shortcuts';
+import LiveChat from '@/components/live-chat';
 
 export default function Home() {
   return (
@@ -25,10 +27,12 @@ export default function Home() {
       <Footer />
       <CookieConsent />
       <WhatsAppButton />
+      <LiveChat />
       <SocialProof />
       <FloatingCTABar />
       <BackToTop />
       <ExitIntentPopup />
+      <KeyboardShortcuts />
     </div>
   );
 }
